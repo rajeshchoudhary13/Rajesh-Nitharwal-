@@ -1,0 +1,164 @@
+/* ==========================================================================
+   EXPERIENCE PAGE — the span strip
+   --------------------------------------------------------------------------
+   The vertical timeline is this page's identity and it already exists
+   (experience.css, owned by the Experience section). What this file adds is the
+   framing above it: a horizontal strip showing the shape of the career, so the
+   timeline below is read as a trajectory rather than as four separate jobs.
+
+   Horizontal on purpose. It is the one place on the site where the timeline
+   gesture runs left to right, which is what keeps it from reading as a second
+   copy of the vertical rail 400px further down the same page.
+   ========================================================================== */
+.cspan {
+  margin-block: clamp(2.5rem, 5vw, 4rem);
+}
+
+.cspan__head {
+  max-width: 62ch;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+/* ---------- The strip ----------
+   Equal columns rather than auto-fit: four roles are a fixed sequence, and a
+   wrapping timeline would break the left-to-right reading the strip exists to
+   provide. It collapses to a vertical list at the lap breakpoint instead. */
+.cspan__list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rail the markers sit on. Drawn behind the row and inset by half a column
+   at each end, so it spans marker-to-marker rather than running off both edges
+   of the strip. */
+.cspan__list::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 1px;
+  background: var(--border);
+}
+
+.cspan__step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding-right: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.cspan__marker {
+  display: flex;
+  align-items: center;
+  height: 11px;
+  margin-bottom: var(--s-4);
+}
+
+.cspan__dot {
+  width: 11px;
+  height: 11px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border-strong);
+  /* Opaque, so the rail behind it is interrupted rather than showing through. */
+  background: var(--bg);
+  transition:
+    border-color var(--t-base) var(--ease),
+    background-color var(--t-base) var(--ease);
+}
+
+/* The current role is the only filled marker, so the eye lands on where the
+   career is *now* rather than on where it started. */
+.cspan__step[data-current] .cspan__dot {
+  border-color: var(--primary);
+  background: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.cspan__period {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+.cspan__role {
+  font-family: var(--font-display);
+  font-size: clamp(0.98rem, 1.8vw, 1.15rem);
+  line-height: 1.24;
+  letter-spacing: -0.012em;
+  color: var(--text);
+}
+
+.cspan__company {
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* The step number, last in the DOM but pushed to the top of the block: it is
+   decorative ordering information, so it should not come before the role in the
+   reading order, but it belongs above it visually. */
+.cspan__num {
+  order: -1;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
+
+.cspan__step[data-current] .cspan__role {
+  color: var(--text);
+}
+
+/* ---------- Metrics spacing ---------- */
+.experience-page__metrics {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* ---------- Responsive ----------
+   Below the lap breakpoint the strip becomes a two-up grid rather than a
+   four-column squeeze; four 1fr columns at 900px gives each role about 200px,
+   which wraps every role title onto three lines. */
+@media (max-width: 1024px) {
+  .cspan__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 4vw, 2.25rem) 0;
+  }
+  /* The horizontal rail cannot span a wrapped grid, so it is dropped and each
+     step keeps its own top rule instead — the sequence is still legible from
+     the numbers and dates. */
+  .cspan__list::before {
+    display: none;
+  }
+  .cspan__step {
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--border);
+  }
+  .cspan__marker {
+    margin-bottom: var(--s-2);
+  }
+}
+
+@media (max-width: 560px) {
+  .cspan__list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .cspan__step {
+    padding-block: var(--s-4);
+    padding-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cspan__dot {
+    transition: none;
+  }
+}

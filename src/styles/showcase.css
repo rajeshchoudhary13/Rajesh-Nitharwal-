@@ -1,0 +1,328 @@
+/* ==================== Mobile / Web showcase sections ===================== */
+.showcase {
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase--mobile {
+  border-block: 1px solid var(--border);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 4.5%, transparent), color-mix(in srgb, var(--primary-alt) 3.5%, transparent) 55%, transparent);
+}
+
+.showcase__aura {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  translate: -50% 0;
+  width: min(1100px, 130%);
+  aspect-ratio: 2 / 1;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--primary) 18%, transparent), transparent 72%);
+  pointer-events: none;
+}
+
+/* ---------- Device row ---------- */
+.devices {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: clamp(1.25rem, 2.8vw, 2.1rem);
+  align-items: end;
+  padding-block: clamp(0.5rem, 1.8vw, 1.35rem);
+}
+
+.devices__caption {
+  margin-top: 1.15rem;
+  text-align: center;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* Slight vertical rhythm so the row reads as a designed display shelf.
+   Uses the standalone `translate` property, not `transform`: each phone is a
+   Framer element whose inline `transform` (entrance, float, hover lift) would
+   otherwise overwrite this offset entirely. `translate` composes with it. */
+@media (min-width: 981px) {
+  .devices > *:nth-child(even) {
+    translate: 0 24px;
+  }
+}
+
+/* ---------- Capability chips ---------- */
+.caps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 235px), 1fr));
+  gap: 0.7rem;
+  margin-top: clamp(2.25rem, 4vw, 3.25rem);
+}
+
+.cap {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.95rem 1.05rem;
+  border-radius: var(--r-md);
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.cap:hover {
+  border-color: color-mix(in srgb, var(--primary-alt) 40%, transparent);
+  box-shadow: var(--shadow-hover);
+}
+
+.cap__icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 11px;
+  border: 1px solid color-mix(in srgb, var(--primary-alt) 28%, transparent);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--cyan);
+}
+
+.cap h3 {
+  font-size: 0.92rem;
+  margin-bottom: 0.1rem;
+}
+
+.cap p {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Web layout ---------- */
+.web__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.6vw, 2.1rem);
+  align-items: start;
+}
+
+.browsers {
+  display: grid;
+  gap: clamp(1rem, 1.9vw, 1.35rem);
+}
+
+.web__side {
+  display: grid;
+  gap: 0.65rem;
+  align-content: start;
+  position: sticky;
+  top: calc(var(--nav-h) + 1.5rem);
+}
+
+.web__side-title {
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
+}
+
+.web__strengths {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.web__strengths li {
+  padding: 0.85rem 1rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--grad-surface);
+  backdrop-filter: blur(12px);
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.web__strengths li:hover {
+  border-color: color-mix(in srgb, var(--primary-alt) 40%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+.web__strengths h4 {
+  font-size: 0.92rem;
+  margin-bottom: 0.12rem;
+}
+
+.web__strengths p {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .web__layout {
+    grid-template-columns: 1fr;
+  }
+  .web__side {
+    position: static;
+  }
+  .browsers {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  }
+}
+
+/* ==========================================================================
+   Showcase refinement layer
+   ========================================================================== */
+.showcase--mobile {
+  border-block: 0;
+}
+
+/* Hairline gradient edges instead of flat borders, so the band blends into the
+   sections either side of it. */
+.showcase--mobile::before,
+.showcase--mobile::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--grad-line);
+  pointer-events: none;
+}
+
+.showcase--mobile::before {
+  top: 0;
+}
+
+.showcase--mobile::after {
+  bottom: 0;
+}
+
+/* ---------- Device row ---------- */
+.devices {
+  gap: clamp(1.35rem, 3vw, 2.35rem);
+}
+
+.devices__caption {
+  margin-top: 1.4rem;
+  letter-spacing: 0.11em;
+  line-height: 1.7;
+}
+
+/* Only shown where the row is actually swipeable. */
+.devices__swipe-hint {
+  display: none;
+  color: var(--cyan);
+}
+
+/* Below the point where five phones stop fitting, the grid becomes a snap
+   scrolling strip: one device at a time, swipeable, with the neighbours peeking
+   in so it is obvious there is more. */
+@media (max-width: 980px) {
+  .devices {
+    display: flex;
+    align-items: flex-end;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    padding-bottom: 0.75rem;
+  }
+
+  .devices::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Sized so one phone plus a sliver of the next fits without the 9:19 frame
+     eating a whole short viewport. */
+  .devices > * {
+    scroll-snap-align: center;
+    flex: 0 0 min(58%, 208px);
+  }
+
+  .devices__swipe-hint {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .devices {
+    scroll-snap-type: none;
+  }
+}
+
+/* ---------- Capability cards ---------- */
+.caps {
+  gap: 0.65rem;
+  margin-top: clamp(2.5rem, 4.5vw, 3.5rem);
+}
+
+.cap {
+  gap: 0.85rem;
+  padding: 1.05rem 1.15rem;
+  border-radius: var(--r-lg);
+  align-items: flex-start;
+}
+
+.cap__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  box-shadow: var(--hairline);
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.cap:hover .cap__icon {
+  transform: translateY(-2px) scale(1.06);
+}
+
+.cap h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.15rem;
+}
+
+/* ---------- Web layout ---------- */
+.web__layout {
+  gap: clamp(1.35rem, 2.8vw, 2.35rem);
+}
+
+.web__side {
+  gap: 0.6rem;
+  /* Clears the condensed navbar plus a little breathing room. */
+  top: calc(var(--nav-h) + 1.75rem);
+}
+
+.web__side-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.web__strengths li {
+  padding: 0.95rem 1.1rem;
+  border-radius: var(--r-lg);
+  box-shadow: var(--e-1), var(--hairline);
+  transition:
+    border-color var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+/* Accent tick that grows on hover, matching the treatment used on service and
+   stat cards. */
+.web__strengths h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.web__strengths h4::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--cyan);
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.web__strengths li:hover h4::before {
+  transform: scale(1.8);
+}

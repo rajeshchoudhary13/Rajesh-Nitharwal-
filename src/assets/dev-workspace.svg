@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" width="640" height="200" role="img"
+     aria-label="Abstract illustration of a code editor window beside a mobile app screen">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f5f8"/>
+      <stop offset="1" stop-color="#f7f8fa"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b7f95"/>
+      <stop offset="0.55" stop-color="#6338f5"/>
+      <stop offset="1" stop-color="#7c5cff"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.78" cy="0.1" r="0.7">
+      <stop offset="0" stop-color="#6338f5" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#6338f5" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0H0V26" fill="none" stroke="#6b7280" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="640" height="200" rx="16" fill="url(#bg)"/>
+  <rect width="640" height="200" rx="16" fill="url(#grid)"/>
+  <rect width="640" height="200" rx="16" fill="url(#glow)"/>
+
+  <!-- Code editor window -->
+  <g>
+    <rect x="28" y="30" width="330" height="142" rx="12" fill="#f7f8fa" stroke="#ffffff" stroke-opacity="0.1"/>
+    <rect x="28" y="30" width="330" height="26" rx="12" fill="#ffffff" fill-opacity="0.04"/>
+    <circle cx="46" cy="43" r="4" fill="#ff5f57"/>
+    <circle cx="60" cy="43" r="4" fill="#febc2e"/>
+    <circle cx="74" cy="43" r="4" fill="#28c840"/>
+    <rect x="94" y="39" width="72" height="8" rx="4" fill="#ffffff" fill-opacity="0.09"/>
+    <g fill="none" stroke-width="6" stroke-linecap="round">
+      <path d="M48 76 H108" stroke="#8250df" stroke-opacity="0.85"/>
+      <path d="M118 76 H206" stroke="#0a7c42" stroke-opacity="0.65"/>
+      <path d="M48 96 H92" stroke="#0550ae" stroke-opacity="0.8"/>
+      <path d="M102 96 H188" stroke="#ffffff" stroke-opacity="0.16"/>
+      <path d="M62 116 H150" stroke="#ffffff" stroke-opacity="0.16"/>
+      <path d="M160 116 H244" stroke="#8250df" stroke-opacity="0.5"/>
+      <path d="M48 136 H120" stroke="#0a7c42" stroke-opacity="0.45"/>
+      <path d="M130 136 H176" stroke="#ffffff" stroke-opacity="0.12"/>
+    </g>
+    <rect x="186" y="132" width="8" height="9" rx="1" fill="#0b7f95"/>
+  </g>
+
+  <!-- API connection -->
+  <g>
+    <path d="M366 104 H432" stroke="#6b7280" stroke-opacity="0.35" stroke-width="2" stroke-dasharray="5 5" fill="none"/>
+    <circle cx="399" cy="104" r="5" fill="#0b7f95"/>
+  </g>
+
+  <!-- Phone -->
+  <g>
+    <rect x="440" y="18" width="96" height="166" rx="20" fill="#e6e7ee" stroke="#ffffff" stroke-opacity="0.14"/>
+    <rect x="447" y="25" width="82" height="152" rx="15" fill="#ffffff"/>
+    <rect x="474" y="31" width="28" height="4" rx="2" fill="#000000" fill-opacity="0.8"/>
+    <rect x="458" y="46" width="26" height="26" rx="8" fill="url(#accent)"/>
+    <rect x="458" y="80" width="60" height="6" rx="3" fill="#ffffff" fill-opacity="0.18"/>
+    <rect x="458" y="92" width="38" height="6" rx="3" fill="#ffffff" fill-opacity="0.1"/>
+    <rect x="458" y="108" width="60" height="20" rx="6" fill="#6338f5" fill-opacity="0.18"/>
+    <rect x="458" y="134" width="60" height="20" rx="6" fill="#7c5cff" fill-opacity="0.16"/>
+    <rect x="470" y="164" width="36" height="4" rx="2" fill="url(#accent)"/>
+  </g>
+
+  <!-- Accent arc -->
+  <path d="M560 176 C598 150 606 96 578 52" fill="none" stroke="url(#accent)" stroke-opacity="0.45" stroke-width="2"/>
+  <circle cx="578" cy="52" r="4" fill="#7c5cff"/>
+  <circle cx="560" cy="176" r="4" fill="#0b7f95"/>
+</svg>

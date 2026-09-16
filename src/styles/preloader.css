@@ -1,0 +1,105 @@
+/* ==========================================================================
+   PRELOADER
+   Full-bleed warm paper, name set large, one hairline meter. Nothing else.
+   ========================================================================== */
+.pre {
+  position: fixed;
+  inset: 0;
+  /* Above the navbar (100) and the modal scrim, below nothing. */
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: var(--s-6);
+  background: var(--bg);
+  /* The plate is composited on its own layer, so fading it out cannot force a
+     repaint of the page being revealed underneath. */
+  will-change: opacity;
+}
+
+.pre__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 640px;
+  text-align: center;
+}
+
+.pre__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 6vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+
+.pre__role {
+  margin-top: var(--s-3);
+  font-family: var(--font-body);
+  font-size: clamp(0.7rem, 1.6vw, 0.8rem);
+  font-weight: 400;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ---------- Meter ---------- */
+.pre__meter {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  width: min(100%, 320px);
+  margin-top: var(--s-12);
+}
+
+.pre__rail {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.pre__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--primary);
+  /* Grows from the left edge; scaleX means no layout, no repaint. */
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+
+.pre__count {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  /* Two digits + the sign, reserved, so the row never shifts as it counts. */
+  min-width: 3.4ch;
+  text-align: right;
+}
+
+.pre__pct {
+  margin-left: 0.15em;
+  color: var(--text-dim);
+}
+
+@media (max-width: 640px) {
+  .pre__meter {
+    margin-top: var(--s-8);
+  }
+  .pre__role {
+    letter-spacing: 0.24em;
+  }
+}
+
+/* The counter is the only thing here that must keep working under reduced
+   motion — it is information, not decoration. The entrance transforms are
+   already stripped by <MotionConfig reducedMotion="user">. */
+@media (prefers-reduced-motion: reduce) {
+  .pre__fill {
+    transition: none;
+  }
+}

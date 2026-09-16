@@ -1,0 +1,930 @@
+/* ==========================================================================
+   NAVIGATION — fixed header, centred pill, desktop mega menu.
+
+   Layout is a three-column grid rather than flex space-between: the pill has to
+   sit optically centred in the header regardless of how wide the name on the
+   left or the actions on the right happen to be, and space-between centres it
+   only when those two are the same width (they never are).
+
+   Breakpoints, kept in step with DESKTOP in Navigation.jsx:
+     >= 1024px   pill + mega menu
+     768-1023    pill hidden, burger + accordion drawer
+     < 768       burger + full-screen accordion drawer
+   ========================================================================== */
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease);
+}
+
+/* Compact, surfaced header once scrolled. */
+.nav.is-scrolled {
+  background: var(--panel);
+  border-bottom-color: var(--border);
+  backdrop-filter: blur(16px);
+}
+
+/* NO backdrop-filter while the drawer or a mega panel is open.
+   `backdrop-filter` makes an element a containing block for its
+   `position: fixed` descendants, which collapsed the drawer to the height of
+   the bar. Both states go fully opaque instead, which a full-bleed panel needs
+   anyway. */
+.nav.is-open,
+.nav.is-mega {
+  background: var(--bg);
+  border-bottom-color: var(--border);
+  backdrop-filter: none;
+}
+
+/* `auto` side columns, not `1fr`: with `1fr` the grid happily lets the centre
+   track exceed its share and the pill overlapped the name by up to 144px. Sizing
+   the sides to their content and giving the centre `minmax(0, auto)` means the
+   pill can never claim space the name is using — it shrinks or the row wraps
+   first. `min-width: 0` on the sides lets the name itself truncate rather than
+   force the overflow outward. */
+.nav__inner {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, auto) minmax(0, auto);
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-6);
+  height: var(--nav-h);
+}
+
+/* ---------- Left: identity ---------- */
+.nav__logo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-self: start;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.nav__logo-name {
+  /* Truncates instead of pushing the pill off-centre on a narrow desktop. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  white-space: nowrap;
+  transition: color var(--t-base) var(--ease);
+}
+
+.nav__logo:hover .nav__logo-name {
+  color: var(--primary-ink);
+}
+
+.nav__logo-role {
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   CENTRE: the pill
+   ========================================================================== */
+.nav__pill {
+  justify-self: center;
+  padding: var(--s-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  background: var(--surface);
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav__links > li {
+  display: flex;
+  align-items: center;
+  /* The caret sits inside the same rounded cell as the label. */
+  border-radius: var(--r-full);
+  transition: background var(--t-base) var(--ease);
+}
+
+.nav__links > li:hover {
+  background: var(--surface-2);
+}
+
+.nav__link {
+  position: relative;
+  display: block;
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-full);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text-muted);
+  transition: color var(--t-base) var(--ease);
+}
+
+.nav__link:hover,
+.nav__link.is-expanded {
+  color: var(--text);
+}
+
+.nav__link.is-active {
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* The sliding active marker. A dot rather than an underline: inside a pill an
+   underline reads as a border on the pill itself. */
+.nav__indicator {
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  width: 3px;
+  height: 3px;
+  margin-left: -1.5px;
+  border-radius: var(--r-full);
+  background: var(--primary);
+}
+
+/* ---------- Caret ---------- */
+.nav__caret {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 26px;
+  margin-right: 2px;
+  border-radius: var(--r-full);
+  color: var(--text-dim);
+  transition:
+    transform var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.nav__caret:hover {
+  color: var(--text);
+}
+
+/* Rotates to point up while its panel is open. */
+.nav__caret.is-open {
+  transform: rotate(180deg);
+  color: var(--primary-ink);
+}
+
+/* ==========================================================================
+   RIGHT: actions
+   ========================================================================== */
+.nav__actions {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: var(--s-3);
+}
+
+.nav__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.nav__status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--r-full);
+  background: var(--ok);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nav__status-dot {
+    animation: nav-pulse 2.8s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes nav-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ---------- Get in touch ---------- */
+.nav__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-4);
+  border: 1px solid var(--text);
+  border-radius: var(--r-full);
+  background: var(--text);
+  color: var(--bg);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: var(--e-1);
+  transition:
+    background var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.nav__cta:hover {
+  border-color: var(--primary);
+  background: var(--primary);
+  /* #FFFFFF on #B65F45 — the briefed pairing, 4.6:1. */
+  color: #ffffff;
+}
+
+.nav__cta svg {
+  transition: transform var(--t-base) var(--ease);
+}
+
+.nav__cta:hover svg {
+  transform: translate(4px, -4px);
+}
+
+.nav__cta--block {
+  justify-content: center;
+  width: 100%;
+  padding-block: var(--s-3);
+}
+
+/* The press ripple is a leftover of the previous button language: on a 40px
+   square control, or on a nav tab, it renders as a large circular smudge rather
+   than as feedback. Killed for every ripple host inside the header. */
+/* `.ripple` ONLY — never a substring match.
+   This was `.nav [class*='ripple']`, which also matched `class="ripple-host
+   nav__burger"` and, with !important, hid the burger outright: the mobile header
+   had no way to open the menu at all. The ripple element the hook injects is
+   `class="ripple"` exactly, so an exact match is both sufficient and safe. */
+.nav .ripple {
+  display: none !important;
+}
+
+.nav__burger {
+  display: none;
+  color: var(--text);
+}
+
+/* ---------- Narrow desktop (1024-1199px) ----------
+   The row still does not fit at these widths: measured -63px at 1024 and -28px
+   at 1100. Rather than shrink the type, the two least-load-bearing elements give
+   way — the logo's role line and the availability pill — and the tab padding and
+   letter-spacing tighten. The name, the tabs and the CTA all survive intact,
+   which is the right order of sacrifice for a portfolio header. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .nav__inner {
+    gap: var(--s-4);
+  }
+
+  .nav__logo-role,
+  .nav__status {
+    display: none;
+  }
+
+  .nav__link {
+    padding-inline: var(--s-2);
+    letter-spacing: 0.09em;
+  }
+
+  .nav__caret {
+    width: 16px;
+  }
+
+  .nav__cta {
+    padding-inline: var(--s-3);
+  }
+}
+
+/* ==========================================================================
+   MEGA MENU
+   ========================================================================== */
+.mega__layer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  /* Above the page, below the bar's own row. */
+  z-index: 1;
+  padding-bottom: var(--s-6);
+  pointer-events: none;
+}
+
+/* Only the panel itself takes the pointer — the padding above is a hover-safe
+   gap, not a click-blocker over the page. */
+.mega {
+  pointer-events: auto;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--e-4);
+  transform-origin: top center;
+}
+
+.mega__grid {
+  display: grid;
+  /* Fixed information panel, fluid content. */
+  grid-template-columns: minmax(240px, 300px) 1fr;
+}
+
+/* ---------- Left information panel ---------- */
+.mega__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-6);
+  background: var(--primary-surface);
+  color: #ffffff;
+}
+
+.mega__intro-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.mega__intro-text {
+  /* A shorter measure and tighter leading keep the accent column from
+     out-growing the content column by more than a row's worth. */
+  max-width: 34ch;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  /* White at 88% on the deep terracotta ground: 5.3:1, so the standfirst is
+     distinct from the title without dropping under AA. Any lower and this is
+     the first thing in the panel to fail. */
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* NOT `margin-top: auto`.
+   Pushing the stat to the bottom made the intro panel claim every pixel the grid
+   would give it, and since the intro is the taller half on the shorter menus it
+   then set the row height — leaving ~180px of dead space under the links. The
+   stat sits directly under the standfirst instead, and the panel is as tall as
+   its content. */
+.mega__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: var(--s-2);
+}
+
+.mega__stat-value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.mega__stat-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.mega__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+  padding: var(--s-2) var(--s-4);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: var(--r-full);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  transition:
+    background var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.mega__cta:hover {
+  border-color: #ffffff;
+  background: #ffffff;
+  /* Dark ink on white — the accent as text on white would be 4.46:1, so the
+     hover uses the ink colour instead. */
+  color: var(--primary-ink);
+}
+
+.mega__cta svg {
+  transition: transform var(--t-base) var(--ease);
+}
+
+.mega__cta:hover svg {
+  transform: translateX(4px);
+}
+
+/* ---------- Right content ---------- */
+.mega__content {
+  display: grid;
+  gap: var(--s-1);
+  padding: var(--s-6);
+  /* `center`, not `start`: the accent column is the taller half on the shorter
+     panels, so pinning the content to the top left a visible band of empty
+     surface beneath it. Centring distributes that slack above and below, which
+     reads as deliberate padding instead of a gap. */
+  align-content: center;
+}
+
+/* The information panel is the taller of the two halves on the shorter menus,
+   so the grid stretches it and the content side gains dead space at the bottom.
+   Capping the intro's own growth and letting the row size to content keeps both
+   halves honest. */
+.mega__grid {
+  align-items: stretch;
+}
+
+/* Links: three columns. Two columns left an obvious hole with five and six
+   items (5 -> 3+2, one empty cell of dead space at the bottom right); three
+   fills evenly at 6 and leaves a single gap at 5, and the rows are shorter so
+   the panel is not needlessly tall. */
+.mega__content--links {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-1) var(--s-3);
+}
+
+/* Cards: four tiles across, so they fill the content half rather than sitting
+   as a 2x2 block with a column of dead space beside it. Drops to 2x2 on a narrow
+   desktop where four tiles would each be too tight for the project name. */
+.mega__content--cards {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-3);
+}
+
+@media (max-width: 1279px) {
+  .mega__content--cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Tiles stack their icon above the label at four-across: side by side there is
+   not enough width left for a project name at that column count. */
+.mega__content--cards .mega__item--card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-2);
+}
+
+@media (max-width: 1279px) {
+  .mega__content--cards .mega__item--card {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+/* The arrow is redundant on a tile whose whole surface is the target. */
+.mega__item--card .mega__item-arrow {
+  display: none;
+}
+
+/* Columns: the skills groups. */
+.mega__content--columns {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-6);
+  padding: var(--s-8) var(--s-6);
+}
+
+/* ---------- One destination row ---------- */
+.mega__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-3);
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  transition:
+    background var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease),
+    transform var(--t-base) var(--ease);
+}
+
+.mega__item:hover {
+  background: var(--bg);
+  border-color: var(--border);
+  transform: translateX(4px);
+}
+
+.mega__item--card {
+  /* Tiles read as objects, so they carry their border at rest. */
+  border-color: var(--border);
+  background: var(--bg);
+}
+
+.mega__item--card:hover {
+  border-color: var(--primary);
+  background: var(--surface);
+}
+
+.mega__item-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--primary-ink);
+  transition:
+    border-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.mega__item:hover .mega__item-icon {
+  border-color: var(--primary);
+}
+
+.mega__item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.mega__item-title {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.mega__item-desc {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  /* A long project domain or email must not widen the panel. */
+  overflow-wrap: anywhere;
+}
+
+.mega__item-arrow {
+  display: grid;
+  place-items: center;
+  flex: none;
+  align-self: center;
+  color: var(--text-dim);
+  opacity: 0;
+  transition:
+    opacity var(--t-base) var(--ease),
+    transform var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.mega__item:hover .mega__item-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+  color: var(--primary);
+}
+
+/* ---------- Skills columns ---------- */
+.mega__col-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-3);
+  padding-bottom: var(--s-2);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  transition: color var(--t-base) var(--ease);
+}
+
+.mega__col-title svg {
+  opacity: 0;
+  transition:
+    opacity var(--t-base) var(--ease),
+    transform var(--t-base) var(--ease);
+}
+
+.mega__col-title:hover {
+  color: var(--primary-ink);
+}
+
+.mega__col-title:hover svg {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.mega__col-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.mega__col-list li {
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.mega__col-more {
+  color: var(--text-dim) !important;
+  font-size: 0.72rem !important;
+}
+
+/* ==========================================================================
+   TABLET + MOBILE
+   ========================================================================== */
+@media (max-width: 1023px) {
+  /* The pill needs the width to hold seven tabs plus carets; below 1024 it and
+     the desktop-only status pill give way to the burger. */
+  .nav__pill,
+  .nav__status,
+  .mega__layer {
+    display: none;
+  }
+
+  /* The pill is `display: none` here, so the grid has TWO items, not three.
+     `1fr auto` then sized the actions track from content that was itself mostly
+     hidden and collapsed it to 0px, which left the burger with no room to
+     paint — the mobile header had no navigation control at all.
+
+     `minmax(0, 1fr) auto` with an explicit floor on the actions column keeps the
+     control's box regardless of what else inside it is hidden. */
+  .nav__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--s-3);
+  }
+
+  .nav__actions {
+    /* Never collapses: the burger is the only way to open the menu. */
+    min-width: 40px;
+    flex: none;
+  }
+
+  .nav__burger {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: none;
+  }
+
+  /* ---------- Drawer ---------- */
+  .nav__drawer {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: var(--nav-h) 0 0 0;
+    padding: var(--s-6) var(--gutter) var(--s-8);
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .nav__drawer-links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav__drawer-links > li {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav__drawer-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .nav__drawer-link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-4);
+    flex: 1;
+    padding-block: var(--s-4);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text-muted);
+    transition:
+      color var(--t-base) var(--ease),
+      padding-left var(--t-base) var(--ease);
+  }
+
+  .nav__drawer-link:hover,
+  .nav__drawer-link.is-active {
+    color: var(--text);
+  }
+
+  .nav__drawer-link.is-active {
+    padding-left: var(--s-2);
+  }
+
+  .nav__drawer-link.is-active .nav__drawer-num {
+    color: var(--primary-ink);
+  }
+
+  .nav__drawer-num {
+    flex: none;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+    transition: color var(--t-base) var(--ease);
+  }
+
+  /* The expander is its own 44px target, separate from the page link. */
+  .nav__drawer-toggle {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    color: var(--text-muted);
+    transition:
+      color var(--t-base) var(--ease),
+      border-color var(--t-base) var(--ease);
+  }
+
+  .nav__drawer-toggle:hover,
+  .nav__drawer-links > li.is-expanded .nav__drawer-toggle {
+    color: var(--primary-ink);
+    border-color: var(--primary);
+  }
+
+  /* ---------- Accordion ---------- */
+  .nav__sub {
+    /* Framer animates height; this is what clips the reveal. */
+    overflow: hidden;
+  }
+
+  .nav__sub-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 var(--s-4) var(--s-6);
+    /* A rule down the indent, so the children read as belonging to the parent. */
+    border-left: 1px solid var(--border);
+    margin-left: var(--s-3);
+  }
+
+  .nav__sub-link {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding-block: var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    transition:
+      color var(--t-base) var(--ease),
+      padding-left var(--t-base) var(--ease);
+  }
+
+  .nav__sub-link:hover {
+    padding-left: var(--s-2);
+    color: var(--text);
+  }
+
+  .nav__sub-link svg {
+    flex: none;
+    color: var(--primary-ink);
+  }
+
+  /* ---------- Drawer footer ---------- */
+  .nav__drawer-foot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    margin-top: var(--s-8);
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--border);
+  }
+
+  .nav__drawer-theme {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+  }
+
+  /* The compact toggle is a row, not a stack: without an explicit flow the
+     label wrapped under its own glyph in the drawer footer. */
+  .nav__drawer-theme .themebtn--compact {
+    flex: none;
+    grid-auto-flow: column;
+    white-space: nowrap;
+  }
+
+  .nav__drawer-theme-label {
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .nav__drawer-socials {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .nav__drawer-socials a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    color: var(--text-muted);
+    transition:
+      color var(--t-base) var(--ease),
+      border-color var(--t-base) var(--ease);
+  }
+
+  .nav__drawer-socials a:hover {
+    color: var(--primary-ink);
+    border-color: var(--primary);
+  }
+}
+
+/* The desktop-only drawer must not exist above the breakpoint. */
+@media (min-width: 1024px) {
+  .nav__drawer {
+    display: none;
+  }
+}
+
+/* The CTA label is the first thing to go when the BAR gets tight — but the
+   drawer's full-width copy of the button has all the room it needs, so the
+   `--block` variant is excluded. Without that exclusion the drawer's primary
+   action rendered as a bare arrow with no words on it. */
+@media (max-width: 860px) {
+  .nav__cta:not(.nav__cta--block) span {
+    display: none;
+  }
+  .nav__cta:not(.nav__cta--block) {
+    padding: var(--s-2);
+  }
+}
+
+@media (max-width: 420px) {
+  .nav__logo-role {
+    display: none;
+  }
+  /* The bar keeps only the name and the burger at this width. The drawer's own
+     full-width CTA is explicitly spared — it is the primary action in there. */
+  .nav__cta:not(.nav__cta--block) {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .nav__caret.is-open {
+    /* The state still has to be legible without the rotation animating. */
+    transform: rotate(180deg);
+  }
+  .nav__cta:hover svg,
+  .mega__cta:hover svg,
+  .mega__item:hover,
+  .mega__item:hover .mega__item-arrow,
+  .mega__col-title:hover svg {
+    transform: none;
+  }
+  .nav__drawer-link:hover,
+  .nav__sub-link:hover {
+    padding-left: 0;
+  }
+}

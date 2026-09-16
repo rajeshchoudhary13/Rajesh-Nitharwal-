@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Rajesh Nitharwal</title>
+    <!--
+      SPA fallback for hosts that serve 404.html for unmatched paths (GitHub
+      Pages being the common one) instead of honouring _redirects / vercel.json.
+
+      It replaces the current history entry with the same path, then loads the
+      app — so the visitor's URL is preserved and React Router resolves the route
+      on boot. `replace` matters: a push would leave the 404 in the back stack.
+    -->
+    <script>
+      (function () {
+        var target = window.location.pathname + window.location.search + window.location.hash
+        try {
+          window.history.replaceState(null, '', target)
+        } catch (e) {
+          /* Non-fatal: the app still boots, just at the raw URL. */
+        }
+        window.location.replace('/index.html?redirect=' + encodeURIComponent(target))
+      })()
+    </script>
+  </head>
+  <body></body>
+</html>

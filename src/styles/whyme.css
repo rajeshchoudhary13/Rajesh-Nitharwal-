@@ -1,0 +1,99 @@
+/* ==========================================================================
+   Why work with me — six trust cards.
+
+   Each card ends with an evidence line, pinned to the bottom with
+   `margin-top: auto` so the six lines align across the row regardless of how
+   long the description above them runs. An evidence line floating at a
+   different height in every card is what makes a grid look assembled by hand.
+   ========================================================================== */
+.why__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: var(--card-gap);
+}
+
+.why__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.25rem, 2.2vw, 1.7rem);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.why__card:hover {
+  border-color: color-mix(in srgb, var(--a, var(--primary)) 42%, transparent);
+  box-shadow: 0 24px 54px -32px color-mix(in srgb, var(--a, var(--primary)) 80%, transparent);
+}
+
+/* A large, very quiet index in the corner — structure without noise. */
+.why__num {
+  position: absolute;
+  top: clamp(0.85rem, 1.6vw, 1.15rem);
+  right: clamp(1rem, 1.8vw, 1.35rem);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--watermark);
+  transition: color var(--t-base) var(--ease);
+  pointer-events: none;
+}
+
+.why__card:hover .why__num {
+  color: color-mix(in srgb, var(--a, var(--primary)) 42%, transparent);
+}
+
+.why__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.9rem;
+  border-radius: 13px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 30%, transparent);
+  background: var(--a-soft, transparent);
+  color: var(--a, var(--primary));
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.why__card:hover .why__icon {
+  transform: translateY(-3px);
+}
+
+.why__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  /* Room for the index without the title running under it. */
+  padding-right: 2.5rem;
+}
+
+.why__desc {
+  margin-top: 0.5rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.72;
+}
+
+.why__evidence {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.why__evidence svg {
+  flex: none;
+  margin-top: 0.32em;
+  color: var(--ok);
+}

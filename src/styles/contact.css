@@ -1,0 +1,525 @@
+/* ================================ Contact ================================ */
+.contact__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1.25rem, 2.4vw, 2rem);
+  align-items: start;
+}
+
+.contact__info {
+  display: grid;
+  gap: clamp(0.8rem, 1.5vw, 1.15rem);
+  min-width: 0;
+}
+
+.contact__channels {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.channel {
+  border-radius: var(--r-md);
+  overflow: hidden;
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.channel:hover {
+  border-color: color-mix(in srgb, var(--primary-alt) 40%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+.channel__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.95rem 1rem;
+  min-width: 0;
+}
+
+.channel__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--primary-alt) 28%, transparent);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--cyan);
+}
+
+.channel__text {
+  display: grid;
+  min-width: 0;
+}
+
+.channel__label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.channel__value {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.contact__quick {
+  padding: var(--card-pad);
+  border-radius: var(--r-lg);
+  display: grid;
+  gap: 0.85rem;
+}
+
+.contact__quick-title {
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.contact__quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ---------- Form ---------- */
+.contact__form {
+  padding: clamp(1.4rem, 2.6vw, 2rem);
+  border-radius: var(--r-xl);
+  display: grid;
+  gap: 1.05rem;
+}
+
+.contact__form-title {
+  font-size: 1.15rem;
+  letter-spacing: -0.024em;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.field label span {
+  color: var(--violet);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.82rem 0.95rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--inset-well);
+  color: var(--text);
+  font-size: var(--fs-sm);
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease),
+    background var(--t-base) var(--ease);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 124px;
+  line-height: 1.7;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-dim);
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--border-strong);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--primary-alt) 65%, transparent);
+  background: var(--inset-well-focus);
+  box-shadow: var(--ring);
+}
+
+.field input[aria-invalid='true'],
+.field select[aria-invalid='true'],
+.field textarea[aria-invalid='true'] {
+  border-color: color-mix(in srgb, var(--danger) 60%, transparent);
+}
+
+.field__error {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--fs-xs);
+  color: var(--danger-text);
+}
+
+.field__hint {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  justify-self: end;
+}
+
+.form-status {
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+}
+
+.form-status--success {
+  border: 1px solid color-mix(in srgb, var(--ok) 42%, transparent);
+  background: color-mix(in srgb, var(--ok) 10%, transparent);
+  color: var(--ok-text);
+}
+
+.form-status--error {
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  color: var(--danger-text);
+}
+
+@media (max-width: 900px) {
+  .contact__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Contact refinement layer
+   ========================================================================== */
+.contact__grid {
+  gap: clamp(1.35rem, 2.6vw, 2.25rem);
+}
+
+/* Wrapper that carries the form's entrance animation, leaving the form element
+   itself free for the validation shake. */
+.contact__form-wrap {
+  min-width: 0;
+}
+
+/* ---------- Channels ---------- */
+.channel {
+  border-radius: var(--r-lg);
+}
+
+.channel__inner {
+  gap: 0.9rem;
+  padding: 1.05rem 1.1rem;
+}
+
+.channel__icon {
+  border-radius: 13px;
+  box-shadow: var(--hairline);
+  transition:
+    transform var(--t-base) var(--ease-spring),
+    background var(--t-base) var(--ease-out);
+}
+
+.channel:hover .channel__icon {
+  transform: translateY(-2px) scale(1.05);
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.channel__label {
+  letter-spacing: 0.15em;
+}
+
+/* Chevron that only appears on the rows that actually navigate somewhere, so
+   linked and static rows are distinguishable before you point at them. */
+.channel__arrow {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  margin-left: auto;
+  border-top: 1.5px solid var(--text-dim);
+  border-right: 1.5px solid var(--text-dim);
+  rotate: 45deg;
+  opacity: 0.45;
+  transition:
+    opacity var(--t-base) var(--ease-out),
+    translate var(--t-base) var(--ease-spring);
+}
+
+.channel:hover .channel__arrow {
+  opacity: 1;
+  translate: 3px 0;
+}
+
+/* ---------- Quick actions ---------- */
+.contact__quick {
+  gap: 0.95rem;
+  padding: clamp(1.2rem, 2vw, 1.6rem);
+}
+
+.contact__quick-actions {
+  gap: 0.55rem;
+}
+
+/* Grid cell keeps the swapping icons from shifting the label as they change. */
+.contact__copy-icon {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+}
+
+/* ---------- Form ---------- */
+.contact__form {
+  gap: 1.15rem;
+  padding: clamp(1.5rem, 2.8vw, 2.25rem);
+}
+
+.contact__form-title {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1.2rem;
+}
+
+.contact__form-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--primary-alt) 35%, transparent), transparent);
+}
+
+.field {
+  gap: 0.45rem;
+}
+
+.field label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color var(--t-base) var(--ease-out);
+}
+
+/* Label follows the field's state: it brightens on focus and turns red when the
+   field is rejected, so the pairing is unambiguous. */
+.field:focus-within label {
+  color: var(--primary);
+}
+
+.field.has-error label {
+  color: var(--danger-text);
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: 0.88rem 1rem;
+  border-radius: var(--r-md);
+  box-shadow: inset 0 1px 2px var(--hairline-ink);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  box-shadow:
+    var(--ring),
+    inset 0 1px 2px var(--hairline-ink);
+}
+
+.field input[aria-invalid='true']:focus,
+.field select[aria-invalid='true']:focus,
+.field textarea[aria-invalid='true']:focus {
+  border-color: color-mix(in srgb, var(--danger) 75%, transparent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent),
+    inset 0 1px 2px var(--hairline-ink);
+}
+
+/* ---------- Character meter ---------- */
+.field__meter {
+  height: 3px;
+  border-radius: var(--r-full);
+  background: var(--wash-4);
+  overflow: hidden;
+}
+
+.field__meter-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 0 50%;
+  border-radius: var(--r-full);
+  background: linear-gradient(90deg, var(--cyan), var(--blue));
+  transition: background var(--t-base) var(--ease-out);
+}
+
+.field__meter-fill.is-warning {
+  background: linear-gradient(90deg, var(--warn), var(--warn));
+}
+
+.field__hint {
+  transition: color var(--t-base) var(--ease-out);
+}
+
+.field__hint.is-warning {
+  color: var(--warn);
+}
+
+/* ---------- Status ---------- */
+.form-status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--r-md);
+  font-size: var(--fs-sm);
+}
+
+.form-status__icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  color: var(--danger-text);
+}
+
+.form-status .check {
+  flex: none;
+}
+
+@media (max-width: 900px) {
+  /* The form leads on narrow layouts — it is the primary action, and the contact
+     details are still one scroll away. */
+  .contact__form-wrap {
+    order: -1;
+  }
+}
+
+/* ==========================================================================
+   Project inquiry layer
+
+   The form grew from three fields to seven, so it now pairs short fields into
+   rows and adds native selects. Everything here is additive: the field, error,
+   meter and status rules above are untouched and shared.
+   ========================================================================== */
+
+/* ---------- Paired fields ----------
+   Two short fields per row on desktop, one per row on a phone. auto-fit with a
+   min of 200px does both without a breakpoint, and a field that needs the full
+   width simply sits outside a row. */
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 1.05rem;
+}
+
+/* ---------- Selects ----------
+   The native control is reset and given the site's own chevron, drawn as an
+   inline SVG data URI so there is no extra request and no icon component in a
+   stylesheet. `color-scheme` is what makes the dropdown list itself follow the
+   theme in every browser. */
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  color-scheme: inherit;
+  /* Room for the chevron, plus a nudge so long option text never runs under it. */
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 15px 15px;
+}
+
+/* An unchosen select is a placeholder, so it reads at placeholder weight until
+   a value is picked. */
+.field select:invalid,
+.field select option[value=''] {
+  color: var(--text-dim);
+}
+
+.field select:has(option[value='']:checked) {
+  color: var(--text-dim);
+}
+
+/* The option list is painted by the OS, so it needs real colours rather than
+   translucent tokens — a glass background renders as transparent there. */
+.field select option {
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+/* ---------- Form head ---------- */
+.contact__form-head {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.contact__form-sub {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ---------- Channel hint ---------- */
+/* One line per channel saying what it is best for, so a visitor picks the right
+   one instead of defaulting to whichever is first. */
+.channel__hint {
+  margin-top: 0.15rem;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ---------- Availability facts ---------- */
+.contact__facts {
+  display: grid;
+  gap: 0.6rem;
+  padding-top: 0.95rem;
+  background-image: var(--grad-line);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 0 0;
+}
+
+.contact__facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.contact__facts dd {
+  margin-top: 0.1rem;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+  .field-row {
+    /* Below this width two columns would give each field about 130px, which is
+       narrower than the placeholder text they carry. */
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

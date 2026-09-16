@@ -1,0 +1,149 @@
+/* ==========================================================================
+   Final CTA.
+
+   The only full-bleed tinted panel on the page, which is what makes it read as
+   the end of the argument rather than one more section. The tint is built from
+   --primary through color-mix, so it follows all three themes without a single
+   colour literal here.
+   ========================================================================== */
+.cta {
+  padding-block: clamp(2rem, 5vw, 4rem) clamp(3rem, 7vw, 5.5rem);
+}
+
+.cta__panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--r-2xl);
+  border: 1px solid color-mix(in srgb, var(--primary) 26%, var(--border));
+  background:
+    radial-gradient(120% 140% at 12% 0%, color-mix(in srgb, var(--primary) 13%, transparent), transparent 62%),
+    radial-gradient(110% 130% at 92% 100%, color-mix(in srgb, var(--support) 11%, transparent), transparent 60%),
+    var(--bg-elevated);
+  box-shadow: var(--e-4);
+}
+
+/* Faint engineering grid — a developer's page, quietly. */
+.cta__grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  /* Faded toward the edges so the grid never meets the border as a hard stop. */
+  mask: radial-gradient(120% 100% at 50% 0%, #000 35%, transparent 78%);
+  -webkit-mask: radial-gradient(120% 100% at 50% 0%, #000 35%, transparent 78%);
+  pointer-events: none;
+}
+
+.cta__bloom {
+  position: absolute;
+  z-index: -1;
+  top: -35%;
+  left: 50%;
+  translate: -50% 0;
+  width: min(760px, 90%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--primary) 16%, transparent), transparent 70%);
+  filter: blur(26px);
+  pointer-events: none;
+}
+
+.cta__inner {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  max-width: 780px;
+  margin-inline: auto;
+  padding: clamp(2.25rem, 6vw, 4.25rem) var(--gutter);
+  text-align: center;
+}
+
+.cta__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cta__eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 18%, transparent);
+}
+
+.cta__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 4.4vw, 3.15rem);
+  font-weight: 800;
+  letter-spacing: -0.032em;
+  line-height: 1.1;
+  text-wrap: balance;
+  /* The clip reveal would otherwise shave descenders. */
+  padding-bottom: 0.08em;
+}
+
+.cta__title-grad {
+  background: linear-gradient(112deg, var(--grad-text-mid) 0%, var(--primary) 52%, var(--support) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cta__desc {
+  max-width: 58ch;
+  font-size: var(--fs-lead);
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+.cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 0.6rem;
+}
+
+.cta__direct {
+  margin-top: 0.4rem;
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+}
+
+.cta__direct-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--primary) 35%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--t-fast) var(--ease);
+}
+
+.cta__direct-link:hover {
+  text-decoration-color: var(--primary);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+  .cta__actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}

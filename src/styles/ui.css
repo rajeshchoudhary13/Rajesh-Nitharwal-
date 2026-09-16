@@ -1,0 +1,436 @@
+/* ==========================================================================
+   UI primitives — the shared interaction and state layer.
+
+   Everything here is additive and opt-in through a class, so no existing
+   component changes appearance until it asks for it:
+
+     .spot          pointer-follow spotlight (needs usePointerGlow)
+     .parallax-child  shallow 3D lean on a GlowCard child (needs `parallax`)
+     .edge-lit      gradient hairline that brightens on hover
+     .sheen         one-pass light sweep across a surface on hover
+     .ripple-host   container for useRipple
+     .skeleton      shimmering loading placeholder
+     .empty         empty-state block
+     .check         drawn success tick
+
+   All motion is transform / opacity only and every block ends up disabled by
+   the reduced-motion query at the bottom of this file.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- Spotlight */
+/* A radial highlight that tracks the pointer. The hook writes --mx/--my/--glow;
+   with --glow at 0 (the default) the layer is completely invisible, so the
+   class is inert until pointed at. */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+
+/* z-index:-1 paints the highlight above the card's own background but below all
+   of its content, so no child needs a stacking fix. `isolation: isolate` keeps
+   the negative layer trapped inside the card instead of falling behind the page. */
+.spot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--glow, 0);
+  transition: opacity var(--t-slow) var(--ease-out);
+  background: radial-gradient(
+    var(--spot-size, 420px) circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in srgb, var(--a, var(--blue)) 18%, transparent),
+    transparent 68%
+  );
+}
+
+/* ------------------------------------------------------------------ Parallax */
+/* Applied to a *child* of a GlowCard with `parallax`, never to the card itself —
+   Framer owns the card's transform. The parent publishes --rx/--ry; the child
+   leans into them. */
+.parallax-child {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform var(--t-slow) var(--ease-out);
+}
+
+/* ----------------------------------------------------------------- Edge lit */
+/* A 1px gradient ring drawn with a masked padding-box. Sits under the content
+   and fades in on hover, giving cards a lit edge without a second border. */
+.edge-lit {
+  position: relative;
+  isolation: isolate;
+}
+
+.edge-lit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--a, var(--blue)) 55%, transparent),
+    transparent 42%,
+    transparent 62%,
+    color-mix(in srgb, var(--violet) 32%, transparent)
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+
+.edge-lit:hover::after,
+.edge-lit:focus-within::after {
+  opacity: 1;
+}
+
+/* -------------------------------------------------------------------- Sheen */
+/* Diagonal light sweep. Translated on a pseudo-element so it composites on the
+   GPU and never touches layout. */
+.sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sheen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 55%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent, var(--sheen), transparent);
+  transform: translate3d(-160%, 0, 0) skewX(-18deg);
+  opacity: 0;
+  transition:
+    transform var(--t-slower) var(--ease-out),
+    opacity var(--t-base) linear;
+}
+
+.sheen:hover::after,
+.sheen:focus-visible::after {
+  transform: translate3d(320%, 0, 0) skewX(-18deg);
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------- Ripple */
+.ripple-host {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, currentColor 26%, transparent), color-mix(in srgb, currentColor 14%, transparent) 70%, transparent);
+  transform: scale(0);
+  opacity: 0.55;
+  animation: ripple-out 0.62s var(--ease-out) forwards;
+}
+
+/* On the filled primary button the surface is light, so darken instead. */
+.btn--primary .ripple {
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.08) 70%, transparent);
+}
+
+@keyframes ripple-out {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* ----------------------------------------------------------------- Skeleton */
+/* Loading placeholder. The sweep is a background-position animation on a wide
+   gradient — one property, compositor friendly, and it needs no extra element. */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-sm);
+  background: var(--sheen);
+  background-image: linear-gradient(
+    100deg,
+    transparent 20%,
+    var(--sheen) 42%,
+    color-mix(in srgb, var(--primary-light) 11%, transparent) 50%,
+    var(--sheen) 58%,
+    transparent 80%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-sweep 1.55s var(--ease-in-out) infinite;
+}
+
+@keyframes skeleton-sweep {
+  from {
+    background-position: -120% 0;
+  }
+  to {
+    background-position: 220% 0;
+  }
+}
+
+.skeleton--text {
+  height: 0.72rem;
+  border-radius: var(--r-full);
+}
+
+.skeleton--title {
+  height: 1.5rem;
+  border-radius: var(--r-xs);
+}
+
+.skeleton--chip {
+  height: 1.6rem;
+  width: 4.5rem;
+  border-radius: var(--r-full);
+}
+
+.skeleton--icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  flex: none;
+}
+
+/* Section-level loading state: a heading block plus a card grid, sized so the
+   real section drops in without the page jumping. */
+.sk-section {
+  padding-block: var(--section-y);
+}
+
+.sk-section__head {
+  display: grid;
+  gap: var(--sp-3);
+  justify-items: center;
+  max-width: 620px;
+  margin: 0 auto var(--head-gap);
+  text-align: center;
+}
+
+.sk-section__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 265px), 1fr));
+  gap: var(--card-gap);
+}
+
+.sk-card {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--card-pad);
+  min-height: 190px;
+  align-content: start;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--grad-surface);
+}
+
+/* Staggered fade so a multi-card skeleton breathes rather than pulsing as one
+   flat block. */
+.sk-card:nth-child(2) .skeleton {
+  animation-delay: 0.12s;
+}
+.sk-card:nth-child(3) .skeleton {
+  animation-delay: 0.24s;
+}
+.sk-card:nth-child(4) .skeleton {
+  animation-delay: 0.36s;
+}
+
+/* -------------------------------------------------------------- Empty state */
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+  padding: clamp(2.25rem, 5vw, 3.5rem) var(--card-pad);
+  border-radius: var(--r-lg);
+  border: 1px dashed var(--border-strong);
+  background: var(--wash-1);
+  text-align: center;
+}
+
+.empty__icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+}
+
+.empty__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 600;
+}
+
+.empty__text {
+  max-width: 44ch;
+  color: var(--text-dim);
+  font-size: var(--fs-sm);
+  line-height: 1.65;
+}
+
+/* ------------------------------------------------------- Success check mark */
+/* The tick is a stroked path whose dash offset animates from hidden to drawn,
+   wrapped in a ring that scales in behind it. */
+.check {
+  display: grid;
+  place-items: center;
+  width: var(--check-size, 46px);
+  height: var(--check-size, 46px);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ok) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ok) 45%, transparent);
+  color: var(--ok);
+}
+
+.check svg {
+  width: 58%;
+  height: 58%;
+  overflow: visible;
+}
+
+.check path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 32;
+  stroke-dashoffset: 32;
+  animation: check-draw 0.44s var(--ease-out) 0.1s forwards;
+}
+
+@keyframes check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ------------------------------------------------------------ Scroll hints */
+/* Mouse-shaped cue under the hero that nudges the visitor to scroll. */
+.scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color var(--t-base) var(--ease);
+}
+
+.scroll-cue:hover {
+  color: var(--text-muted);
+}
+
+.scroll-cue__track {
+  position: relative;
+  width: 20px;
+  height: 32px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border-strong);
+  overflow: hidden;
+}
+
+.scroll-cue__dot {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  translate: -50% 0;
+  width: 4px;
+  height: 7px;
+  border-radius: var(--r-full);
+  background: var(--cyan);
+  animation: cue-fall 1.9s var(--ease-in-out) infinite;
+}
+
+@keyframes cue-fall {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(13px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------- Horizontal drag strips */
+/* Used on narrow screens where a grid of mockups would otherwise squash: the
+   row becomes a snap-scrolling, swipeable strip. */
+.drag-strip {
+  display: flex;
+  gap: var(--card-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* Bleed to the viewport edges so the strip reads as scrollable content */
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  padding-bottom: 0.5rem;
+}
+
+.drag-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.drag-strip > * {
+  scroll-snap-align: center;
+  flex: 0 0 auto;
+}
+
+/* ----------------------------------------------------------- Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .scroll-cue__dot,
+  .check path,
+  .ripple {
+    animation: none !important;
+  }
+  .check path {
+    stroke-dashoffset: 0;
+  }
+  .skeleton {
+    background-image: none;
+  }
+  .parallax-child {
+    transform: none !important;
+  }
+  .spot::before,
+  .sheen::after {
+    display: none;
+  }
+  .drag-strip {
+    scroll-snap-type: none;
+  }
+}

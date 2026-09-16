@@ -1,0 +1,307 @@
+/* ==========================================================================
+   Featured work — editorial rows.
+
+   One project per full-width row: device preview on one side, the client-facing
+   narrative on the other, alternating sides down the page. A thumbnail grid was
+   the obvious alternative and the wrong one — the problem/solution copy is the
+   reason a client believes the work, and a card that size cannot carry it.
+
+   Rows alternate with `.fw--flip`, which swaps the two grid columns. Order is
+   set on the children rather than with `direction: rtl`, so text alignment and
+   list bullets are unaffected.
+   ========================================================================== */
+.featured__rows {
+  display: grid;
+  gap: clamp(3rem, 7vw, 6rem);
+}
+
+.fw {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: clamp(1.75rem, 4.5vw, 4rem);
+}
+
+.fw--flip .fw__visual {
+  order: 2;
+}
+
+/* ---------- Visual ---------- */
+.fw__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding-block: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+/* A soft accent bloom behind the device, so the phone sits in light rather than
+   floating on the page background. */
+.fw__aura {
+  position: absolute;
+  inset: 8% 4%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--a-soft, transparent), transparent 72%);
+  filter: blur(18px);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* ---------- Body ---------- */
+.fw__body {
+  min-width: 0;
+}
+
+.fw__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.7rem;
+}
+
+.fw__index {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--a, var(--primary));
+}
+
+.fw__domain {
+  padding: 0.24rem 0.6rem;
+  border-radius: var(--r-full);
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 30%, transparent);
+  background: color-mix(in srgb, var(--a, var(--primary)) 8%, transparent);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.fw__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.1vw, 2.35rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  /* The clip reveal shaves descenders without a little breathing room. */
+  padding-bottom: 0.06em;
+}
+
+.fw__tagline {
+  margin-top: 0.4rem;
+  font-size: var(--fs-lead);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Problem / solution ---------- */
+.fw__narrative {
+  margin-top: clamp(1.1rem, 2vw, 1.5rem);
+  padding-left: clamp(0.9rem, 1.6vw, 1.15rem);
+  /* A single accent rule down the left edge ties the two blocks together as one
+     narrative, which two separate cards would not. */
+  border-left: 2px solid color-mix(in srgb, var(--a, var(--primary)) 40%, transparent);
+}
+
+.fw__narrative dt {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--a, var(--primary));
+}
+
+.fw__narrative dd {
+  margin-top: 0.35rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+.fw__narrative dd + dt {
+  margin-top: 1rem;
+}
+
+/* ---------- Features ---------- */
+.fw__label {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.fw__features {
+  margin-top: clamp(1.1rem, 2vw, 1.4rem);
+}
+
+.fw__features ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 0.4rem 1.1rem;
+  margin-top: 0.55rem;
+}
+
+.fw__features li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.45rem;
+  align-items: start;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.fw__features svg {
+  margin-top: 0.3em;
+  color: var(--ok);
+}
+
+/* ---------- Technology ---------- */
+.fw__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: clamp(1.1rem, 2vw, 1.35rem);
+}
+
+.fw__tech li {
+  padding: 0.24rem 0.52rem;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--border);
+  background: var(--wash-1);
+  color: var(--text-dim);
+  font-size: 0.67rem;
+  white-space: nowrap;
+}
+
+.fw__tech-more {
+  border-style: dashed;
+  color: var(--text-muted);
+}
+
+/* ---------- Foot ---------- */
+.fw__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.25rem;
+  margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
+  padding-top: clamp(1rem, 2vw, 1.35rem);
+  border-top: 1px solid var(--border);
+}
+
+.fw__platform {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: var(--text-dim);
+}
+
+.fw__platform svg {
+  color: var(--a, var(--primary));
+}
+
+/* ==========================================================================
+   "Also shipped" — projects with no written case study.
+   ========================================================================== */
+.featured__also {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.featured__also-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: var(--card-gap);
+  margin-top: 0.7rem;
+}
+
+.fwmini {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--r-md);
+}
+
+.fwmini__icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 28%, transparent);
+  background: var(--a-soft, transparent);
+  color: var(--a, var(--primary));
+}
+
+.fwmini__text {
+  display: grid;
+  min-width: 0;
+}
+
+.fwmini__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: 600;
+}
+
+.fwmini__domain {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+
+.fwmini__platform {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* ---------- Section footer ---------- */
+.featured__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.featured__foot-text {
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 900px) {
+  .fw {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.25rem, 4vw, 2rem);
+  }
+  /* Stacked, the device always leads — the flip only makes sense side by side. */
+  .fw--flip .fw__visual {
+    order: 0;
+  }
+  .fw__visual {
+    max-width: 320px;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .fwmini {
+    grid-template-columns: auto 1fr;
+  }
+  /* Third column would squeeze the name to two words; the platform moves under
+     the text instead of being truncated. */
+  .fwmini__platform {
+    grid-column: 2;
+  }
+}

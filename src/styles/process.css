@@ -1,0 +1,195 @@
+/* ==========================================================================
+   How I work — one list, two timelines.
+
+   Desktop: a horizontal rail with the seven cards laid across it.
+   Mobile:  the same rail rotated into the left gutter, cards stacked.
+
+   Both come from the same markup. Only two things change: which axis the rail
+   occupies, and the gradient direction. The scroll-linked scale on the fill is
+   an inline transform written by Framer — a stylesheet cannot override it — so
+   the component picks the axis from the same 720px breakpoint used below. Keep
+   the two numbers in step if this breakpoint moves.
+   ========================================================================== */
+.process__track {
+  position: relative;
+}
+
+/* ---------- Desktop: horizontal ---------- */
+.process__rail {
+  position: absolute;
+  top: 13px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: var(--r-full);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.process__rail-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--primary), var(--support));
+}
+
+.process__list {
+  display: grid;
+  /* Seven across is too narrow to read, so the row wraps to four + three on a
+     laptop and stays legible; auto-fit keeps that decision in one place. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: clamp(1.25rem, 2.5vw, 1.75rem) var(--card-gap);
+}
+
+.process__item {
+  position: relative;
+  padding-top: 2.15rem;
+}
+
+.process__node {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--a, var(--primary));
+  background: var(--bg);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--a, var(--primary)) 12%, transparent);
+}
+
+.process__card {
+  display: grid;
+  align-content: start;
+  height: 100%;
+  padding: clamp(1rem, 1.8vw, 1.3rem);
+  border-radius: var(--r-md);
+}
+
+.process__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.process__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 30%, transparent);
+  background: var(--a-soft, transparent);
+  color: var(--a, var(--primary));
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.process__card:hover .process__icon {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.process__step {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--watermark);
+}
+
+.process__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.process__desc {
+  margin-top: 0.4rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* The two answers a client is really looking for, kept visually distinct from
+   the description so they can be scanned down the row. */
+.process__meta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.3rem 0.6rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-strong);
+}
+
+.process__meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.process__meta dd {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* ---------- Section footer ---------- */
+.process__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.9rem, 2vw, 1.6rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.process__foot-text {
+  max-width: 56ch;
+  font-size: var(--fs-body);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ==========================================================================
+   Mobile: the rail rotates into the left gutter.
+   ========================================================================== */
+@media (max-width: 720px) {
+  .process__track {
+    padding-left: 1.9rem;
+  }
+
+  .process__rail {
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 6px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+
+  .process__rail-fill {
+    transform-origin: top center;
+    background: linear-gradient(180deg, var(--primary), var(--support));
+  }
+
+  .process__list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .process__item {
+    padding-top: 0;
+  }
+
+  .process__node {
+    top: 1.35rem;
+    left: -1.9rem;
+  }
+}

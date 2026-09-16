@@ -1,0 +1,98 @@
+/* ==========================================================================
+   "Have an idea? I can build it." — twelve recognition tiles.
+
+   Twelve items is a lot on one screen, so the tile is deliberately lighter than
+   a service card: a small icon, a title, two lines, and nothing else competing.
+   The grid runs three wide on desktop, two on tablet and one on a phone, driven
+   by auto-fit rather than breakpoints.
+   ========================================================================== */
+.build__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 268px), 1fr));
+  gap: var(--card-gap);
+}
+
+.build__card {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: clamp(1.1rem, 1.9vw, 1.4rem);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.build__card:hover {
+  border-color: color-mix(in srgb, var(--a, var(--primary)) 42%, transparent);
+  box-shadow: 0 20px 44px -28px color-mix(in srgb, var(--a, var(--primary)) 80%, transparent);
+}
+
+.build__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 28%, transparent);
+  background: var(--a-soft, color-mix(in srgb, var(--primary) 12%, transparent));
+  color: var(--a, var(--primary));
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.build__card:hover .build__icon {
+  transform: translateY(-2px) rotate(-4deg);
+}
+
+.build__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+.build__desc {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* Only shown where real comparable work exists, so it can afford to look like
+   a verified badge rather than a decorative tag. */
+.build__proof {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+  padding: 0.22rem 0.5rem 0.22rem 0.42rem;
+  justify-self: start;
+  border-radius: var(--r-full);
+  border: 1px solid color-mix(in srgb, var(--ok) 30%, transparent);
+  background: color-mix(in srgb, var(--ok) 8%, transparent);
+  color: var(--ok-text);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Section footer ---------- */
+.build__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.9rem, 2vw, 1.6rem);
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+  text-align: center;
+}
+
+.build__foot-text {
+  max-width: 54ch;
+  font-size: var(--fs-body);
+  color: var(--text-muted);
+  line-height: 1.7;
+}

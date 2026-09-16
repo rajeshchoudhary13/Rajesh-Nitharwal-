@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f1eb" />
+
+    <!-- Theme boot. Runs before first paint and before the CSS is applied, so
+         the stored theme is already on <html> and the page never flashes the
+         wrong one. Deliberately inline and synchronous: a deferred script would
+         paint light first. Kept in step with src/hooks/useTheme.js — same key,
+         same allowed values. -->
+    <script>
+      (function () {
+        try {
+          var KEY = 'rn-theme';
+          var ALLOWED = ['light', 'dark', 'night'];
+          var stored = null;
+          try { stored = localStorage.getItem(KEY); } catch (e) { /* blocked storage */ }
+          var theme = ALLOWED.indexOf(stored) > -1
+            ? stored
+            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light');
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
+
+    <!-- Primary meta. The title leads with the service a client searches for
+         ("freelance react native developer"), not with the job title on a
+         resume — this site exists to be found by people hiring, and the name
+         still carries for anyone searching it directly. -->
+    <title>Freelance Full Stack &amp; React Native Developer — Rajesh Nitharwal</title>
+    <meta
+      name="description"
+      content="Freelance Full Stack and Mobile App Developer. I design, build and launch React Native apps for Android and iOS, React.js web applications, Node.js APIs and admin dashboards for startups and businesses. Available for new projects."
+    />
+    <meta
+      name="keywords"
+      content="Freelance React Native Developer, React Native Developer, React.js Developer, Full Stack Developer, Mobile App Developer, Freelance App Developer, React Native Freelancer, Web Application Developer, Hire React Native Developer, Android and iOS App Developer, Node.js Developer, Rajesh Nitharwal"
+    />
+    <meta name="author" content="Rajesh Nitharwal" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://rajeshnitharwal.dev/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rajesh Nitharwal — Freelance Developer" />
+    <meta property="og:title" content="Freelance Full Stack &amp; React Native Developer — Rajesh Nitharwal" />
+    <meta
+      property="og:description"
+      content="I build digital products that turn ideas into scalable experiences — React Native apps for Android and iOS, React.js web applications and the APIs behind them."
+    />
+    <meta property="og:url" content="https://rajeshnitharwal.dev/" />
+    <meta property="og:image" content="https://rajeshnitharwal.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Rajesh Nitharwal — Freelance Full Stack and Mobile App Developer"
+    />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Freelance Full Stack &amp; React Native Developer" />
+    <meta
+      name="twitter:description"
+      content="React Native and React.js developer available for freelance projects — apps, web applications, APIs and store releases."
+    />
+    <meta name="twitter:image" content="https://rajeshnitharwal.dev/og.png" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Two families only: Playfair Display for editorial headings, Inter for
+         body and the uppercase meta labels. Loaded in one request. -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap"
+    />
+
+    <!-- ==================================================================
+         Structured data. GENERATED — do not hand-edit between the markers.
+
+         `npm run seo` (which also runs before every build) regenerates this
+         block from src/config/site.js, src/data/services.js and
+         src/data/faq.js, so the service list and the FAQ answers here can never
+         drift from what the page actually renders.
+         ================================================================== -->
+    <!-- SEO:JSONLD:START -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://rajeshnitharwal.dev/#person",
+            "name": "Rajesh Nitharwal",
+            "jobTitle": "Full Stack & Mobile App Developer",
+            "description": "Freelance Full Stack and Mobile App Developer. I design, build and launch React Native apps for Android and iOS, React.js web applications, Node.js APIs and admin dashboards for startups and businesses.",
+            "url": "https://rajeshnitharwal.dev/",
+            "email": "mailto:rajeshchoudhary1318@gmail.com",
+            "telephone": "+91 8905883987",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Jaipur",
+              "addressRegion": "Rajasthan",
+              "addressCountry": "IN"
+            },
+            "sameAs": [
+              "https://linkedin.com/in/rajesh-nitharwal-b88291258",
+              "https://github.com/rajeshchoudhary13"
+            ],
+            "knowsAbout": [
+              "Freelance React Native Developer",
+              "React Native Developer",
+              "React.js Developer",
+              "Full Stack Developer",
+              "Mobile App Developer",
+              "Freelance App Developer",
+              "React Native Freelancer",
+              "Web Application Developer",
+              "Hire React Native Developer",
+              "Android and iOS App Developer"
+            ]
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": "https://rajeshnitharwal.dev/#service",
+            "name": "Rajesh Nitharwal — Full Stack & Mobile App Developer",
+            "description": "Freelance Full Stack and Mobile App Developer. I design, build and launch React Native apps for Android and iOS, React.js web applications, Node.js APIs and admin dashboards for startups and businesses.",
+            "url": "https://rajeshnitharwal.dev/",
+            "provider": {
+              "@id": "https://rajeshnitharwal.dev/#person"
+            },
+            "areaServed": "Worldwide",
+            "availableLanguage": [
+              "en"
+            ],
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Jaipur",
+              "addressRegion": "Rajasthan",
+              "addressCountry": "IN"
+            },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Development services",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Mobile App Development",
+                    "description": "Cross-platform mobile applications built once and shipped to both stores — customer apps, business apps, driver apps, booking flows and location-aware products.",
+                    "serviceType": "Mobile App Development"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Web Application Development",
+                    "description": "Modern web applications and dashboards — admin panels, business portals, SaaS interfaces and custom platforms — responsive from small phones up to wide desktops.",
+                    "serviceType": "Web Application Development"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Full Stack Development",
+                    "description": "Complete product delivery — the interface, the API behind it, the data model underneath and the admin panel that runs it.",
+                    "serviceType": "Full Stack Development"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "API & Backend Integration",
+                    "description": "REST APIs, Firebase, payments, maps, notifications, real-time sockets and third-party services integrated so the data flow is predictable instead of flaky.",
+                    "serviceType": "API & Backend Integration"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "UI/UX Implementation",
+                    "description": "Figma files built out as pixel-accurate, responsive, production-ready screens — with the animation and interaction detail that separates a polished product from a rough one.",
+                    "serviceType": "UI/UX Implementation"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "App Launch & Maintenance",
+                    "description": "Release builds, Play Store and App Store submission, production fixes, version updates and performance work after launch.",
+                    "serviceType": "App Launch & Maintenance"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://rajeshnitharwal.dev/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How much does a project cost?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "It depends on scope, and any number given before we have talked would be guesswork. What drives the cost is the number of screens, whether you need one platform or both, how much backend and admin work sits behind the app, and which third-party services have to be integrated. Send a short description of what you want built and I will come back with a scope and a figure for that scope — not a generic rate card."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How long does development take?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A focused MVP is typically several weeks; a full application with an admin panel and multiple integrations is typically a few months. The honest answer is that the timeline follows the feature list, so the first thing I do is write the feature list down. You will get a milestone plan with the estimate, and an early warning if anything is going to move."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can you build both Android and iOS apps?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes — that is the normal case. Apps are built in React Native from a single codebase and released to both Google Play and the App Store, so a feature lands on both platforms together. Where a platform needs genuinely native code, I write the native Android or iOS module rather than dropping the feature."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can you work with an existing project?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, and it is a common ask. I start with a review of the codebase and the issue list, then come back with what is worth fixing, what is worth rewriting and what is fine as it is. Bug fixing, performance work, redesigns and new features on an inherited codebase are all part of the work I do."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can you integrate third-party APIs?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. REST APIs, Firebase (authentication, Firestore, cloud messaging), Google Maps and Places, payment providers, push notifications and real-time Socket.IO events are all integrations I have built into production apps. If you have an existing backend or a specific provider in mind, the app will be wired to it."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you provide post-launch support?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Launch is not the end of the engagement — crash reports, OS updates that change a permission rule, and performance issues that only appear at real user volume all arrive afterwards. Support can be arranged per fix or as ongoing monthly capacity, whichever suits how much change your product expects."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can you help publish the application?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. I prepare the signed release builds and handle Google Play and App Store submission — signing keys, provisioning, privacy declarations, screenshots and responses to review feedback. The store accounts stay in your name and under your control; I work inside them."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+    <!-- SEO:JSONLD:END -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p style="color: #171717; background: #f4f1eb; padding: 24px; font-family: sans-serif">
+        <strong>Rajesh Nitharwal</strong> — Freelance Full Stack &amp; Mobile App Developer, Jaipur, India.
+        I build React Native applications for Android and iOS, React.js web applications, Node.js APIs and
+        admin dashboards. This site needs JavaScript to display the portfolio; to start a project, email
+        rajeshchoudhary1318@gmail.com or call +91 8905883987.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

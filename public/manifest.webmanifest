@@ -1,0 +1,11 @@
+{
+  "name": "Rajesh Nitharwal — Full Stack Developer",
+  "short_name": "Rajesh Nitharwal",
+  "description": "Portfolio of Rajesh Nitharwal — full-stack developer building production web and mobile applications from Jaipur, India.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f1eb",
+  "theme_color": "#f4f1eb",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

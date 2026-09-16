@@ -1,0 +1,128 @@
+/* ==========================================================================
+   FAQ accordion.
+
+   Narrower than the site container: answers are long-form prose, and prose past
+   about 75 characters per line is measurably harder to read. The container
+   override is local to this section rather than a global utility, because it is
+   the only place on the page with a body of continuous text.
+   ========================================================================== */
+.faq__container {
+  max-width: 880px;
+}
+
+.faq__list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.faq__item {
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+  transition:
+    border-color var(--t-base) var(--ease),
+    background-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.faq__item:hover {
+  border-color: var(--border-strong);
+}
+
+.faq__item.is-open {
+  border-color: color-mix(in srgb, var(--primary) 34%, transparent);
+  background: var(--bg-elevated);
+  box-shadow: var(--e-2);
+}
+
+.faq__q {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.faq__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: clamp(0.95rem, 1.9vw, 1.2rem) clamp(1rem, 2vw, 1.4rem);
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.4;
+  color: var(--text);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.faq__trigger:hover {
+  color: var(--primary);
+}
+
+.faq__item.is-open .faq__trigger {
+  color: var(--primary);
+}
+
+.faq__q-text {
+  min-width: 0;
+}
+
+.faq__mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+  transition:
+    border-color var(--t-base) var(--ease),
+    background-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.faq__trigger:hover .faq__mark {
+  border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+  color: var(--primary);
+}
+
+.faq__item.is-open .faq__mark {
+  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+}
+
+/* Framer animates the height, so no height may be set here. */
+.faq__a {
+  overflow: hidden;
+}
+
+.faq__a-text {
+  padding: 0 clamp(1rem, 2vw, 1.4rem) clamp(1.1rem, 2vw, 1.35rem);
+  /* Indented to the width of the marker column, so the answer reads as
+     belonging to the question rather than starting a new block. */
+  padding-right: clamp(2.6rem, 4vw, 3.4rem);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.85;
+}
+
+/* ---------- Footer ---------- */
+.faq__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  text-align: center;
+}
+
+.faq__foot-text {
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+}

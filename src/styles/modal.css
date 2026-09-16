@@ -1,0 +1,510 @@
+/* ============================ Project modal ============================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 3vw, 2rem);
+  background: var(--scrim);
+  backdrop-filter: blur(8px);
+}
+
+.modal__panel {
+  position: relative;
+  width: min(100%, 720px);
+  max-height: min(88dvh, 900px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(420px 240px at 88% -8%, var(--a-soft, color-mix(in srgb, var(--primary) 20%, transparent)), transparent 70%),
+    linear-gradient(165deg, var(--panel), var(--panel));
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+.modal__close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--wash-3);
+  color: var(--text-muted);
+  transition:
+    color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.modal__close:hover {
+  color: var(--text);
+  background: var(--wash-5);
+  transform: rotate(90deg);
+}
+
+.modal__head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-right: 3rem;
+  margin-bottom: var(--sp-5);
+}
+
+.modal__icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  flex: none;
+  border-radius: 17px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--blue)) 40%, transparent);
+  background: var(--a-soft, color-mix(in srgb, var(--primary) 16%, transparent));
+  color: var(--a, var(--blue));
+}
+
+.modal__head h3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 0.15rem;
+}
+
+.modal__tagline {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.modal__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.8rem;
+  padding: 1rem;
+  margin-bottom: var(--sp-5);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--wash-1);
+}
+
+.modal__meta dt {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.25rem;
+}
+
+.modal__meta dd {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.modal__section {
+  margin-bottom: var(--sp-5);
+}
+
+.modal__section h4 {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 0.65rem;
+}
+
+.modal__section p {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+.modal__list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.modal__list li {
+  display: flex;
+  gap: 0.6rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.68;
+}
+
+.modal__bullet {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 0.62em;
+  border-radius: 50%;
+  background: var(--a, var(--blue));
+}
+
+.modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: var(--sp-4);
+}
+
+.modal__note {
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 520px) {
+  .modal {
+    padding: 0;
+    place-items: end stretch;
+  }
+  .modal__panel {
+    max-height: 92dvh;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+  }
+  .modal__head {
+    gap: 0.75rem;
+  }
+  .modal__icon {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+/* ==========================================================================
+   Modal refinement layer
+   ========================================================================== */
+.modal {
+  background: var(--scrim);
+  backdrop-filter: blur(10px) saturate(120%);
+}
+
+.modal__panel {
+  border-radius: var(--r-2xl);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px var(--device-line),
+    inset 0 1px 0 var(--hairline-ink);
+}
+
+/* Grab handle: hidden until the panel becomes a bottom sheet, where a swipe is
+   the natural dismissal. */
+.modal__handle {
+  display: none;
+}
+
+/* Kept absolutely positioned as in the base rule — the panel is the scroll
+   container, and a sticky/floating close button inside it fights the drag sheet
+   on phones. The backdrop-blur is what keeps it legible over content. */
+.modal__close {
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  background: var(--chip-bg);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--e-2), var(--hairline);
+}
+
+.modal__close:hover {
+  color: var(--text);
+  background: var(--wash-5);
+}
+
+/* Framer owns this button's transform (Pressable's spring), so the 90° spin the
+   base rule asked for is applied to the icon instead. */
+.modal__close svg {
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.modal__close:hover svg {
+  transform: rotate(90deg);
+}
+
+/* ---------- Head ---------- */
+.modal__head {
+  gap: 1.1rem;
+  padding-right: 3.25rem;
+}
+
+.modal__icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 19px;
+  box-shadow:
+    0 14px 30px -16px color-mix(in srgb, var(--a, var(--blue)) 85%, transparent),
+    var(--hairline);
+}
+
+/* ---------- Meta ---------- */
+.modal__meta {
+  gap: 1rem;
+  padding: 1.15rem;
+  border-radius: var(--r-lg);
+  box-shadow: var(--hairline);
+}
+
+.modal__meta dd {
+  line-height: 1.55;
+}
+
+/* ---------- Sections ---------- */
+.modal__section h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Rule that fills the remaining width after the label, so each section reads as
+   a titled band without extra markup. */
+.modal__section h4::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--support) 32%, transparent), transparent);
+}
+
+.modal__section p {
+  line-height: var(--lh-body);
+}
+
+.modal__list li {
+  line-height: var(--lh-body);
+  transition: color var(--t-base) var(--ease-out);
+}
+
+.modal__list li:hover {
+  color: var(--text);
+}
+
+.modal__bullet {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--a, var(--blue)) 60%, transparent);
+}
+
+/* ---------- Bottom sheet ---------- */
+@media (max-width: 520px) {
+  .modal__panel {
+    /* Drag-to-dismiss is vertical; the handle claims the gesture. */
+    padding-top: 0.5rem;
+    border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+  }
+
+  .modal__handle {
+    display: grid;
+    place-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    width: 100%;
+    padding: 0.55rem 0 0.9rem;
+    /* Claim the vertical gesture so the sheet drags instead of scrolling. */
+    touch-action: none;
+    background: linear-gradient(180deg, var(--panel), var(--chip-bg) 70%, transparent);
+  }
+
+  .modal__handle span {
+    width: 46px;
+    height: 4px;
+    border-radius: var(--r-full);
+    background: var(--wash-3);
+  }
+
+  .modal__close {
+    width: 38px;
+    height: 38px;
+    /* Clear of the grab handle that now occupies the top of the sheet. */
+    top: 1.9rem;
+  }
+
+  .modal__head {
+    padding-right: 3.25rem;
+  }
+}
+
+/* ---------- Stack spec ----------
+   Framework / state / integration facts for the projects that document them.
+   A flat chip list rather than a second definition grid, so it reads as a
+   footnote to the meta band above instead of competing with it. */
+.modal__spec {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: calc(var(--sp-5) * -0.6) 0 var(--sp-5);
+}
+
+.modal__spec li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--wash-2);
+}
+
+.modal__spec-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.modal__spec-value {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ---------- Engineering callout ----------
+   The hardest part of each app, lifted out of the prose into an accent-edged
+   band so a reader skimming the dialog cannot miss it. */
+.modal__deep {
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--r-lg);
+  border: 1px solid color-mix(in srgb, var(--a, var(--blue)) 26%, var(--border));
+  border-left: 2px solid var(--a, var(--blue));
+  background:
+    radial-gradient(320px 160px at 100% 0%, var(--a-soft, color-mix(in srgb, var(--primary) 14%, transparent)), transparent 70%),
+    var(--wash-1);
+}
+
+.modal__deep h4 {
+  color: var(--a, var(--blue));
+}
+
+.modal__deep h4::after {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--a, var(--blue)) 34%, transparent), transparent);
+}
+
+.modal__deep-list {
+  margin-top: 0.85rem;
+}
+
+/* Scoped through the parent so it out-specifies `.modal__section p` without
+   reaching for !important. */
+.modal__deep .modal__deep-foot {
+  margin-top: 0.85rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--border);
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+
+/* ---------- End-to-end flow ----------
+   Numbered steps joined by a rail, so the sequence is legible at a glance and
+   a long flow still scans as one path rather than a wall of bullets. */
+.modal__flow {
+  display: grid;
+  gap: 0.75rem;
+  counter-reset: flow;
+}
+
+.modal__flow li {
+  position: relative;
+  display: flex;
+  gap: 0.7rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: var(--lh-body);
+}
+
+/* The rail is drawn from each step down to the next, so it stops naturally at
+   the last one without needing a modifier class. */
+.modal__flow li:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 1.7rem;
+  left: 0.78rem;
+  width: 1px;
+  height: calc(100% - 1.05rem);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--a, var(--blue)) 40%, transparent), transparent);
+}
+
+.modal__flow-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: var(--a, var(--blue));
+  border: 1px solid color-mix(in srgb, var(--a, var(--blue)) 34%, transparent);
+  background: var(--a-soft, color-mix(in srgb, var(--primary) 12%, transparent));
+}
+
+.modal__flow-text {
+  padding-top: 0.16rem;
+}
+
+@media (max-width: 520px) {
+  .modal__deep {
+    padding: 1rem;
+  }
+}
+
+/* ==========================================================================
+   Premium layer — dialog
+   Section labels move from cyan to platinum so they behave like the small caps
+   of a printed spec sheet; the accent is reserved for the one section that is
+   actually about the engineering.
+   ========================================================================== */
+.modal__section h4 {
+  font-size: 0.66rem;
+  letter-spacing: 0.19em;
+  color: var(--platinum);
+}
+
+.modal__section h4::after {
+  background: var(--grad-hairline);
+}
+
+/* The engineering callout keeps its accent label — it is the one place where
+   colour is carrying meaning rather than decoration. */
+.modal__deep h4 {
+  color: color-mix(in srgb, var(--a, var(--blue)) 78%, var(--platinum));
+}
+
+.modal__meta dt {
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+}
+
+.modal__meta {
+  background: var(--wash-1);
+  box-shadow: var(--hairline-2);
+}
+
+.modal__spec li {
+  background: var(--wash-1);
+  box-shadow: var(--hairline);
+}
+
+.modal__spec-value {
+  color: var(--platinum);
+}
+
+.modal__flow-num {
+  font-size: 0.56rem;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--a, var(--blue)) 82%, var(--platinum));
+}
+
+/* Provenance line inside the modal: why a stack or a live link is absent.
+   Deliberately quiet — it is a caveat, not content. */
+.modal__foot-note {
+  margin-top: 0.6rem;
+  color: var(--text-dim);
+  font-size: 0.74rem;
+  line-height: 1.6;
+  font-style: italic;
+}

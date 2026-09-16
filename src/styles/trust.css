@@ -1,0 +1,142 @@
+/* ==========================================================================
+   Trust bar — the numbers, immediately under the hero.
+
+   One horizontal panel rather than a grid of cards: five separate cards here
+   would read as five things to evaluate, and the point of this row is that it
+   is scanned in about a second and then left behind.
+
+   Layout is a flex row with dividers between items, which is what lets the
+   five entries reflow to 3 + 2 on a tablet and 2 + 2 + 1 on a phone without
+   any breakpoint owning a fixed column count.
+   ========================================================================== */
+.trust {
+  /* Pulled up under the hero so the two read as one opening move. */
+  padding-block: 0 clamp(1rem, 3vw, 2rem);
+  position: relative;
+}
+
+.trust__panel {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.35rem, 2.6vw, 2.1rem) clamp(1.15rem, 2.4vw, 2.25rem);
+  border-radius: var(--r-xl);
+}
+
+/* Accent hairline across the top edge, drawn in as the panel arrives. */
+.trust__rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform-origin: left center;
+  background: var(--grad-line);
+}
+
+.trust__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.trust__item {
+  flex: 1 1 clamp(140px, 16vw, 190px);
+  min-width: 0;
+  position: relative;
+}
+
+/* Dividers between items only — a rule after the last one would fence the
+   panel off from nothing. Drawn on the item so it survives reflow. */
+.trust__item + .trust__item::before {
+  content: '';
+  position: absolute;
+  left: calc(clamp(1rem, 2.4vw, 2rem) / -2);
+  top: 6%;
+  bottom: 6%;
+  width: 1px;
+  background: var(--border);
+}
+
+.trust__value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.08em;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.4vw, 2.55rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  background: linear-gradient(120deg, var(--text) 12%, var(--grad-text-mid) 78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.trust__value em {
+  font-style: normal;
+  font-size: 0.62em;
+  color: var(--primary);
+  -webkit-text-fill-color: var(--primary);
+}
+
+/* The capability entries are words, not digits, so they take a smaller size —
+   at counter scale they would out-shout the numbers beside them. */
+.trust__value-text {
+  font-size: 0.68em;
+  letter-spacing: -0.02em;
+}
+
+.trust__label {
+  margin-top: 0.55rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.trust__hint {
+  margin-top: 0.2rem;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.trust__foot {
+  margin-top: clamp(1.1rem, 2vw, 1.5rem);
+  padding-top: clamp(0.85rem, 1.6vw, 1.15rem);
+  border-top: 1px solid var(--border);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .trust__item {
+    flex: 1 1 clamp(130px, 27vw, 200px);
+  }
+  /* Once items wrap, a left divider can land at the start of a new row where
+     it reads as a stray mark. Row-relative dividers are not expressible in
+     CSS, so below this width the dividers go and the gap does the separating. */
+  .trust__item + .trust__item::before {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .trust__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem 1rem;
+  }
+  /* The odd one out spans the row rather than sitting in a half-empty column. */
+  .trust__item:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .trust__foot {
+    text-align: center;
+  }
+}

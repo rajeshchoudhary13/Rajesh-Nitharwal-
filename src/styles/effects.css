@@ -1,0 +1,328 @@
+/* ==========================================================================
+   Ambient background, scroll progress and back-to-top (original dark FX)
+   ========================================================================== */
+.bgfx {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(1200px 700px at 78% -8%, color-mix(in srgb, var(--primary) 14%, transparent), transparent 62%),
+    radial-gradient(950px 620px at 12% 8%, color-mix(in srgb, var(--primary-alt) 12%, transparent), transparent 60%),
+    radial-gradient(900px 700px at 50% 108%, color-mix(in srgb, var(--support) 9%, transparent), transparent 62%),
+    linear-gradient(180deg, var(--bg) 0%, var(--surface-2) 45%, var(--bg) 100%);
+}
+
+/* Developer grid */
+.bgfx__grid {
+  position: absolute;
+  inset: -10%;
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 62px 62px;
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 32%, #000 35%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 32%, #000 35%, transparent 78%);
+  animation: grid-drift 40s linear infinite;
+}
+
+@keyframes grid-drift {
+  to {
+    background-position: 62px 62px;
+  }
+}
+
+/* Floating orbs */
+.bgfx__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.bgfx__orb--1 {
+  width: 46vw;
+  height: 46vw;
+  max-width: 620px;
+  max-height: 620px;
+  top: -12%;
+  right: -8%;
+  background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--primary) 50%, transparent), transparent 70%);
+  animation: orb-a 32s var(--ease-in-out) infinite;
+}
+
+.bgfx__orb--2 {
+  width: 38vw;
+  height: 38vw;
+  max-width: 520px;
+  max-height: 520px;
+  bottom: -14%;
+  left: -10%;
+  background: radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--primary-alt) 45%, transparent), transparent 70%);
+  animation: orb-b 38s var(--ease-in-out) infinite;
+}
+
+.bgfx__orb--3 {
+  width: 30vw;
+  height: 30vw;
+  max-width: 400px;
+  max-height: 400px;
+  top: 42%;
+  left: 46%;
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--support) 30%, transparent), transparent 70%);
+  animation: orb-c 44s var(--ease-in-out) infinite;
+}
+
+@keyframes orb-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-5%, 6%, 0) scale(1.1);
+  }
+}
+@keyframes orb-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(7%, -5%, 0) scale(1.07);
+  }
+}
+@keyframes orb-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-8%, -7%, 0) scale(1.12);
+  }
+}
+
+/* Fine noise for a premium, non-flat backdrop */
+.bgfx__noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Scroll progress */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform-origin: 0 50%;
+  background: var(--grad-primary);
+  z-index: 120;
+}
+
+/* Back to top */
+.to-top {
+  position: fixed;
+  right: clamp(1rem, 2.5vw, 2rem);
+  bottom: clamp(1rem, 2.5vw, 2rem);
+  z-index: 110;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-strong);
+  color: var(--text);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
+}
+
+.to-top::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  padding: 1px;
+  background: var(--grad-primary);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease);
+}
+
+.to-top:hover::after {
+  opacity: 1;
+}
+
+/* Shared marquee */
+.marquee {
+  position: relative;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.marquee__track {
+  display: flex;
+  gap: 0.7rem;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bgfx__grid,
+  .bgfx__orb,
+  .marquee__track {
+    animation: none !important;
+  }
+  .marquee {
+    overflow-x: auto;
+  }
+}
+
+/* ==========================================================================
+   Effects refinement layer
+   ========================================================================== */
+
+/* ---------- Ambient backdrop ---------- */
+/* The orbs breathe: blur and opacity drift on a long cycle so the backdrop is
+   never quite static. Deliberately no hue-rotate — the accent palette is part of
+   the brand and must not shift. */
+.bgfx__orb--1 {
+  animation:
+    orb-a 32s var(--ease-in-out) infinite,
+    orb-breathe 46s var(--ease-in-out) infinite;
+}
+
+.bgfx__orb--2 {
+  animation:
+    orb-b 38s var(--ease-in-out) infinite,
+    orb-breathe 54s var(--ease-in-out) infinite reverse;
+}
+
+@keyframes orb-breathe {
+  0%,
+  100% {
+    filter: blur(70px);
+    opacity: 0.5;
+  }
+  50% {
+    filter: blur(84px);
+    opacity: 0.64;
+  }
+}
+
+/* Vignette that focuses attention on the column of content. */
+.bgfx::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 120% 80% at 50% 40%, transparent 45%, var(--scrim) 100%);
+}
+
+/* ---------- Scroll progress ---------- */
+.scroll-progress {
+  height: 3px;
+  /* Glow below the bar so it reads as a lit filament rather than a border. */
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--primary) 70%, transparent),
+    0 1px 16px color-mix(in srgb, var(--primary-alt) 40%, transparent);
+}
+
+/* ---------- Back to top ---------- */
+.to-top {
+  width: 52px;
+  height: 52px;
+  box-shadow: var(--e-3), var(--hairline);
+}
+
+/* The ring reports reading progress around the button. */
+.to-top__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Start the sweep at 12 o'clock. */
+  rotate: -90deg;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.to-top__ring circle {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.to-top__ring-track {
+  stroke: var(--border-strong);
+}
+
+.to-top__ring-fill {
+  stroke: var(--cyan);
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--support) 70%, transparent));
+}
+
+.to-top__glyph {
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  transition: color var(--t-base) var(--ease-out);
+}
+
+.to-top:hover .to-top__glyph {
+  color: var(--primary);
+}
+
+/* ---------- Marquee ---------- */
+.marquee {
+  /* Wider fade so items enter and leave rather than popping at the edge. */
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+
+.marquee__track {
+  /* Slower on wide screens, where the same speed reads as frantic. */
+  animation-duration: 56s;
+}
+
+@media (max-width: 640px) {
+  .marquee__track {
+    animation-duration: 38s;
+  }
+  .to-top {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bgfx__orb--1,
+  .bgfx__orb--2 {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,235 @@
+/* ==========================================================================
+   Services — six numbered cards, each with a disclosure.
+
+   The card is a grid with the technology row and the toggle pinned to the
+   bottom (`margin-top: auto` on the row, since `justify-content` cannot pin a
+   single child). That keeps the six toggles on one line across the row even
+   though the descriptions are different lengths — an uneven row of buttons is
+   the fastest way to make a grid look unfinished.
+
+   The `--a` custom property comes from `data-accent` (see global.css), so every
+   accent-tinted rule below works for all five accents and all three themes
+   without a single colour literal.
+   ========================================================================== */
+.svc__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--card-gap);
+  align-items: start;
+}
+
+.svc {
+  position: relative;
+  display: grid;
+  /* Explicit rows so the auto row (the description) absorbs the slack and the
+     rows below it stay aligned card to card. */
+  grid-template-rows: auto auto auto 1fr auto auto;
+  padding: clamp(1.3rem, 2.2vw, 1.75rem);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.svc:hover,
+.svc.is-open {
+  border-color: color-mix(in srgb, var(--a, var(--primary)) 46%, transparent);
+  box-shadow: 0 26px 60px -34px color-mix(in srgb, var(--a, var(--primary)) 85%, transparent);
+}
+
+/* ---------- Head: icon + index ---------- */
+.svc__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.svc__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 32%, transparent);
+  background: var(--a-soft, color-mix(in srgb, var(--primary) 12%, transparent));
+  color: var(--a, var(--primary));
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.svc:hover .svc__icon {
+  transform: translateY(-3px) scale(1.06);
+}
+
+/* The number is a positional marker, so it sits at watermark weight — loud
+   enough to give the grid rhythm, quiet enough not to compete with the title. */
+.svc__num {
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--watermark);
+  transition: color var(--t-base) var(--ease);
+}
+
+.svc:hover .svc__num {
+  color: color-mix(in srgb, var(--a, var(--primary)) 55%, transparent);
+}
+
+/* ---------- Copy ---------- */
+.svc__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+/* --primary-ink rather than the raw accent: this is small text (~14px), and the
+   brand accent measures 4.46:1 on white / 4.24:1 on the dark surface — both just
+   under AA. --primary-ink is the same hue at the briefed hover level, which
+   clears it in every theme. Icons and rules keep the true accent. */
+.svc__lead {
+  margin-top: 0.35rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--primary-ink);
+  line-height: 1.5;
+}
+
+.svc__desc {
+  margin-top: 0.6rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ---------- Technology row ---------- */
+.svc__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 1.05rem;
+}
+
+.svc__tech-item {
+  padding: 0.22rem 0.5rem;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--border);
+  background: var(--wash-1);
+  color: var(--text-dim);
+  font-size: 0.67rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* ---------- Disclosure ---------- */
+.svc__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.05rem;
+  padding: 0.5rem 0;
+  align-self: start;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--a, var(--primary));
+  transition: gap var(--t-fast) var(--ease);
+}
+
+.svc__toggle:hover {
+  gap: 0.6rem;
+}
+
+.svc__toggle-chevron {
+  display: grid;
+  place-items: center;
+}
+
+/* Framer animates the height, so this element must not set one. */
+.svc__detail {
+  overflow: hidden;
+}
+
+.svc__detail-inner {
+  margin-top: 0.4rem;
+  padding-top: 1.05rem;
+  border-top: 1px solid var(--border);
+}
+
+.svc__detail-text {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+.svc__detail-label {
+  margin-top: 1.05rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.svc__list {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+}
+
+.svc__list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  align-items: start;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.svc__list svg {
+  margin-top: 0.28em;
+  color: var(--ok);
+}
+
+.svc__detail-cta {
+  margin-top: 1.1rem;
+}
+
+/* ---------- Section footer ---------- */
+.svc__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.9rem, 2vw, 1.6rem);
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+  padding: clamp(1.1rem, 2.2vw, 1.5rem) var(--card-pad);
+  border-radius: var(--r-lg);
+  border: 1px dashed var(--border-strong);
+  background: var(--wash-1);
+  text-align: center;
+}
+
+.svc__foot-text {
+  max-width: 52ch;
+  font-size: var(--fs-body);
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .svc {
+    /* Below one column there is no row to align to, so the explicit rows only
+       cost the description its flexibility. */
+    grid-template-rows: none;
+  }
+  .svc__num {
+    font-size: 1.4rem;
+  }
+}

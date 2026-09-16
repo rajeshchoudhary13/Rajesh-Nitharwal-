@@ -1,0 +1,447 @@
+/* ===================== Device + browser mockups ========================== */
+
+/* ------------------------------ Phone ----------------------------------- */
+.phone {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  perspective: 1200px;
+}
+
+.phone__frame {
+  position: relative;
+  width: min(100%, 238px);
+  aspect-ratio: 9 / 19;
+  padding: 9px;
+  border-radius: 36px;
+  background: linear-gradient(165deg, var(--device-shell-1) 0%, var(--device-shell-2) 55%, var(--device-shell-2) 100%);
+  border: 1px solid var(--device-line);
+  box-shadow:
+    0 40px 70px -34px rgba(var(--shadow-rgb), var(--shadow-a)),
+    0 0 0 1px var(--device-line),
+    inset 0 1px 0 var(--hairline-ink);
+  transition: box-shadow var(--t-base) var(--ease);
+}
+
+.phone__frame:hover {
+  box-shadow:
+    0 48px 80px -34px rgba(var(--shadow-rgb), var(--shadow-a)),
+    0 0 0 1px color-mix(in srgb, var(--a, var(--blue)) 40%, transparent),
+    inset 0 1px 0 var(--hairline-ink);
+}
+
+.phone__frame::after {
+  /* accent halo */
+  content: '';
+  position: absolute;
+  inset: -18px;
+  z-index: -1;
+  border-radius: 48px;
+  background: radial-gradient(closest-side, var(--a-soft, color-mix(in srgb, var(--primary) 16%, transparent)), transparent 75%);
+  opacity: 0.9;
+}
+
+.phone__notch {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 2;
+  width: 32%;
+  height: 7px;
+  border-radius: var(--r-full);
+  background: var(--bg);
+}
+
+.phone__btn {
+  position: absolute;
+  right: -2px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--device-bar);
+}
+
+.phone__btn--power {
+  top: 26%;
+  height: 12%;
+}
+
+.phone__btn--vol {
+  left: -2px;
+  right: auto;
+  top: 20%;
+  height: 8%;
+}
+
+.phone__screen {
+  position: relative;
+  height: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background:
+    radial-gradient(220px 140px at 78% 0%, var(--a-soft, color-mix(in srgb, var(--primary) 18%, transparent)), transparent 72%),
+    linear-gradient(180deg, var(--device-screen-1) 0%, var(--device-screen-2) 100%);
+  border: 1px solid var(--device-border);
+}
+
+.phone__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0.9rem 0.2rem;
+  font-size: 0.58rem;
+  color: var(--device-text);
+}
+
+.phone__status-icons {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.phone__status-icons i {
+  width: 4px;
+  height: 8px;
+  border-radius: 1px;
+  background: var(--device-bar);
+}
+
+.phone__app {
+  padding: 0.9rem 0.9rem 0.6rem;
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+}
+
+.phone__app-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(150deg, var(--a, var(--blue)), var(--device-bar));
+  color: var(--fill-primary-ink);
+  box-shadow: 0 10px 24px -12px var(--a, var(--blue));
+}
+
+.phone__app-name {
+  font-size: 0.94rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.phone__app-domain {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--a, var(--cyan));
+}
+
+.phone__skeleton {
+  display: grid;
+  gap: 6px;
+  margin-top: 0.35rem;
+}
+
+.phone__row {
+  height: 30px;
+  border-radius: 9px;
+  transform-origin: 0 50%;
+  background: linear-gradient(105deg, var(--device-bar), var(--device-bar));
+  border: 1px solid var(--device-line);
+}
+
+.phone__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 0.4rem;
+}
+
+.phone__tech li {
+  padding: 2px 7px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--device-border);
+  font-family: var(--font-mono);
+  font-size: 0.53rem;
+  color: var(--device-text);
+}
+
+.phone__tabbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 34px;
+  border-top: 1px solid var(--device-border);
+  background: var(--device-bar);
+}
+
+.phone__tabbar span {
+  width: 16px;
+  height: 4px;
+  border-radius: var(--r-full);
+  background: var(--device-bar);
+}
+
+.phone__tabbar span.is-active {
+  width: 22px;
+  background: var(--a, var(--blue));
+}
+
+.phone__caption {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ----------------------------- Browser ---------------------------------- */
+.browser {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: linear-gradient(165deg, var(--device-bar), var(--device-bar));
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.browser:hover {
+  border-color: color-mix(in srgb, var(--a, var(--blue)) 45%, transparent);
+  box-shadow: var(--shadow-hover);
+}
+
+.browser__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--device-bar);
+}
+
+.browser__url {
+  flex: 1;
+  min-width: 0;
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--r-full);
+  background: var(--device-bar);
+  border: 1px solid var(--device-border);
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.browser__viewport {
+  padding: var(--card-pad);
+  display: grid;
+  gap: 0.85rem;
+  background: radial-gradient(320px 160px at 88% 0%, var(--a-soft, color-mix(in srgb, var(--primary) 14%, transparent)), transparent 70%);
+}
+
+.browser__head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.browser__head h4 {
+  font-size: 1.02rem;
+  letter-spacing: -0.018em;
+}
+
+.browser__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 11px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--blue)) 35%, transparent);
+  background: var(--a-soft, color-mix(in srgb, var(--primary) 14%, transparent));
+  color: var(--a, var(--blue));
+}
+
+.browser__list {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.browser__list li {
+  display: flex;
+  gap: 0.55rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.browser__bullet {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 0.55em;
+  border-radius: 50%;
+  background: var(--a, var(--blue));
+}
+
+.browser__tech {
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--border);
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 420px) {
+  .phone__frame {
+    width: min(100%, 210px);
+  }
+}
+
+/* ==========================================================================
+   Mockup refinement layer
+   ========================================================================== */
+
+/* ------------------------------ Phone ----------------------------------- */
+.phone {
+  gap: 0.85rem;
+}
+
+.phone__frame {
+  border-radius: 38px;
+  /* Framer owns the frame's transform (float + hover lift), so the pressed and
+     hovered states are expressed through shadow and the halo instead. */
+  transition:
+    box-shadow var(--t-slow) var(--ease-out),
+    border-color var(--t-base) var(--ease-out);
+}
+
+.phone__frame::after {
+  transition: opacity var(--t-slow) var(--ease-out);
+}
+
+.phone__frame:hover::after {
+  opacity: 1;
+}
+
+/* Screen glare — a fixed diagonal highlight that makes the glass read as glass. */
+.phone__screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(118deg, var(--device-bar) 12%, transparent 34%, transparent 100%);
+}
+
+.phone__app-icon {
+  border-radius: 13px;
+  box-shadow:
+    0 10px 24px -12px var(--a, var(--blue)),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* The active tab indicator pulses gently, which is what sells the screen as a
+   running app rather than a still. */
+.phone__tabbar span.is-active {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--a, var(--blue)) 70%, transparent);
+  animation: tab-glow 2.8s var(--ease-in-out) infinite;
+}
+
+@keyframes tab-glow {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.phone__caption {
+  letter-spacing: 0.1em;
+  transition: color var(--t-base) var(--ease-out);
+}
+
+.phone:hover .phone__caption {
+  color: var(--text-muted);
+}
+
+/* ----------------------------- Browser ---------------------------------- */
+.browser {
+  border-radius: var(--r-xl);
+  box-shadow: var(--e-3), var(--hairline);
+}
+
+.browser__bar {
+  padding: 0.7rem 0.9rem;
+  border-bottom-color: transparent;
+  background-image:
+    linear-gradient(var(--device-bar), var(--device-bar)),
+    var(--grad-line);
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, 100% 1px;
+  background-position: 0 0, 0 100%;
+}
+
+.browser__url {
+  padding: 0.32rem 0.8rem;
+  transition:
+    color var(--t-base) var(--ease-out),
+    border-color var(--t-base) var(--ease-out);
+}
+
+.browser:hover .browser__url {
+  color: var(--text-muted);
+  border-color: var(--device-line);
+}
+
+.browser__viewport {
+  gap: 0.95rem;
+  padding: clamp(1.2rem, 2vw, 1.6rem);
+}
+
+.browser__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  box-shadow: var(--hairline);
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.browser:hover .browser__icon {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.browser__list li {
+  line-height: var(--lh-body);
+  transition: color var(--t-base) var(--ease-out);
+}
+
+.browser__list li:hover {
+  color: var(--text);
+}
+
+.browser__bullet {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--a, var(--blue)) 55%, transparent);
+}
+
+/* Gradient divider instead of the dashed rule. */
+.browser__tech {
+  border-top: 0;
+  padding-top: 0.85rem;
+  background-image: var(--grad-line);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone__tabbar span.is-active {
+    animation: none;
+  }
+}

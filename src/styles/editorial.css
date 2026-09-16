@@ -1,0 +1,791 @@
+/* ==========================================================================
+   EDITORIAL REFINEMENT LAYER
+   --------------------------------------------------------------------------
+   Loaded LAST, after every base and section stylesheet.
+
+   The 20 section components were designed for the previous visual language:
+   pill buttons, glass cards with blur and coloured glows, gradient headings,
+   decorative shimmer. The palette swap in tokens.css re-tinted all of that, but
+   tint was never the whole difference — the brief also rules out the *shapes*.
+
+   Correcting that at the source would mean rewriting 28 stylesheets and risking
+   the layout and behaviour they encode. Instead the geometry and material are
+   normalised here, in one auditable place, while the sections keep sole
+   ownership of their layout. Anything in this file is a deliberate override of
+   an inherited decorative choice — never of a layout one.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. TYPOGRAPHY
+   ========================================================================== */
+
+/* Display headings are set in Playfair at a normal weight. The inherited rules
+   ask for 700-800, which on a serif display face reads as heavy rather than
+   editorial. */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+  letter-spacing: -0.018em;
+}
+
+/* Body copy keeps Inter and a comfortable measure. */
+body {
+  font-weight: 400;
+  letter-spacing: 0.001em;
+}
+
+/* Small uppercase meta labels: the `.mono` class is used site-wide as an
+   eyebrow/caption treatment. With the mono family gone it becomes a tracked
+   uppercase Inter label, which is the editorial equivalent. */
+.mono {
+  font-family: var(--font-body);
+  letter-spacing: 0.14em;
+}
+
+/* Gradient-filled text is replaced by flat ink everywhere. `-webkit-text-fill`
+   has to be reset too, or the transparent fill from the old rule survives. */
+.section__title .grad,
+.trust__value,
+.hero__title-grad,
+[class*='__title'] .grad {
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  color: var(--text) !important;
+  filter: none !important;
+}
+
+/* Section headings: the eyebrow shimmer and the drop shadow both go. */
+.section__title {
+  font-weight: 400;
+  letter-spacing: -0.022em;
+}
+
+.section__title .grad {
+  filter: none !important;
+}
+
+/* ---------- Eyebrow ----------
+   From a filled, shimmering, bordered pill to a plain tracked label with a
+   short accent rule. This is the single biggest visual change in the file: the
+   eyebrow appears above every section on the site. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+/* The shimmer sweep. */
+.eyebrow::after {
+  display: none;
+}
+
+.eyebrow:hover {
+  border-color: transparent;
+  color: var(--primary);
+}
+
+/* The icon inside the eyebrow becomes a rule, which reads as a printed kicker. */
+.eyebrow svg {
+  display: none;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--primary);
+  flex: none;
+}
+
+/* The heading rule underneath: a plain hairline, left-aligned. */
+.section__rule {
+  height: 1px;
+  width: 72px;
+  background: var(--border-strong);
+}
+
+.section__head--center .section__rule {
+  width: 96px;
+  background: var(--border-strong);
+}
+
+/* ==========================================================================
+   2. BUTTONS
+   Square-ish, flat, bordered. No pill, no gradient, no glow.
+   ========================================================================== */
+.btn {
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: none;
+  background-image: none;
+  transition:
+    background-color var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.btn:hover,
+.btn:active {
+  box-shadow: none;
+}
+
+/* Primary: ink on paper, terracotta on hover — exactly as briefed. */
+.btn--primary {
+  border: 1px solid var(--text);
+  background: var(--text);
+  background-image: none;
+  color: var(--bg);
+  font-weight: 500;
+}
+
+.btn--primary:hover {
+  border-color: var(--primary);
+  background: var(--primary);
+  background-image: none;
+  /* #FFFFFF on #B65F45 is 4.6:1 — the briefed pairing. */
+  color: #ffffff;
+  box-shadow: none;
+}
+
+/* Secondary: transparent with a 1px ink border. */
+.btn--outline {
+  border: 1px solid var(--text);
+  background: transparent;
+  color: var(--text);
+}
+
+.btn--outline:hover {
+  border-color: var(--primary);
+  background: transparent;
+  color: var(--primary);
+  box-shadow: none;
+}
+
+/* Tertiary: no border at all, just a label that tints. */
+.btn--ghost {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.btn--ghost:hover {
+  border-color: var(--primary);
+  background: transparent;
+  color: var(--primary);
+  box-shadow: none;
+}
+
+/* The sheen sweep and the press ripple are both decorative gloss the brief
+   rules out; the spring lift in AnimatedButton is the feedback that remains. */
+.btn.sheen::before,
+.btn.sheen::after,
+.btn .ripple,
+.ripple-host .ripple {
+  display: none !important;
+}
+
+/* Arrow travel — the one button micro-interaction kept. */
+.btn svg {
+  transition: transform var(--t-base) var(--ease);
+}
+
+.btn:hover svg {
+  transform: none;
+}
+
+.btn--arrow:hover svg:last-child {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   3. SURFACES
+   Glass becomes paper: a flat surface, a 1px border, no blur, no glow.
+   ========================================================================== */
+.glass,
+.gcard {
+  background: var(--surface);
+  background-image: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+/* GlowCard's pointer spotlight and accent bloom. */
+.gcard::before,
+.gcard::after,
+.glass::before,
+.glass::after {
+  display: none !important;
+}
+
+.gcard:hover,
+.glass:hover {
+  border-color: var(--border-strong);
+  box-shadow: none;
+}
+
+/* Chips: flat, square, quiet. */
+.chip {
+  border-radius: var(--r-xs);
+  border-color: var(--border);
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  text-transform: none;
+}
+
+.chip:hover {
+  transform: none;
+  border-color: var(--primary);
+  background: transparent;
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   4. TRUST BAR
+   A plain measured row on the page, not a floating card.
+   ========================================================================== */
+/* `.trust__panel` also carries `.glass` in the markup, and the glass rules in
+   global.css's refinement layer are equally specific — so the selector is
+   doubled up here to win the tie on the properties that matter. Doubling the
+   class is preferred over !important: it keeps the rule overridable further
+   down, which an !important would not. */
+.trust__panel.trust__panel,
+.trust .trust__panel {
+  padding: clamp(1.75rem, 3vw, 2.5rem) 0;
+  border: 0;
+  border-top: 1px solid var(--border-strong);
+  border-radius: 0;
+  background: transparent;
+  background-image: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  overflow: visible;
+}
+
+.trust__rule {
+  display: none;
+}
+
+.trust__value {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.trust__value em {
+  color: var(--primary);
+  -webkit-text-fill-color: var(--primary);
+}
+
+.trust__value-text {
+  font-size: 0.78em;
+}
+
+.trust__label {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.trust__foot {
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ==========================================================================
+   5. CURSOR
+   Kept — it already meets the brief (desktop-only, off under reduced motion,
+   never replaces the native cursor). Only the tone is brought into the palette:
+   an ink ring rather than a coloured one, so it reads as a crosshair on paper.
+
+   The animated background and the scroll-progress bar are simply not rendered
+   any more (see App.jsx), so there is nothing to override for them here.
+   ========================================================================== */
+.cursor__ring {
+  border-color: color-mix(in srgb, var(--text) 28%, transparent);
+  background: transparent;
+}
+
+.cursor__ring.is-active {
+  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+}
+
+.cursor__dot {
+  background: var(--text);
+}
+
+/* ==========================================================================
+   6. FORM CONTROLS
+   ========================================================================== */
+input,
+select,
+textarea {
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  font-family: var(--font-body);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary) !important;
+}
+
+/* ==========================================================================
+   7. REDUCED MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .btn--arrow:hover svg:last-child {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   8. ALIGNMENT
+   --------------------------------------------------------------------------
+   Eight of the section components pass `center` to <SectionHeading>, which was
+   right for a single scrolling page where each section was its own island.
+   Inside a routed page every heading now sits under a left-aligned masthead, and
+   a centred block under a left-aligned one reads as a mistake rather than a
+   choice. All headings are left-aligned; the components keep their prop, it
+   simply no longer changes the axis.
+   ========================================================================== */
+.page .section__head--center {
+  margin-inline: 0;
+  text-align: left;
+}
+
+.page .section__head--center .section__desc,
+.page .section__head--center .section__rule {
+  margin-inline: 0;
+}
+
+.page .section__head--center .section__rule {
+  transform-origin: 0 50%;
+}
+
+/* Rows that centred themselves to sit under a centred heading are re-anchored
+   left. `.faq__list` is deliberately NOT in this list: it is a grid, not a flex
+   row, so `justify-content` there distributes the *tracks* and collapses each
+   item to its content width instead of moving the row. It is handled below with
+   the property that actually applies to a grid. */
+.page .skills__tabs,
+.page .process__foot,
+.page .faq__foot {
+  margin-inline: 0;
+  justify-content: flex-start;
+}
+
+/* The FAQ list and its container: full measure, left-anchored. */
+.page .faq__container {
+  margin-inline: 0;
+}
+
+.page .faq__list {
+  justify-items: stretch;
+  margin-inline: 0;
+}
+
+/* ==========================================================================
+   9. SEGMENTED CONTROLS / FILTER TABS
+   The skills categories and the project filters were dark filled pills with a
+   coloured glow. They become flat bordered labels — an index row, not a set of
+   buttons competing with the content.
+   ========================================================================== */
+.skills__tab,
+.pfilter,
+.cs__tab {
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  overflow: visible;
+}
+
+.skills__tab:hover,
+.pfilter:hover,
+.cs__tab:hover {
+  border-color: var(--border-strong);
+  background: transparent;
+  color: var(--text);
+  box-shadow: none;
+  transform: none;
+}
+
+/* The active state was a dark filled pill, so its label was set to the paper
+   colour (`--fill-primary-ink`). With the fill gone that label would be paper
+   on paper — invisible. The selectors are doubled to outrank the section
+   stylesheets' own refinement layers, and `svg`/count children are reset with
+   it so nothing is left inheriting the old inverted ink. */
+.skills__tab.is-active.is-active,
+.pfilter.is-active.is-active,
+.cs__tab.is-active.is-active {
+  border-color: var(--text);
+  background: transparent;
+  color: var(--text);
+  font-weight: 500;
+  box-shadow: none;
+}
+
+.skills__tab.is-active.is-active svg,
+.pfilter.is-active.is-active svg,
+.cs__tab.is-active.is-active svg {
+  color: var(--primary);
+}
+
+/* Radius has to be doubled up too — the originals set --r-full. */
+.skills__tab.skills__tab,
+.pfilter.pfilter,
+.cs__tab.cs__tab {
+  border-radius: var(--r-sm);
+  min-height: 40px;
+}
+
+.skills__tab.skills__tab .skills__tab-count,
+.pfilter.pfilter .pfilter__count {
+  border-radius: var(--r-xs);
+  background: transparent;
+  opacity: 1;
+}
+
+/* The sliding filled background behind the active tab. A border is the
+   indicator now, so the fill is removed rather than re-tinted. */
+.skills__tab-bg,
+.pfilter__bg,
+.cs__tab-bg {
+  display: none !important;
+}
+
+.skills__tab.is-active svg,
+.pfilter.is-active svg {
+  color: var(--primary);
+}
+
+.skills__tab-count,
+.pfilter__count {
+  border-radius: var(--r-xs);
+  background: transparent;
+  border: 0;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.skills__tab.is-active .skills__tab-count,
+.pfilter.is-active .pfilter__count {
+  background: transparent;
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   10. TECHNOLOGY ICONS
+   The brand-coloured logos (React cyan, JS yellow, TS blue, Bootstrap purple)
+   are the loudest thing left on the Skills page and they fight the warm palette
+   head-on. Desaturated to ink by default, with the true brand colour restored
+   on hover — the information stays available on demand without the grid reading
+   as a sticker sheet.
+
+   `.techicon` IS the <svg>, not a wrapper around one, and its colour arrives
+   through the --brand-l / --brand-d custom properties set inline per icon — so
+   this has to be a filter on the element itself. A descendant selector would
+   never match, and overriding the custom property would need one rule per icon.
+   ========================================================================== */
+svg.techicon {
+  filter: grayscale(1) opacity(0.55);
+  transition: filter var(--t-base) var(--ease);
+}
+
+/* Restored on hover of whichever tile or row owns the icon. */
+.techtile:hover svg.techicon,
+li:hover > svg.techicon,
+li:hover svg.techicon,
+a:hover svg.techicon,
+button:hover svg.techicon,
+svg.techicon:hover {
+  filter: grayscale(0) opacity(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  svg.techicon {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   11. PROJECT GRID
+   --------------------------------------------------------------------------
+   The brief is explicit: two columns on desktop, one on mobile. The inherited
+   rule is `auto-fit, minmax(300px, 1fr)`, which yields three columns at 1280px
+   and four on a wide display — a wall of cards, which the brief rules out by
+   name.
+
+   Stated as explicit column counts per breakpoint rather than as another
+   auto-fit: auto-fit derives the count from the available width, so it cannot
+   express "two, whatever the width".
+   ========================================================================== */
+.page .projects__grid,
+.page #projects-grid {
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+@media (min-width: 768px) {
+  .page .projects__grid,
+  .page #projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   12. PROJECT CARD
+   Thin border, minimal radius, consistent image ratio, no heavy shadow.
+   Hover: image scale(1.03), content lift, arrow travel — the briefed spec.
+   ========================================================================== */
+/* `.pcard` also carries `.glass`, so the class is doubled to outrank it. */
+.pcard.pcard {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: none;
+  overflow: hidden;
+  transition:
+    border-color 0.45s var(--ease),
+    transform 0.45s var(--ease);
+}
+
+.pcard.pcard:hover {
+  border-color: var(--border-strong);
+  box-shadow: none;
+  /* Content lift — the briefed translateY(-4px). */
+  transform: translateY(-4px);
+}
+
+/* The accent bloom behind the media. */
+.pcard__glow {
+  display: none !important;
+}
+
+/* One ratio for every card, so a grid row never has ragged image heights. */
+.pcard__media,
+.pcard__shot {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: var(--surface-2);
+  border-radius: 0;
+}
+
+.pcard__shot-img,
+.pcard__media img,
+.pcard__shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.55s var(--ease);
+}
+
+/* Image zoom — the briefed scale(1.03). */
+.pcard:hover .pcard__shot-img,
+.pcard:hover .pcard__media img,
+.pcard:hover .pcard__shot img {
+  transform: scale(1.03);
+}
+
+/* Arrow travel on the card's action. */
+.pcard:hover .pcard__cta svg:last-child,
+.pcard:hover .btn--arrow svg:last-child {
+  transform: translateX(6px);
+}
+
+.pcard__index {
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcard.pcard,
+  .pcard__shot-img,
+  .pcard__media img {
+    transition: none;
+  }
+  .pcard.pcard:hover,
+  .pcard:hover .pcard__shot-img,
+  .pcard:hover .pcard__media img {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   13. PROCESS STEPS
+   --------------------------------------------------------------------------
+   `auto-fit, minmax(210px, 1fr)` yields five columns at 1280px and each card
+   carries a title, a paragraph and two labelled rows — at ~210px that content
+   sets to three or four words a line and reads as a cramped column of scraps.
+
+   Capped at three across on desktop and two on tablet, which gives each card a
+   measure its text can actually use. The seven steps then read as 3 + 3 + 1.
+   ========================================================================== */
+@media (min-width: 981px) {
+  .page .process__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 641px) and (max-width: 980px) {
+  .page .process__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   14. STAT CARDS
+   The four counters on the About page sat in a 2x2 of bordered boxes with the
+   value floating alone at the top. Flattened to a plain measured row — the
+   number, its label, its hint — which is how a figure reads in print.
+   ========================================================================== */
+/* `.stat` also carries `.glass`, so the class is doubled to outrank it. */
+.stat.stat {
+  border-radius: var(--r-md);
+  box-shadow: none;
+  background: transparent;
+}
+
+.stat__value {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  -webkit-text-fill-color: currentColor;
+  background: none;
+}
+
+.stat__rule {
+  background: var(--border-strong);
+}
+
+/* ==========================================================================
+   15. ACCENT TEXT CONTRAST
+   --------------------------------------------------------------------------
+   The briefed --primary (#B65F45) is 4.46:1 on white and 3.95:1 on the page —
+   fractionally under AA for normal-size text, comfortably over the 3:1 large-
+   text threshold. So the colour stays exactly as briefed for everything that is
+   not small text (rules, borders, icons, dots, and display-size type), and the
+   handful of places that paint small *text* in the accent use --primary-ink
+   instead: the same hue at the briefed hover level, 6.31:1 on white.
+
+   Listed explicitly rather than applied with a blanket `[class*=]` sweep, so it
+   is obvious which elements are affected and a future accent-coloured element
+   does not silently opt itself in.
+   ========================================================================== */
+.eyebrow,
+.phead__index,
+.home__name,
+.svc__lead,
+.pcard__domain,
+.footer__links a:hover,
+.home__socials a:hover,
+.nav__link:hover,
+.stat__value em,
+.trust__value em {
+  color: var(--primary-ink);
+}
+
+/* Links that reveal the accent on hover: the hover state is where the text is
+   read, so it takes the accessible step too. */
+.home__work-link:hover .home__work-name,
+.nf__link:hover .nf__link-label,
+.chip:hover {
+  color: var(--primary-ink);
+}
+
+/* Large display type keeps the true brand accent — at these sizes 3:1 applies
+   and the exact colour matters more. */
+.phead__title .accent,
+.home__title .accent {
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   16. SMALL-TYPE CONTRAST
+   --------------------------------------------------------------------------
+   A measured pass over every text node on every route in all three themes
+   turned up one recurring shape: labels set at 0.58-0.65rem (9-10px) in either
+   the accent or --text-dim, sitting on a tinted inner surface. At that size AA
+   wants 4.5:1 and these were landing between 1.8 and 3.1.
+
+   Two things are wrong in each case and both are fixed here: the size (9px is
+   below the site's own floor for readable text) and the colour.
+   ========================================================================== */
+
+/* NOTE ON WHERE THESE FIXES LIVE.
+   This stylesheet is bundled into the entry CSS, but the section stylesheets are
+   imported by lazily-loaded section components — so their chunks load AFTER the
+   entry sheet and outrank it at equal specificity. Anything this file needs to
+   override in a lazily-loaded section therefore has to either raise specificity
+   or be fixed at source. `.pcard__domain` is fixed at source in projects.css for
+   exactly that reason; the rules below only touch properties no section
+   stylesheet re-declares later.
+
+   ---------- Meta label / value pairs ----------
+   The About snapshot rows and anything else pairing a tiny uppercase label with
+   a value. Both step up a size and onto --text-muted. */
+.about__meta-label,
+.about__meta-sub,
+.about__meta dt,
+.stat__hint,
+.trust__hint,
+.pcard__platform,
+.pcard__badge {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Counts on filter/tab controls ----------
+   0.58rem on a wash; now body-sized ink at the same weight as the label. */
+.pfilter__count,
+.skills__tab-count {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+/* ---------- Global floor ----------
+   Nothing on the site should set text below 0.68rem (~11px). This catches the
+   long tail of one-off small labels across the 28 section stylesheets without
+   needing a rule per class — it only raises a size, so no layout depends on it.
+   `.mono` covers the eyebrow/meta treatment used throughout. */
+.page small,
+.page figcaption,
+.page .mono {
+  font-size: max(0.7rem, 1em);
+}

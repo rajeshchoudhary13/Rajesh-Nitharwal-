@@ -1,0 +1,789 @@
+/* ================================= Hero ================================== */
+.hero {
+  position: relative;
+  padding-top: calc(var(--nav-h) + clamp(2.25rem, 6vw, 4.5rem));
+  padding-bottom: clamp(2.75rem, 5vw, 4.5rem);
+  overflow: hidden;
+}
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+  min-height: min(76vh, 720px);
+}
+
+.hero__copy {
+  min-width: 0;
+}
+
+/* ---------- Title ---------- */
+.hero__title {
+  /* A notch under --fs-hero. The headline is a full sentence set over three
+     deliberate lines, so the ceiling is the size at which the longest of them
+     ("I Build Digital Products") still fits the copy column unwrapped — past
+     that it re-wraps into five ragged lines and loses the shape. */
+  font-size: clamp(2.05rem, 4.1vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  margin-bottom: 0.55rem;
+}
+
+/* One clip-reveal per line, so the lines stack instead of wrapping mid-phrase. */
+.hero__title-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero__word {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* The last line of the headline carries the gradient. Tinting the whole
+   sentence would turn a three-line statement into a decoration; tinting the
+   closing clause lands the emphasis where the sentence already puts it. */
+.hero__title-grad {
+  background: linear-gradient(115deg, var(--grad-text-mid) 0%, var(--primary) 55%, var(--support) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Availability badge ----------
+   The first thing on the page, because it is the first thing a client needs to
+   know. Reads as a live status pill, not a decorative tag. */
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--sp-4);
+  padding: 0.42rem 0.85rem 0.42rem 0.7rem;
+  border-radius: var(--r-full);
+  border: 1px solid color-mix(in srgb, var(--ok) 32%, transparent);
+  background: color-mix(in srgb, var(--ok) 9%, var(--surface));
+  color: var(--ok-text);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  box-shadow: var(--e-1);
+}
+
+/* Booked is a real state, not an error — amber, same shape, no alarm. */
+.hero__badge.is-busy {
+  border-color: color-mix(in srgb, var(--warn) 34%, transparent);
+  background: color-mix(in srgb, var(--warn) 10%, var(--surface));
+  color: var(--warn-text);
+}
+
+.hero__badge-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 16%, transparent);
+}
+
+.hero__badge.is-busy .hero__badge-dot {
+  background: var(--warn);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--warn) 16%, transparent);
+}
+
+/* A slow breathing halo rather than a hard blink. */
+.hero__badge-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  animation: dot-pulse 2.6s var(--ease-in-out) infinite;
+}
+
+/* ---------- Technology indicators ----------
+   Plain-text pills, deliberately quiet: they answer "is this the right kind of
+   developer?" at a glance and then get out of the way of the CTA above them. */
+.hero__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: var(--sp-5);
+}
+
+.hero__stack-item {
+  /* Sized so all seven indicators fit one line in the desktop copy column;
+     a seventh pill wrapping on its own reads as an accident. */
+  padding: 0.28rem 0.55rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--wash-1);
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition:
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    background-color var(--t-fast) var(--ease);
+}
+
+.hero__stack-item:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--primary) 34%, transparent);
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
+}
+
+.hero__intro {
+  max-width: 52ch;
+  color: var(--text-muted);
+  font-size: var(--fs-lead);
+  line-height: 1.75;
+  margin-bottom: var(--sp-5);
+}
+
+.hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.35rem;
+  margin-bottom: var(--sp-5);
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+}
+
+.hero__facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hero__facts svg {
+  color: var(--violet);
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.hero__marquee {
+  margin-top: clamp(2.5rem, 5vw, 3.75rem);
+  padding-top: clamp(1.5rem, 3vw, 2.25rem);
+  border-top: 1px solid var(--border);
+}
+
+.marquee__group {
+  display: flex;
+  gap: 0.7rem;
+  padding-right: 0.7rem;
+}
+
+.marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--wash-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.marquee__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+}
+
+/* =========================== Hero visual =========================== */
+.hero-visual {
+  position: relative;
+  min-height: clamp(350px, 42vw, 520px);
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+.hv__orbits {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.hv__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--primary-light) 16%, transparent);
+}
+
+.hv__ring--1 {
+  width: min(94%, 450px);
+  aspect-ratio: 1;
+}
+
+.hv__ring--2 {
+  width: min(72%, 335px);
+  aspect-ratio: 1;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--primary-alt) 14%, transparent);
+}
+
+.hv__atom {
+  position: absolute;
+  color: color-mix(in srgb, var(--primary-alt) 50%, transparent);
+  filter: drop-shadow(0 0 26px color-mix(in srgb, var(--primary) 40%, transparent));
+}
+
+/* ---------- Code card ---------- */
+.hv__code {
+  position: relative;
+  z-index: 3;
+  width: min(100%, 372px);
+  padding: 0;
+  overflow: hidden;
+}
+
+.hv__code-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--device-bar);
+}
+
+.hv__dots,
+.browser__dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.hv__dots i,
+.browser__dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--device-bar);
+}
+
+.hv__dots i:first-child {
+  background: #ff5f57;
+}
+.hv__dots i:nth-child(2) {
+  background: #febc2e;
+}
+.hv__dots i:nth-child(3) {
+  background: #28c840;
+}
+
+.hv__file {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+
+.hv__code-body {
+  display: grid;
+  gap: 0.28rem;
+  padding: 0.95rem 0.9rem 1.15rem;
+  font-size: clamp(0.66rem, 1.05vw, 0.78rem);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--code-text);
+}
+
+.hv__line {
+  display: block;
+}
+
+.hv__ln {
+  display: inline-block;
+  width: 1.5em;
+  color: var(--device-text);
+  user-select: none;
+}
+
+.tok-kw {
+  color: var(--code-keyword);
+}
+.tok-str {
+  color: var(--code-string);
+}
+.tok-fn {
+  color: var(--code-fn);
+}
+
+.hv__caret {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  margin-left: 1.6em;
+  background: var(--cyan);
+}
+
+/* ---------- API animation ---------- */
+.hv__api {
+  position: absolute;
+  z-index: 4;
+  left: 2%;
+  bottom: 8%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--r-full);
+}
+
+.hv__api-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.hv__api-node svg {
+  color: var(--cyan);
+}
+
+.hv__api-wire {
+  position: relative;
+  width: clamp(46px, 7.5vw, 72px);
+  height: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.hv__api-wire svg {
+  width: 100%;
+  height: 12px;
+}
+
+.hv__packet {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  translate: 0 -50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 12px 2px color-mix(in srgb, var(--support) 70%, transparent);
+}
+
+.hv__api-label {
+  position: absolute;
+  top: -15px;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+/* ---------- Mini phone ---------- */
+.hv__phone {
+  position: absolute;
+  z-index: 5;
+  right: -3%;
+  bottom: 0;
+  width: clamp(110px, 14.5vw, 152px);
+}
+
+.hv__phone-body {
+  position: relative;
+  aspect-ratio: 9 / 18.5;
+  padding: 7px;
+  border-radius: 24px;
+  border: 1px solid var(--device-line);
+  background: linear-gradient(160deg, var(--device-shell-1), var(--device-shell-2));
+  box-shadow:
+    0 30px 60px -30px rgba(var(--shadow-rgb), var(--shadow-a)),
+    inset 0 0 0 1px var(--hairline-ink);
+}
+
+.hv__phone-notch {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  translate: -50% 0;
+  width: 34%;
+  height: 5px;
+  border-radius: var(--r-full);
+  background: var(--device-bar);
+}
+
+.hv__phone-screen {
+  height: 100%;
+  border-radius: 18px;
+  padding: 15px 9px 9px;
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  background:
+    radial-gradient(120px 80px at 70% 0%, color-mix(in srgb, var(--primary) 24%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--device-screen-1), var(--device-screen-2));
+  border: 1px solid var(--device-line);
+}
+
+.hv__phone-avatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  color: var(--cyan);
+}
+
+.hv__phone-bar {
+  height: 5px;
+  border-radius: var(--r-full);
+  background: var(--device-bar);
+}
+
+.hv__phone-bar.w70 {
+  width: 70%;
+}
+.hv__phone-bar.w45 {
+  width: 45%;
+}
+
+.hv__phone-cards {
+  display: grid;
+  gap: 6px;
+  margin-top: 3px;
+}
+
+.hv__phone-cards span {
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(120deg, color-mix(in srgb, var(--primary-alt) 22%, transparent), color-mix(in srgb, var(--primary-alt) 16%, transparent));
+}
+
+.hv__phone-cta {
+  height: 16px;
+  margin-top: 4px;
+  border-radius: var(--r-full);
+  background: var(--grad-primary);
+  opacity: 0.85;
+}
+
+/* ---------- Floating pills ---------- */
+.hv__float {
+  position: absolute;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border-strong);
+  background: var(--chip-bg);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+
+.hv__float svg {
+  color: var(--a, var(--cyan));
+}
+
+.hv__float.f-1 {
+  top: 4%;
+  left: 4%;
+}
+.hv__float.f-2 {
+  top: 15%;
+  right: 2%;
+}
+.hv__float.f-3 {
+  top: 44%;
+  left: -3%;
+}
+.hv__float.f-4 {
+  bottom: 30%;
+  right: 4%;
+}
+.hv__float.f-5 {
+  bottom: 2%;
+  left: 30%;
+}
+.hv__float.f-6 {
+  top: 30%;
+  right: 20%;
+}
+
+/* ---------- Hero breakpoints ---------- */
+@media (min-width: 1025px) {
+  /* Layer the composition: code card sits up-left of the floating device. */
+  .hv__code {
+    translate: -9% -7%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .hero-visual {
+    order: 2;
+    min-height: clamp(340px, 60vw, 450px);
+    max-width: 560px;
+    margin-inline: auto;
+    width: 100%;
+  }
+  .hv__float.f-6 {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero__facts {
+    gap: 0.35rem 1rem;
+  }
+  .hero__cta .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .hero-visual {
+    min-height: 395px;
+  }
+  .hv__code {
+    width: min(100%, 318px);
+  }
+  .hv__api {
+    left: 0;
+    bottom: 2%;
+    padding: 0.45rem 0.6rem;
+  }
+  .hv__phone {
+    right: 0;
+    bottom: 15%;
+    width: 102px;
+  }
+  .hv__float.f-3,
+  .hv__float.f-5 {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero__cta {
+    display: grid;
+  }
+  .hv__float.f-2 {
+    display: none;
+  }
+}
+
+@media (min-width: 1700px) {
+  .hero__inner {
+    min-height: min(72vh, 800px);
+  }
+  .hero-visual {
+    min-height: 560px;
+  }
+}
+
+/* ==========================================================================
+   Hero refinement layer
+   ========================================================================== */
+
+.hero {
+  /* Room for the scroll cue that now sits between the grid and the marquee. */
+  padding-bottom: clamp(1.75rem, 3.5vw, 3rem);
+}
+
+/* The visual is wrapped so the scroll parallax can transform the wrapper while
+   `.hero-visual` keeps owning its own internal layout. The wrapper therefore
+   inherits the grid-item duties (min-width, order). */
+.hero__visual-wrap {
+  min-width: 0;
+  will-change: transform;
+}
+
+/* ---------- Title ---------- */
+.hero__title {
+  margin-bottom: 0.7rem;
+}
+
+/* The clip-path reveal needs the word to be its own block, and a touch of
+   bottom padding so descenders are not shaved by the clip edge. */
+.hero__word {
+  padding-bottom: 0.06em;
+}
+
+.hero__title-grad {
+  /* A wider gradient panned slowly gives the closing line a living sheen
+     without any JavaScript. */
+  background: linear-gradient(
+    115deg,
+    var(--grad-text-mid) 0%,
+    var(--primary) 34%,
+    var(--support) 62%,
+    var(--grad-text-mid) 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: name-sheen 9s var(--ease-in-out) infinite;
+}
+
+@keyframes name-sheen {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ---------- Facts ---------- */
+.hero__facts li {
+  gap: 0.45rem;
+}
+
+@keyframes dot-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.75);
+    opacity: 0;
+  }
+}
+
+/* ---------- Actions ---------- */
+.hero__cta {
+  gap: 0.7rem;
+}
+
+/* ---------- Scroll cue ---------- */
+.hero__cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin: clamp(1.75rem, 3.5vw, 2.75rem) auto 0;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--r-md);
+}
+
+/* ---------- Marquee ---------- */
+.hero__marquee {
+  /* Hairline gradient instead of a flat border. */
+  border-top: 0;
+  position: relative;
+}
+
+.hero__marquee::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: var(--grad-line);
+}
+
+.marquee__item {
+  box-shadow: var(--hairline);
+  transition:
+    color var(--t-base) var(--ease-out),
+    border-color var(--t-base) var(--ease-out),
+    background var(--t-base) var(--ease-out);
+}
+
+.marquee__item:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--primary-alt) 40%, transparent);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+
+/* =========================== Hero visual =========================== */
+
+/* The code card is the focal object of the composition, so it gets the deepest
+   elevation of anything in the hero. */
+.hv__code {
+  box-shadow: var(--e-4), var(--hairline);
+}
+
+.hv__api,
+.hv__float {
+  box-shadow: var(--e-2), var(--hairline);
+}
+
+/* Rings breathe very slowly, which stops the composition reading as a static
+   illustration. The outer ring is rotated by Framer, so only opacity is used
+   here to avoid two transform owners. */
+.hv__ring--2 {
+  animation: ring-breathe 11s var(--ease-in-out) infinite;
+}
+
+@keyframes ring-breathe {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.hv__phone-body {
+  box-shadow:
+    0 34px 68px -32px rgba(var(--shadow-rgb), var(--shadow-a)),
+    inset 0 0 0 1px var(--hairline-ink);
+}
+
+/* ---------- Hero breakpoints ---------- */
+@media (max-width: 1024px) {
+  /* `order` has to live on the grid item, which is now the wrapper. */
+  .hero__visual-wrap {
+    order: 2;
+    max-width: 560px;
+    margin-inline: auto;
+    width: 100%;
+  }
+  .hero__cue {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero__cta {
+    gap: 0.55rem;
+  }
+  /* Seven pills wrap to three lines on a phone and push the facts below the
+     fold; five still answer the "right kind of developer?" question. */
+  .hero__stack-item:nth-child(n + 6) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title-grad {
+    animation: none;
+  }
+  .hero__badge-dot::after,
+  .hv__ring--2 {
+    animation: none;
+  }
+}

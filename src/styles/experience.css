@@ -1,0 +1,333 @@
+/* =============================== Timeline ================================ */
+.timeline {
+  position: relative;
+  padding-left: clamp(2.25rem, 4vw, 3.25rem);
+}
+
+.timeline__rail {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: clamp(0.6rem, 1.4vw, 1rem);
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--primary-light) 5%, transparent), color-mix(in srgb, var(--primary-light) 16%, transparent), color-mix(in srgb, var(--primary-light) 5%, transparent));
+  overflow: hidden;
+}
+
+.timeline__progress {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 0;
+  background: linear-gradient(180deg, var(--cyan), var(--blue) 45%, var(--violet));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--primary) 70%, transparent);
+}
+
+.timeline__list {
+  display: grid;
+  gap: clamp(1rem, 2.2vw, 1.6rem);
+}
+
+.tl-item {
+  position: relative;
+}
+
+.tl-item__node {
+  position: absolute;
+  top: 1.35rem;
+  left: calc(clamp(2.25rem, 4vw, 3.25rem) * -1 + clamp(0.6rem, 1.4vw, 1rem) - 15px);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--primary-light) 35%, transparent);
+  background: var(--surface);
+  color: var(--cyan);
+  box-shadow: 0 0 0 5px var(--page-ring);
+  z-index: 2;
+}
+
+.tl-item__pulse {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 1px solid var(--ok);
+}
+
+.tl-card {
+  padding: var(--card-pad);
+  border-radius: var(--r-lg);
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.tl-card:hover {
+  border-color: color-mix(in srgb, var(--primary-alt) 40%, transparent);
+  box-shadow: var(--shadow-hover);
+}
+
+.tl-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.55rem 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.tl-card__title {
+  font-size: clamp(1.05rem, 1.8vw, 1.28rem);
+  letter-spacing: -0.024em;
+  margin-bottom: 0.22rem;
+}
+
+.tl-card__company {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.65rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+.tl-card__loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.tl-card__period {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--wash-2);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.tl-card__period.is-current {
+  border-color: color-mix(in srgb, var(--ok) 42%, transparent);
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 9%, transparent);
+}
+
+.tl-card__summary {
+  color: var(--text);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  padding-bottom: 0.9rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px dashed var(--border);
+}
+
+.tl-card__points {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: var(--sp-4);
+}
+
+.tl-card__points li {
+  display: flex;
+  gap: 0.6rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.68;
+}
+
+.tl-card__bullet {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 0.62em;
+  border-radius: 50%;
+  background: var(--grad-primary);
+}
+
+@media (max-width: 560px) {
+  .timeline {
+    padding-left: 1.8rem;
+  }
+  .timeline__rail {
+    left: 0.4rem;
+  }
+  .tl-item__node {
+    left: -1.7rem;
+    width: 28px;
+    height: 28px;
+    top: 1.15rem;
+  }
+  .tl-card__head {
+    flex-direction: column;
+  }
+}
+
+/* ==========================================================================
+   Timeline refinement layer
+   ========================================================================== */
+.timeline__rail {
+  width: 3px;
+  border-radius: var(--r-full);
+}
+
+.timeline__progress {
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--primary) 75%, transparent),
+    0 0 34px color-mix(in srgb, var(--primary-alt) 30%, transparent);
+}
+
+.timeline__list {
+  gap: clamp(1.15rem, 2.4vw, 1.85rem);
+}
+
+/* ---------- Node ---------- */
+.tl-item__node {
+  width: 36px;
+  height: 36px;
+  border-color: color-mix(in srgb, var(--primary-light) 28%, transparent);
+  background: linear-gradient(160deg, var(--surface), var(--surface-2));
+  box-shadow:
+    0 0 0 5px var(--page-ring),
+    0 10px 24px -12px rgba(var(--shadow-rgb), var(--shadow-a)),
+    inset 0 1px 0 var(--hairline-ink);
+  transition:
+    border-color var(--t-base) var(--ease-out),
+    color var(--t-base) var(--ease-out),
+    transform var(--t-base) var(--ease-spring);
+}
+
+/* Hovering the card highlights its node, tying the two together across the gap. */
+.tl-item:hover .tl-item__node {
+  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+  color: var(--primary);
+  transform: scale(1.08);
+}
+
+/* ---------- Card ---------- */
+.tl-card {
+  padding: clamp(1.25rem, 2.1vw, 1.7rem);
+  border-radius: var(--r-xl);
+}
+
+.tl-card__head {
+  margin-bottom: 0.85rem;
+}
+
+.tl-card__company {
+  gap: 0.35rem 0.7rem;
+}
+
+.tl-card__period {
+  padding: 0.34rem 0.8rem;
+  box-shadow: var(--hairline);
+}
+
+/* The live role's badge breathes very slowly — enough to read as "now" without
+   pulling attention away from the copy. */
+.tl-card__period.is-current {
+  animation: current-glow 3.4s var(--ease-in-out) infinite;
+}
+
+@keyframes current-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--ok) 0%, transparent),
+      var(--hairline);
+  }
+  50% {
+    box-shadow:
+      0 0 18px -2px color-mix(in srgb, var(--ok) 40%, transparent),
+      var(--hairline);
+  }
+}
+
+/* Gradient divider under the summary instead of a dashed rule. */
+.tl-card__summary {
+  border-bottom: 0;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  background-image: var(--grad-line);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  line-height: var(--lh-body);
+}
+
+.tl-card__points li {
+  line-height: var(--lh-body);
+  transition: color var(--t-base) var(--ease-out);
+}
+
+.tl-card__points li:hover {
+  color: var(--text);
+}
+
+.tl-card__bullet {
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.tl-card__points li:hover .tl-card__bullet {
+  transform: scale(1.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-card__period.is-current {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Premium layer — period badge
+   The badge used to tint the whole capsule emerald and pulse it. A saturated
+   pill reads as a status LED; here the capsule stays neutral glass and the
+   state lives in the dot, so "current" still registers instantly without the
+   badge shouting louder than the job title next to it.
+   ========================================================================== */
+.tl-card__period {
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--platinum);
+  background: var(--wash-2);
+  box-shadow: var(--e-1), var(--hairline-2);
+}
+
+.tl-card__period.is-current {
+  color: var(--platinum);
+  border-color: color-mix(in srgb, var(--ok) 30%, var(--border));
+  background: var(--wash-3);
+  /* The capsule no longer breathes — the dot does. */
+  animation: none;
+}
+
+.tl-card__period.is-current svg {
+  color: var(--ok);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--ok) 55%, transparent));
+  animation: live-dot 3.4s var(--ease-in-out) infinite;
+}
+
+@keyframes live-dot {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-card__period.is-current svg {
+    animation: none;
+    opacity: 1;
+  }
+}

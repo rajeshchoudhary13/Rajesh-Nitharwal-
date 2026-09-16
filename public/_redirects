@@ -1,0 +1,5 @@
+# SPA fallback. Every unmatched path is served index.html so React Router can
+# resolve it client-side — without this, a direct hit on /about (or a refresh, or
+# a shared deep link) returns a 404 from the host before the app ever loads.
+# 200, not 301: the URL must stay as the visitor typed it.
+/*  /index.html  200

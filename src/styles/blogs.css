@@ -1,0 +1,206 @@
+/* ==========================================================================
+   BLOGS — the writing index.
+
+   A ruled list rather than a card grid, matching the selected-work list on the
+   home page. All spacing from the --s-* scale.
+   ========================================================================== */
+
+/* ---------- Placeholder notice ----------
+   Deliberately plain: a dashed rule and muted ink. It is an editorial note to
+   the reader, not an alert, so it must not out-shout the posts underneath it. */
+.blogs__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  max-width: 62ch;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding: var(--s-4);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--wash-1);
+}
+
+.blogs__notice svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--primary-ink);
+}
+
+.blogs__notice p {
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* ---------- List ---------- */
+.blogs__list {
+  border-top: 1px solid var(--border-strong);
+}
+
+.blogs__row {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  padding-block: clamp(1.75rem, 3.5vw, 2.5rem);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Only a post with a destination gets the affordance. */
+.blogs__row--link {
+  transition: padding-left var(--t-base) var(--ease);
+}
+
+.blogs__row--link:hover {
+  padding-left: var(--s-3);
+}
+
+.blogs__index {
+  flex: none;
+  /* Aligns the numeral with the title's cap-height rather than its box. */
+  padding-top: 0.4em;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+.blogs__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-width: 0;
+  flex: 1;
+}
+
+/* ---------- Title row ---------- */
+.blogs__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+}
+
+.blogs__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.4vw, 1.65rem);
+  font-weight: 400;
+  line-height: 1.24;
+  letter-spacing: -0.012em;
+  color: var(--text);
+  transition: color var(--t-base) var(--ease);
+}
+
+.blogs__row--link:hover .blogs__title {
+  color: var(--primary-ink);
+}
+
+/* The unpublished marker. Terracotta hairline + accent ink, so it is legible as
+   a status and impossible to read as part of the title. */
+.blogs__flag {
+  flex: none;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--primary);
+  border-radius: var(--r-xs);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary-ink);
+  white-space: nowrap;
+}
+
+/* ---------- Copy + meta ---------- */
+.blogs__excerpt {
+  max-width: 62ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+.blogs__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+.blogs__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* ---------- Arrow ---------- */
+.blogs__arrow {
+  flex: none;
+  align-self: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text-dim);
+  transition:
+    transform var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.blogs__row--link:hover .blogs__arrow {
+  transform: translateX(6px);
+  color: var(--primary);
+}
+
+/* ---------- Empty state ---------- */
+.blogs__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-6);
+  padding-block: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border);
+}
+
+.blogs__empty-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .blogs__row {
+    /* The index moves above the title: at this width a leading gutter costs
+       more measure than the numeral is worth. */
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    padding-block: var(--s-6);
+  }
+
+  .blogs__index {
+    padding-top: 0;
+  }
+
+  .blogs__body {
+    flex-basis: 100%;
+  }
+
+  .blogs__arrow {
+    display: none;
+  }
+
+  .blogs__notice {
+    padding: var(--s-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blogs__row--link:hover {
+    padding-left: 0;
+  }
+  .blogs__row--link:hover .blogs__arrow {
+    transform: none;
+  }
+}

@@ -1,0 +1,594 @@
+/* ==========================================================================
+   SERVICES PAGE — the client-solutions composition
+   --------------------------------------------------------------------------
+   The brief rules out a 3/4-column card grid here and asks for a visual
+   journey. Three shapes, none of them a card grid:
+
+     .jrny   the seven-step process, as one continuous vertical spine
+     .svcl   the six services, as an editorial ledger with an aside each
+     .engm   three engagement models, as compact rows
+
+   The journey is first because "how does this work and how much of my time will
+   it take" is the question that stops people enquiring.
+
+   services.css is not imported here — that file belongs to the <Services>
+   section, which is still mounted on /about as a preview. The two are
+   deliberately different treatments of the same data.
+   ========================================================================== */
+
+.jrny,
+.svcl,
+.engm {
+  margin-block: clamp(3rem, 6vw, 5.5rem);
+}
+
+.jrny__head,
+.engm__head {
+  max-width: 62ch;
+  margin-bottom: clamp(2.25rem, 4.5vw, 3.5rem);
+}
+
+/* ==========================================================================
+   1. THE JOURNEY — `.jrny`
+   --------------------------------------------------------------------------
+   One continuous spine with seven nodes on it. A process is a sequence, and a
+   grid of equal boxes is the one shape that hides sequence — which is exactly
+   why the brief rules it out for this page.
+   ========================================================================== */
+.jrny__list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The spine. Drawn on the list so it is continuous, and inset top and bottom so
+   it starts and ends at the centre of the first and last node rather than
+   running past them. */
+.jrny__list::before {
+  content: '';
+  position: absolute;
+  top: 1.6rem;
+  bottom: 1.6rem;
+  /* Half the node width, so the line runs through the node's centre. */
+  left: 17px;
+  width: 1px;
+  background: var(--border);
+}
+
+.jrny__step {
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.jrny__step:first-child {
+  padding-top: 0;
+}
+
+.jrny__marker {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.15rem;
+}
+
+.jrny__node {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  flex: none;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-full);
+  /* Opaque so the spine is interrupted by the node rather than crossing it. */
+  background: var(--bg);
+  color: var(--a, var(--primary));
+  transition:
+    border-color var(--t-base) var(--ease),
+    background-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.jrny__step:hover .jrny__node {
+  border-color: var(--a, var(--primary));
+  background: color-mix(in srgb, var(--a, var(--primary)) 10%, var(--bg));
+}
+
+.jrny__step-num {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  font-variant-numeric: tabular-nums;
+  color: var(--a, var(--primary));
+}
+
+.jrny__step-title {
+  margin-top: var(--s-1);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: -0.018em;
+  color: var(--text);
+}
+
+.jrny__desc {
+  margin-top: var(--s-3);
+  max-width: 58ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+/* ---------- The two columns that matter ----------
+   "What you get" and "your time" side by side. The second is the one most
+   process sections omit, so it is given equal weight rather than a footnote. */
+.jrny__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 0 clamp(1.5rem, 3vw, 2.5rem);
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+}
+
+.jrny__meta > div {
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border);
+}
+
+.jrny__meta dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.jrny__meta dd {
+  margin: var(--s-2) 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* ==========================================================================
+   2. SERVICE LEDGER — `.svcl`
+   --------------------------------------------------------------------------
+   Each service is a full-width row: the explanation in the wide column, what
+   the client actually receives in an aside. The `detail` copy — formerly behind
+   a "View Details" disclosure in the card grid — is on the page, because it is
+   the part that says what problem the service removes.
+   ========================================================================== */
+.svcl__head {
+  --split-gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.svcl__lead {
+  max-width: 46ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+.svcl__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.svcl__item {
+  padding-block: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--border);
+}
+
+.svcl__item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.svcl__item-grid {
+  --split-gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+/* ---------- Title row ---------- */
+.svcl__title-row {
+  display: grid;
+  grid-template-columns: minmax(2.5rem, auto) minmax(0, 1fr);
+  column-gap: clamp(1rem, 2.5vw, 1.75rem);
+  align-items: baseline;
+  margin-bottom: var(--s-6);
+}
+
+.svcl__num {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--border-strong);
+  transition: color var(--t-base) var(--ease);
+}
+
+.svcl__item:hover .svcl__num {
+  color: var(--a, var(--primary));
+}
+
+.svcl__title {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.8vw, 1.85rem);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.svcl__title svg {
+  flex: none;
+  color: var(--a, var(--primary));
+}
+
+/* The one-line promise, set in the display face so it reads as a claim rather
+   than as the first line of the paragraph below it. */
+.svcl__promise {
+  margin-top: var(--s-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-lead);
+  line-height: 1.35;
+  color: var(--primary);
+}
+
+.svcl__desc,
+.svcl__detail {
+  max-width: 62ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+.svcl__detail {
+  margin-top: var(--s-4);
+}
+
+/* ---------- Aside: what the client receives ---------- */
+.svcl__aside {
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--wash-1);
+}
+
+.svcl__aside-title {
+  margin-bottom: var(--s-4);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.svcl__deliverables {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.svcl__deliverables li {
+  position: relative;
+  padding-left: var(--s-5);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: var(--text);
+}
+
+/* A hairline rather than a bullet glyph, consistent with the rest of the site. */
+.svcl__deliverables li::before {
+  content: '';
+  position: absolute;
+  top: 0.68em;
+  left: 0;
+  width: 11px;
+  height: 1px;
+  background: var(--a, var(--primary));
+}
+
+.svcl__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: var(--s-6) 0 0;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.svcl__tech li {
+  padding: 0.22rem var(--s-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  background: var(--surface);
+}
+
+/* The evidence line: which shipped project this service was actually used on. */
+.svcl__proof {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin-top: var(--s-4);
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+.svcl__proof svg {
+  flex: none;
+  margin-top: 0.2em;
+  color: var(--ok);
+}
+
+/* ==========================================================================
+   3. ENGAGEMENT MODELS — `.engm`
+   --------------------------------------------------------------------------
+   Three columns, but bordered blocks rather than filled cards — this is the
+   last question before contact, and it should not outweigh the six services
+   above it. The visual weight is deliberately lighter than `.svcl`.
+   ========================================================================== */
+.engm__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-strong);
+}
+
+.engm__item {
+  padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1rem, 2vw, 1.5rem);
+  border-bottom: 1px solid var(--border);
+}
+
+.engm__item + .engm__item {
+  border-left: 1px solid var(--border);
+}
+
+.engm__icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--a, var(--primary));
+}
+
+.engm__tag {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--a, var(--primary));
+}
+
+.engm__title {
+  margin-top: var(--s-2);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.engm__desc {
+  margin-top: var(--s-3);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.engm__points {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin: var(--s-4) 0 0;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.engm__points li {
+  position: relative;
+  padding-left: var(--s-5);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+.engm__points li::before {
+  content: '';
+  position: absolute;
+  top: 0.65em;
+  left: 0;
+  width: 10px;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+  /* Three engagement columns at 900px is 300px each minus padding; below that
+     they read better stacked, and the left borders become top borders. */
+  .engm__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .engm__item + .engm__item {
+    border-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .svcl__title-row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-2);
+  }
+  .svcl__num {
+    font-size: 1.6rem;
+  }
+  .svcl__aside {
+    padding: var(--s-4);
+  }
+  .jrny__step {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: var(--s-4);
+  }
+  .jrny__node {
+    width: 30px;
+    height: 30px;
+  }
+  .jrny__list::before {
+    left: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jrny__node,
+  .svcl__num {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   4. BUILDABLES — `.bld`
+   --------------------------------------------------------------------------
+   data/buildables.js: ten product categories written for recognition rather
+   than for description — the visitor finds the row that sounds like their own
+   idea. Two dense columns, an icon and two lines each.
+
+   The <Buildables> section rendered this as a ten-card grid on /about. Ten
+   cards is a lot of visual weight for a recognition list, and the ledger above
+   is already this page's detailed treatment — so this is deliberately the most
+   compact block on the route apart from the engagement rows.
+   ========================================================================== */
+.bld {
+  margin-block: clamp(3rem, 6vw, 5.5rem);
+}
+
+.bld__head {
+  --split-gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.bld__lead {
+  max-width: 44ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+.bld__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.bld__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(0.9rem, 2vw, 1.25rem);
+  align-items: start;
+  padding: clamp(1.1rem, 2.2vw, 1.5rem) clamp(0.75rem, 1.5vw, 1.15rem);
+  border-bottom: 1px solid var(--border);
+  transition: background-color var(--t-base) var(--ease);
+}
+
+.bld__item:hover {
+  background: var(--wash-1);
+}
+
+/* Vertical rule between the two columns on desktop only. */
+@media (min-width: 1025px) {
+  .bld__item:nth-child(even) {
+    border-left: 1px solid var(--border);
+  }
+}
+
+.bld__icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--a, var(--primary));
+  transition: border-color var(--t-base) var(--ease);
+}
+
+.bld__item:hover .bld__icon {
+  border-color: color-mix(in srgb, var(--a, var(--primary)) 45%, transparent);
+}
+
+.bld__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  color: var(--text);
+}
+
+.bld__desc {
+  margin-top: var(--s-2);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+/* Only present where the data carries `evidence` — the categories without it
+   are capability statements, and the absence of a tick is the honest signal. */
+.bld__proof {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+.bld__proof svg {
+  flex: none;
+  color: var(--ok);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bld__item,
+  .bld__icon {
+    transition: none;
+  }
+}

@@ -1,0 +1,185 @@
+/* ==========================================================================
+   FOOTER — one across every page.
+
+   Compact and editorial: a hairline top rule, a four-column band, a legal row.
+   No filled panel, no large type; the footer should close the page quietly.
+   ========================================================================== */
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+
+.footer__inner {
+  padding-block: clamp(3rem, 6vw, 4.5rem) var(--s-8);
+}
+
+/* ---------- Band ----------
+   The identity column is given twice the share of the three link columns, so
+   the blurb has a readable measure without the links stretching. */
+.footer__top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+  gap: clamp(2rem, 4vw, 4rem);
+}
+
+/* ---------- Identity ---------- */
+.footer__name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--text);
+}
+
+.footer__role {
+  margin-top: var(--s-1);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer__blurb {
+  margin-top: var(--s-4);
+  max-width: 32ch;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.footer__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-4);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer__status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--r-full);
+  background: var(--ok);
+}
+
+/* ---------- Columns ---------- */
+.footer__heading {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+
+.footer__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  transition: color var(--t-base) var(--ease);
+}
+
+.footer__links a:hover {
+  color: var(--primary);
+}
+
+.footer__links svg {
+  flex: none;
+  color: var(--text-dim);
+  transition: color var(--t-base) var(--ease);
+}
+
+.footer__links a:hover svg {
+  color: var(--primary);
+}
+
+/* The contact column holds addresses rather than navigation, so it does not
+   get the underline affordance the link columns have. */
+.footer__links--plain a {
+  /* Long email addresses must wrap rather than widen the column. */
+  word-break: break-word;
+}
+
+.footer__quiet {
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+}
+
+/* ---------- Legal ---------- */
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--border);
+}
+
+.footer__copy,
+.footer__built {
+  font-size: 0.74rem;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .footer__top {
+    /* Identity spans the full width, the three link columns share the row. */
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Two columns rather than one: the three link lists are short, and stacking
+     them made the footer taller than the page content above it. */
+  .footer__top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-8) var(--s-6);
+  }
+
+  /* The contact column holds the longest strings (a full email address), so it
+     takes the full width underneath rather than being squeezed into a half. */
+  .footer__col:last-child {
+    grid-column: 1 / -1;
+  }
+  .footer__inner {
+    padding-block: var(--s-12) var(--s-6);
+  }
+  .footer__bottom {
+    margin-top: var(--s-8);
+    /* Stacked and left-aligned rather than split — two short lines centred
+       against each other reads as a mistake at this width. */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-2);
+  }
+}
+
+@media (max-width: 380px) {
+  .footer__top {
+    grid-template-columns: 1fr;
+  }
+  .footer__col:last-child {
+    grid-column: auto;
+  }
+}

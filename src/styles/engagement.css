@@ -1,0 +1,125 @@
+/* ==========================================================================
+   Engagement models — three ways in.
+
+   Three cards of equal weight: no "recommended" badge and no price ladder,
+   because these are not tiers. They are three different situations a client
+   arrives in, and implying one is the upgrade would misread all three.
+   ========================================================================== */
+.engage__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: var(--card-gap);
+}
+
+.engage__card {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+  padding: clamp(1.3rem, 2.2vw, 1.75rem);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.engage__card:hover {
+  border-color: color-mix(in srgb, var(--a, var(--primary)) 46%, transparent);
+  box-shadow: 0 26px 58px -32px color-mix(in srgb, var(--a, var(--primary)) 85%, transparent);
+}
+
+/* Situation label, top-right — it answers "is this me?" before the title does. */
+.engage__tag {
+  position: absolute;
+  top: clamp(1.3rem, 2.2vw, 1.75rem);
+  right: clamp(1.3rem, 2.2vw, 1.75rem);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--r-full);
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 30%, transparent);
+  background: color-mix(in srgb, var(--a, var(--primary)) 8%, transparent);
+  color: var(--a, var(--primary));
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.engage__icon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 32%, transparent);
+  background: var(--a-soft, transparent);
+  color: var(--a, var(--primary));
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.engage__card:hover .engage__icon {
+  transform: translateY(-3px) scale(1.06);
+}
+
+.engage__title {
+  margin-top: 0.3rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.engage__desc {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.engage__points {
+  display: grid;
+  gap: 0.42rem;
+  margin-top: 0.6rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.engage__points li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.45rem;
+  align-items: start;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.engage__points svg {
+  margin-top: 0.3em;
+  color: var(--ok);
+}
+
+/* ---------- Call to action ---------- */
+.engage__cta {
+  display: grid;
+  justify-items: center;
+  gap: 0.85rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.engage__cta-note {
+  max-width: 52ch;
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+@media (max-width: 560px) {
+  /* Absolute positioning would overlap the title once the card narrows, so the
+     tag returns to the flow and leads the card. */
+  .engage__tag {
+    position: static;
+    justify-self: start;
+  }
+}

@@ -1,0 +1,878 @@
+/* ================================= About ================================= */
+.about__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.4vw, 2rem);
+  align-items: start;
+}
+
+.about__profile {
+  padding: var(--card-pad);
+  display: grid;
+  gap: var(--sp-4);
+  align-content: start;
+}
+
+/* ---------- Cover illustration ---------- */
+.about__cover {
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--wash-1);
+  line-height: 0;
+}
+
+.about__cover-img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 640 / 200;
+  object-fit: cover;
+}
+
+.about__card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+}
+
+.about__avatar {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  flex: none;
+  border-radius: 18px;
+  background: var(--fill-primary);
+  color: var(--fill-primary-ink);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  box-shadow: 0 16px 36px -18px color-mix(in srgb, var(--primary) 90%, transparent);
+}
+
+.about__card-head h3 {
+  font-size: 1.22rem;
+  letter-spacing: -0.024em;
+}
+
+.about__role {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  color: var(--cyan);
+}
+
+.about__text {
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+.about__meta {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.05rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--wash-1);
+}
+
+/* 0.7rem, not 0.63rem: at ~10px on the card's tinted inner surface this label
+   measured under 3.1:1 in every theme, and --text-muted plus a size step is what
+   brings it clear of AA. */
+.about__meta dt {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.about__meta dd {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+.about__meta-sub {
+  display: block;
+  font-weight: 400;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.about__education h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.about__education h4 svg {
+  color: var(--violet);
+}
+
+.about__education ul {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.about__education li {
+  padding-left: 0.85rem;
+  border-left: 2px solid color-mix(in srgb, var(--primary-alt) 32%, transparent);
+}
+
+.about__edu-degree {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.about__edu-meta {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+
+/* ---------- Side column ---------- */
+.about__side {
+  display: grid;
+  gap: clamp(1.25rem, 2.4vw, 2rem);
+  min-width: 0;
+}
+
+.about__focus {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.focus {
+  display: flex;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--r-md);
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.focus:hover {
+  border-color: color-mix(in srgb, var(--a, var(--blue)) 42%, transparent);
+  box-shadow: var(--shadow-hover);
+}
+
+.focus__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--blue)) 34%, transparent);
+  background: var(--a-soft, color-mix(in srgb, var(--primary) 14%, transparent));
+  color: var(--a, var(--blue));
+  transition: transform var(--t-base) var(--ease);
+}
+
+.focus:hover .focus__icon {
+  transform: translateY(-2px);
+}
+
+.focus h4 {
+  font-size: 0.98rem;
+  margin-bottom: 0.15rem;
+}
+
+.focus p {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* ---------- Stats ---------- */
+.about__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.stat {
+  padding: 1.1rem 1.15rem;
+  border-radius: var(--r-md);
+  text-align: left;
+  transition:
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+
+.stat:hover {
+  border-color: color-mix(in srgb, var(--primary-alt) 40%, transparent);
+  box-shadow: var(--shadow-hover);
+}
+
+.stat__value {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  font-family: var(--font-display);
+  font-size: clamp(1.65rem, 3.1vw, 2.15rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stat__value em {
+  font-style: normal;
+  font-size: 0.6em;
+}
+
+.stat__label {
+  margin-top: 0.45rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.stat__hint {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+@media (max-width: 980px) {
+  .about__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 440px) {
+  .about__stats {
+    grid-template-columns: 1fr;
+  }
+  .about__card-head {
+    align-items: flex-start;
+  }
+}
+
+/* ==========================================================================
+   About refinement layer
+   ========================================================================== */
+.about__grid {
+  gap: clamp(1.35rem, 2.6vw, 2.25rem);
+}
+
+.about__profile {
+  gap: var(--stack);
+  padding: clamp(1.3rem, 2.2vw, 1.9rem);
+  border-radius: var(--r-xl);
+}
+
+/* ---------- Cover illustration ---------- */
+.about__cover {
+  position: relative;
+  border-radius: var(--r-lg);
+  /* The maskUp variant clips this element, so the radius must clip too. */
+  overflow: hidden;
+}
+
+/* Gradient scrim blends the illustration into the card instead of ending on a
+   hard edge. */
+.about__cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 45%, var(--scrim));
+}
+
+.about__cover-img {
+  transition: transform var(--t-slower) var(--ease-out);
+}
+
+.about__profile:hover .about__cover-img {
+  transform: scale(1.03);
+}
+
+/* ---------- Identity ---------- */
+.about__avatar {
+  border-radius: 20px;
+  box-shadow:
+    0 16px 36px -18px color-mix(in srgb, var(--primary) 90%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.about__profile:hover .about__avatar {
+  transform: translateY(-2px) rotate(-2deg);
+}
+
+.about__role {
+  letter-spacing: 0.07em;
+}
+
+.about__text {
+  line-height: var(--lh-body);
+}
+
+/* ---------- Meta ---------- */
+.about__meta {
+  gap: 0.9rem;
+  padding: 1.15rem;
+  box-shadow: var(--hairline);
+}
+
+/* Accent tick before each definition term, so the list scans as structured
+   data rather than stacked paragraphs. */
+.about__meta dt {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.about__meta dt::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--cyan);
+  opacity: 0.7;
+}
+
+/* ---------- Education ---------- */
+.about__education li {
+  position: relative;
+  border-left: 0;
+  padding-left: 1rem;
+}
+
+/* Gradient spine replaces the flat left border. */
+.about__education li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.25em;
+  bottom: 0.25em;
+  width: 2px;
+  border-radius: var(--r-full);
+  background: linear-gradient(180deg, var(--cyan), var(--violet));
+  opacity: 0.55;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+
+.about__education li:hover::before {
+  opacity: 1;
+}
+
+/* ---------- Focus rows ---------- */
+.about__focus {
+  gap: 0.6rem;
+}
+
+.focus {
+  gap: 0.9rem;
+  padding: 1.05rem 1.15rem;
+  align-items: flex-start;
+}
+
+.focus__icon {
+  border-radius: 13px;
+  box-shadow: var(--hairline);
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+/* A small rotation on hover animates the icon rather than just sliding it. */
+.focus:hover .focus__icon {
+  transform: translateY(-2px) rotate(-4deg) scale(1.05);
+}
+
+.focus p {
+  line-height: 1.68;
+}
+
+/* ---------- Stats ---------- */
+.about__stats {
+  gap: 0.6rem;
+}
+
+.stat {
+  display: grid;
+  align-content: start;
+  gap: 0.1rem;
+  padding: 1.2rem 1.25rem;
+  border-radius: var(--r-lg);
+}
+
+/* Per-card accent instead of the shared indigo gradient — reads as four
+   distinct figures rather than one repeated treatment. */
+.stat__value {
+  background: linear-gradient(140deg, var(--surface) 8%, var(--a, var(--blue)) 105%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Accent rule under the figure, drawn in by the `drawX` variant. */
+.stat__rule {
+  display: block;
+  width: 34px;
+  height: 2px;
+  margin: 0.6rem 0 0.5rem;
+  border-radius: var(--r-full);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--a, var(--blue)), transparent);
+  transition: width var(--t-base) var(--ease-spring);
+}
+
+.stat:hover .stat__rule {
+  width: 52px;
+}
+
+.stat__label {
+  margin-top: 0;
+}
+
+@media (max-width: 980px) {
+  /* Two-up stats keep working on tablet, where the column is now full width. */
+  .about__stats {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  }
+}
+
+/* ==========================================================================
+   ABOUT PAGE — the asymmetric composition
+   --------------------------------------------------------------------------
+   Everything above styles the About *section*, which is still used elsewhere.
+   What follows is the About *page*: the story split, the career timeline and
+   the approach ledger.
+
+   The page's job is to read as an editorial spread rather than as a stack of
+   grids, so almost everything here is type, rules and whitespace. There is one
+   filled surface on the whole route (the services grid, which is an existing
+   section) and no card anywhere in this file.
+   ========================================================================== */
+
+/* ---------- Story split ---------- */
+.about-page__story {
+  --split-gap: clamp(2.5rem, 5vw, 5.5rem);
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.about-page__story-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.8vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  color: var(--text);
+  text-wrap: balance;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* The prose column keeps its own measure, so widening the page never widens
+   the reading line past what is comfortable. */
+.about-page__prose .prose {
+  max-width: 62ch;
+}
+
+/* ---------- Aside ----------
+   Facts a reader checks rather than reads. Sticky on desktop via `.rail`. */
+.about-page__aside {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3.5vw, 2.5rem);
+  padding-left: clamp(1.25rem, 2.5vw, 2rem);
+  border-left: 1px solid var(--border);
+}
+
+.about-page__aside-title {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.about-page__aside-title svg {
+  color: var(--primary);
+  flex: none;
+}
+
+.about-page__aside-text {
+  margin-bottom: var(--s-4);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* ---------- Education ---------- */
+.about-page__edu {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.about-page__edu li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding-block: var(--s-4);
+  border-top: 1px solid var(--border);
+}
+
+.about-page__edu li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.about-page__edu-degree {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.about-page__edu-inst {
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.about-page__edu-meta {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1024px) {
+  /* Stacked, the left border becomes a top rule — a vertical rule on a
+     full-width block reads as an accident. */
+  .about-page__aside {
+    padding-left: 0;
+    padding-top: clamp(1.75rem, 4vw, 2.5rem);
+    border-left: 0;
+    border-top: 1px solid var(--border);
+    /* Two columns side by side rather than two tall stacked blocks. */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: clamp(1.75rem, 4vw, 2.5rem);
+  }
+}
+
+/* ==========================================================================
+   CAREER TIMELINE — `.atimeline`
+   --------------------------------------------------------------------------
+   A vertical timeline, not four cards. The rail is a static 1px line with a
+   marker per role; the Experience page has the scroll-driven version, so the
+   two pages show the same shape at different levels of finish rather than the
+   identical component twice.
+   ========================================================================== */
+.atimeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rail. Drawn on the list rather than per item, so it is continuous and
+   stops at the last marker instead of running past it. */
+.atimeline::before {
+  content: '';
+  position: absolute;
+  top: 0.55rem;
+  bottom: 0.55rem;
+  left: 5px;
+  width: 1px;
+  background: var(--border);
+}
+
+/* Three columns: the marker, the role, and the role's stack.
+
+   The stack column is what stops each row being a 60ch paragraph on a 1165px
+   band with nothing to its right. It is deliberately content rather than a
+   wider measure — widening the summary to the full band would push it past a
+   readable line length. */
+.atimeline__item {
+  display: grid;
+  grid-template-columns: 11px minmax(0, 1fr) minmax(0, 0.62fr);
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  padding-block: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.atimeline__item:first-child {
+  padding-top: 0;
+}
+
+.atimeline__marker {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.4rem;
+}
+
+.atimeline__dot {
+  width: 11px;
+  height: 11px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border-strong);
+  background: var(--bg);
+  transition:
+    border-color var(--t-base) var(--ease),
+    background-color var(--t-base) var(--ease);
+}
+
+/* The current role is the only filled marker — one emphasis, so it reads. */
+.atimeline__dot.is-current {
+  border-color: var(--primary);
+  background: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.atimeline__item:hover .atimeline__dot {
+  border-color: var(--primary);
+}
+
+.atimeline__period {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-2);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+.atimeline__now {
+  padding: 0.15rem var(--s-2);
+  border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+  border-radius: var(--r-full);
+  /* 0.7rem is the site's small-text floor (see the note in editorial.css) — a
+     0.6rem uppercase label is under 10px and fails legibility. */
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+}
+
+.atimeline__role {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.atimeline__company {
+  margin-top: var(--s-1);
+  font-size: var(--fs-sm);
+  color: var(--primary);
+}
+
+.atimeline__summary {
+  margin-top: var(--s-3);
+  max-width: 60ch;
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* ---------- Role stack ----------
+   Plain names separated by hairlines rather than a wall of pills: four roles ×
+   up to ten technologies is forty chips, which reads as noise. */
+.atimeline__tech {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--s-2) var(--s-3);
+  margin: 0;
+  padding-top: 0.4rem;
+  list-style: none;
+}
+
+.atimeline__tech li {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  color: var(--text-dim);
+  padding: 0.2rem var(--s-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+
+.atimeline__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4);
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  padding-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-top: 1px solid var(--border);
+}
+
+.atimeline__foot p {
+  flex: 1;
+  min-width: 16ch;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   APPROACH LEDGER — `.aledger`
+   --------------------------------------------------------------------------
+   The six commitments, as a numbered list with the evidence line in a second
+   column. The WhyMe section renders the same data as a card grid; this page
+   deliberately does not, because the services grid below is already this
+   route's one grid.
+   ========================================================================== */
+.about-page__approach {
+  margin-block: clamp(3rem, 6vw, 5rem);
+}
+
+.about-page__approach-head {
+  max-width: 62ch;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.aledger {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aledger__item {
+  --ratio: 1.55fr;
+  --split-gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: baseline;
+  padding-block: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--border);
+  transition: background-color var(--t-base) var(--ease);
+}
+
+.aledger__item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.aledger__item:hover {
+  background: var(--wash-1);
+}
+
+.aledger__lead {
+  display: grid;
+  grid-template-columns: minmax(2.25rem, auto) minmax(0, 1fr);
+  column-gap: clamp(1rem, 2.5vw, 1.75rem);
+  align-items: baseline;
+}
+
+.aledger__num {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--border-strong);
+  transition: color var(--t-base) var(--ease);
+}
+
+.aledger__item:hover .aledger__num {
+  /* `--a` comes from the item's own data-accent (see global.css), so each row
+     lights in its own colour without a literal anywhere in this file. */
+  color: var(--a, var(--primary));
+}
+
+.aledger__title {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.1vw, 1.4rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.aledger__title svg {
+  flex: none;
+  color: var(--a, var(--primary));
+}
+
+.aledger__text {
+  margin-top: var(--s-3);
+  max-width: 58ch;
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* The evidence line — where on the site the claim can be checked. */
+.aledger__evidence {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.aledger__evidence svg {
+  flex: none;
+  margin-top: 0.2em;
+  color: var(--ok);
+}
+
+@media (max-width: 1024px) {
+  .aledger__evidence {
+    padding-left: calc(2.25rem + clamp(1rem, 2.5vw, 1.75rem));
+  }
+}
+
+@media (max-width: 1024px) {
+  /* The stack column drops under the role rather than squeezing to a 150px
+     ribbon of wrapped single words. */
+  .atimeline__item {
+    grid-template-columns: 11px minmax(0, 1fr);
+  }
+  .atimeline__tech {
+    grid-column: 2;
+    padding-top: var(--s-3);
+  }
+}
+
+@media (max-width: 640px) {
+  .aledger__lead {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-2);
+  }
+  .aledger__num {
+    font-size: 1.5rem;
+  }
+  .aledger__evidence {
+    padding-left: 0;
+  }
+  .atimeline__item {
+    gap: var(--s-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aledger__item,
+  .aledger__num,
+  .atimeline__dot {
+    transition: none;
+  }
+}

@@ -1,0 +1,346 @@
+/* ==========================================================================
+   CONTACT PAGE — the conversion composition
+   --------------------------------------------------------------------------
+   The only route that does not open with a masthead. A masthead introduces an
+   article; this page is a form with a reason to fill it in, so it opens with a
+   conversion block: availability, headline, message, terms, and the direct
+   channels for anyone who would rather not use a form.
+
+   contact.css still owns the form itself and is imported by the Contact
+   section. The one rule here that reaches into it is the `--compact` grid
+   width, because dropping the channel column is this page's decision, not the
+   section's.
+   ========================================================================== */
+
+/* The animated backdrop is fixed and inert; the page content needs a stacking
+   context above it. `isolation` rather than a z-index, so nothing here competes
+   with the navbar or the modal. */
+.contact-page {
+  position: relative;
+  isolation: isolate;
+}
+
+/* ==========================================================================
+   1. CONVERSION HERO — `.chero`
+   ========================================================================== */
+.chero {
+  display: grid;
+  /* Asymmetric on purpose: the message earns the wide column, the channels are
+     a sidebar. An even split here would read as two competing offers. */
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* ---------- Availability ---------- */
+.chero__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chero__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-full);
+  background: var(--ok);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 20%, transparent);
+}
+
+.chero__dot.is-busy {
+  background: var(--warn);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--warn) 20%, transparent);
+}
+
+/* ---------- Headline ----------
+   The page's <h1>. Sized between the masthead titles on the editorial pages and
+   a section heading: this is a sales headline, not a chapter title, and it has
+   to stay readable at three lines. */
+.chero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.026em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.chero__lead {
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  max-width: 54ch;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+/* ---------- Terms ----------
+   The three facts a client checks before writing. A rule-separated row rather
+   than a card, so the hero stays type on the page. */
+.chero__terms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 0;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.chero__terms > div {
+  padding: var(--s-4) clamp(0.75rem, 1.5vw, 1.1rem) var(--s-4) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.chero__terms dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.chero__terms dd {
+  margin: var(--s-2) 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--text);
+}
+
+/* ==========================================================================
+   2. DIRECT CHANNELS — `.chero__direct`
+   --------------------------------------------------------------------------
+   The escape hatch from the form. Deliberately styled as rows rather than the
+   `.channel` cards the Contact section uses, so the same four channels never
+   appear twice in the same material on one page.
+   ========================================================================== */
+.chero__direct {
+  padding: clamp(1.5rem, 2.6vw, 2rem);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--wash-1);
+}
+
+.chero__direct-label {
+  margin-bottom: var(--s-4);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.chero__channels {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chero__channel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s-4);
+  padding-block: var(--s-4);
+  border-top: 1px solid var(--border);
+  transition: padding-left var(--t-base) var(--ease);
+}
+
+.chero__channels li:first-child .chero__channel {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.chero__channel:hover {
+  padding-left: var(--s-2);
+}
+
+.chero__channel-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text-muted);
+  transition:
+    border-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.chero__channel:hover .chero__channel-icon {
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  color: var(--primary);
+}
+
+.chero__channel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.chero__channel-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.chero__channel-value {
+  font-size: var(--fs-sm);
+  line-height: 1.3;
+  color: var(--text);
+  /* Long addresses and profile URLs truncate rather than push the arrow out. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chero__channel:hover .chero__channel-value {
+  color: var(--primary);
+}
+
+.chero__channel-hint {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
+.chero__channel-arrow {
+  flex: none;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--text-dim);
+  transition:
+    transform var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.chero__channel:hover .chero__channel-arrow {
+  transform: translateX(4px);
+  color: var(--primary);
+}
+
+/* ---------- Privacy note ----------
+   Worth its own line: "where does my project description go" is a real
+   objection, and the answer here is genuinely good. */
+.chero__note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--border);
+  font-size: 0.76rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.chero__note svg {
+  flex: none;
+  margin-top: 0.2em;
+  color: var(--ok);
+}
+
+/* ==========================================================================
+   3. COMPACT FORM GRID
+   --------------------------------------------------------------------------
+   With the section's channel column suppressed (see the `compact` prop in
+   Contact.jsx), the form is the grid's only child. Without this it would inherit
+   the two-column template and sit in a half-width track with an empty column
+   beside it — the one-sided layout this whole pass is removing.
+
+   Capped rather than full-bleed: a seven-field form at 1280px puts the labels
+   and their inputs absurdly far apart.
+   ========================================================================== */
+/* The class is doubled to raise specificity to (0,2,0).
+
+   contact.css is imported by the lazily-loaded Contact *section*, so it arrives
+   AFTER this file in the cascade — a single `.contact__grid--compact` (0,1,0)
+   loses the `grid-template-columns` tie to `.contact__grid` and the form stays
+   in a half-width track with an empty column beside it. This is the same
+   technique, and the same reason, as `.pcard.pcard` and `.stat.stat` in
+   editorial.css, which documents the lazy-chunk ordering problem. */
+.contact__grid--compact.contact__grid--compact {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 780px;
+}
+
+/* ==========================================================================
+   4. CLOSING LINE — `.cclose`
+   ========================================================================== */
+.cclose {
+  max-width: 62ch;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--border);
+}
+
+.cclose__text {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+.cclose__text a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.cclose__text a:hover {
+  color: var(--text);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .chero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.75rem, 5vw, 2.75rem);
+  }
+  .chero__lead {
+    max-width: 62ch;
+  }
+}
+
+@media (max-width: 640px) {
+  .chero__direct {
+    padding: var(--s-4);
+  }
+  .chero__terms {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .chero__channel {
+    /* The hint is the first thing to go: at 360px the value already wraps the
+       row, and the icon plus arrow leave it about 200px. */
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .chero__channel-arrow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chero__channel:hover {
+    padding-left: 0;
+  }
+  .chero__channel:hover .chero__channel-arrow {
+    transform: none;
+  }
+  .chero__channel,
+  .chero__channel-icon,
+  .chero__channel-arrow {
+    transition: none;
+  }
+}

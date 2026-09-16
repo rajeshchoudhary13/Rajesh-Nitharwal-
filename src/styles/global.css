@@ -1,0 +1,832 @@
+/* ==========================================================================
+   Reset + base + shared primitives (layout shell, glass cards, buttons, chips)
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Anchor offset for the sticky navbar */
+  scroll-padding-top: calc(var(--nav-h) + 12px);
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  isolation: isolate;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 22%, transparent);
+  color: var(--text);
+}
+
+/* ---------- Scrollbar ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--wash-3) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--wash-2);
+  border-radius: var(--r-full);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--wash-3);
+  background-clip: content-box;
+}
+
+/* ---------- Accessibility ---------- */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: var(--r-xs);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  translate: -50% -160%;
+  z-index: 200;
+  padding: 0.7rem 1.2rem;
+  border-radius: var(--r-full);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  transition: translate var(--t-base) var(--ease);
+}
+.skip-link:focus-visible {
+  translate: -50% 0;
+}
+
+/* ---------- Layout shell ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+  scroll-margin-top: var(--nav-h);
+}
+
+.section--tight {
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+/* ---------- Section headings ---------- */
+.section__head {
+  max-width: 680px;
+  margin-bottom: var(--head-gap);
+}
+
+.section__head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  margin-bottom: var(--sp-3);
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.eyebrow svg {
+  color: var(--cyan);
+}
+
+.section__title {
+  font-size: var(--fs-h2);
+  letter-spacing: -0.028em;
+  margin-bottom: var(--sp-3);
+}
+
+.section__title .grad {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.section__desc {
+  color: var(--text-muted);
+  font-size: var(--fs-lead);
+  line-height: 1.72;
+  max-width: 60ch;
+}
+
+.section__head--center .section__desc {
+  margin-inline: auto;
+}
+
+/* ---------- Glass surface ---------- */
+.glass {
+  position: relative;
+  background: var(--grad-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ---------- Buttons ----------
+   One size system; hover lifts with a glow, press settles, focus is always
+   visible. Transform-only motion so hover never reflows a layout. */
+.btn {
+  --btn-bg: var(--surface);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 0.78rem 1.4rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border-strong);
+  background: var(--btn-bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    border-color var(--t-base) var(--ease),
+    background var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease),
+    color var(--t-base) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn svg {
+  flex: none;
+}
+
+.btn--primary {
+  border-color: transparent;
+  background: var(--fill-primary);
+  color: var(--fill-primary-ink);
+  font-weight: 700;
+  box-shadow: 0 14px 38px -16px color-mix(in srgb, var(--primary) 85%, transparent);
+}
+
+.btn--primary:hover {
+  box-shadow: 0 20px 52px -14px color-mix(in srgb, var(--primary) 95%, transparent);
+}
+
+.btn--ghost:hover,
+.btn--outline:hover {
+  border-color: color-mix(in srgb, var(--primary-alt) 55%, transparent);
+  background: var(--surface-2);
+  box-shadow: 0 16px 40px -22px color-mix(in srgb, var(--primary) 80%, transparent);
+}
+
+.btn--outline {
+  background: transparent;
+}
+
+.btn--sm {
+  min-height: 38px;
+  padding: 0.5rem 1rem;
+  font-size: var(--fs-xs);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- Chips / badges ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--wash-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition:
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease);
+}
+
+.chip:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--primary-alt) 45%, transparent);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* ---------- Accent helper ----------
+   The five `data-accent` values in src/data/* are kept as-is so no component or
+   data file has to change, but they no longer resolve to five competing hues.
+   Everything collapses onto two voices — primary violet and support cyan — and
+   varies by tint instead, which is what keeps a long scrolling page reading as
+   one design rather than a swatch sheet.
+
+     blue / violet / amber  -> primary violet, three tints
+     cyan / emerald         -> support cyan, two tints
+
+   `--a` is the card's accent colour; `--a-soft` is the same colour as a wash
+   for fills and glows. Both are read by GlowCard and every section stylesheet. */
+[data-accent='blue'] {
+  --a: var(--primary);
+  --a-soft: color-mix(in srgb, var(--primary) 16%, transparent);
+}
+[data-accent='violet'] {
+  --a: var(--primary-alt);
+  --a-soft: color-mix(in srgb, var(--primary-alt) 16%, transparent);
+}
+[data-accent='amber'] {
+  --a: var(--primary-light);
+  --a-soft: color-mix(in srgb, var(--primary-light) 16%, transparent);
+}
+[data-accent='cyan'] {
+  --a: var(--support);
+  --a-soft: color-mix(in srgb, var(--support) 16%, transparent);
+}
+[data-accent='emerald'] {
+  --a: var(--support-alt);
+  --a-soft: color-mix(in srgb, var(--support-alt) 16%, transparent);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.note {
+  display: flex;
+  gap: 0.55rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: var(--r-sm);
+  border: 1px dashed var(--border-strong);
+  background: var(--wash-1);
+  color: var(--text-dim);
+  font-size: var(--fs-xs);
+  line-height: 1.65;
+}
+
+.note svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--text-muted);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ==========================================================================
+   Refinement layer
+   --------------------------------------------------------------------------
+   Overrides that sharpen the existing primitives — spacing, elevation, focus
+   and micro-interaction states. Additive and last in the cascade, so the base
+   rules above stay readable as the original definition of each component.
+   ========================================================================== */
+
+/* ---------- Typography rhythm ----------
+   Slightly tighter tracking on display text at large sizes, looser on small,
+   which is what keeps headings feeling set rather than defaulted. */
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--lh-tight);
+}
+
+/* Optical alignment for the mono labels used throughout as eyebrows/meta. */
+.mono {
+  font-feature-settings: 'ss01' on;
+  font-variant-ligatures: none;
+}
+
+/* Tabular figures stop counters and stats from jittering as digits change. */
+.stat__value,
+.field__hint,
+.pcard__index,
+.nav__drawer-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Focus ----------
+   A two-tone ring (dark spacer + accent) so focus stays visible on both the
+   page background and light filled buttons. */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--support) 16%, transparent);
+}
+
+/* The ring should hug the control, not the pill's bounding box. */
+.btn:focus-visible,
+.chip:focus-visible {
+  outline-offset: 3px;
+}
+
+/* ---------- Section headings ---------- */
+.section__head {
+  /* A hair wider reads better now that the description sits on fewer lines. */
+  max-width: 720px;
+}
+
+/* Gradient rule under the heading: a small, quiet anchor that gives every
+   section the same visual entry point. A real element rather than a pseudo, so
+   <SectionHeading> can draw it in with the `drawX` variant. */
+.section__rule {
+  display: block;
+  width: 64px;
+  height: 2px;
+  margin-top: var(--sp-4);
+  border-radius: var(--r-full);
+  background: linear-gradient(90deg, var(--cyan), var(--blue) 55%, transparent);
+  transform-origin: 0 50%;
+}
+
+.section__head--center .section__rule {
+  width: 108px;
+  margin-inline: auto;
+  transform-origin: 50% 50%;
+  background: linear-gradient(90deg, transparent, var(--blue), var(--violet), transparent);
+}
+
+.eyebrow {
+  position: relative;
+  gap: 0.55rem;
+  padding: 0.42rem 0.95rem;
+  letter-spacing: var(--tracking-eyebrow);
+  box-shadow: var(--e-1), var(--hairline);
+  transition:
+    border-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
+}
+
+.eyebrow:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+/* Slow shimmer across the eyebrow — the smallest possible hint of life on an
+   otherwise static label. */
+.eyebrow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 35%, color-mix(in srgb, var(--primary-light) 14%, transparent) 50%, transparent 65%);
+  background-size: 260% 100%;
+  animation: eyebrow-shine 5.5s var(--ease-in-out) infinite;
+}
+
+@keyframes eyebrow-shine {
+  0%,
+  55% {
+    background-position: 180% 0;
+  }
+  100% {
+    background-position: -80% 0;
+  }
+}
+
+.section__title {
+  margin-bottom: var(--sp-4);
+}
+
+/* The gradient span sits on a transparent fill; a text-shadow would be lost, so
+   depth comes from a soft drop-shadow on the whole heading instead. */
+.section__title .grad {
+  filter: drop-shadow(0 6px 26px color-mix(in srgb, var(--primary-alt) 18%, transparent));
+}
+
+.section__desc {
+  line-height: var(--lh-body);
+  max-width: 62ch;
+}
+
+/* ---------- Glass surface ----------
+   Adds the lit top edge and moves to the two-part elevation ladder, so cards
+   sit on the page instead of floating on a single blur. */
+.glass {
+  border-radius: var(--r-lg);
+  box-shadow: var(--e-2), var(--hairline);
+  transition:
+    border-color var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    background var(--t-base) var(--ease-out);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  /* 48px is the comfortable minimum for a primary touch target. */
+  min-height: 48px;
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.008em;
+  box-shadow: var(--e-1), var(--hairline);
+  transition:
+    border-color var(--t-base) var(--ease-out),
+    background var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    color var(--t-base) var(--ease-out);
+}
+
+/* Icon feedback on hover. A plain scale rather than a directional nudge:
+   :first-child / :last-child cannot distinguish a leading icon from a trailing
+   one (the label is a text node, invisible to both), so anything directional
+   misfires on one of the three button shapes in use. Buttons whose icon really
+   should travel opt in with `.btn--arrow`. */
+.btn svg {
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.btn:hover svg {
+  transform: scale(1.09);
+}
+
+.btn--arrow:hover svg:last-child {
+  transform: translate(2px, -2px);
+}
+
+.btn--primary {
+  /* Slightly larger gradient than the box, panned on hover, so the fill itself
+     appears to shift under the pointer. */
+  background: var(--fill-primary);
+  background-size: 160% 160%;
+  background-position: 0% 50%;
+  box-shadow:
+    0 12px 32px -14px color-mix(in srgb, var(--primary) 80%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition:
+    background-position var(--t-slow) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    color var(--t-base) var(--ease-out);
+}
+
+.btn--primary:hover {
+  background-position: 100% 50%;
+  box-shadow:
+    0 22px 54px -16px color-mix(in srgb, var(--primary) 95%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.btn--ghost:hover,
+.btn--outline:hover {
+  border-color: color-mix(in srgb, var(--primary-alt) 55%, transparent);
+  background: var(--surface-2);
+  box-shadow:
+    0 16px 40px -22px color-mix(in srgb, var(--primary) 80%, transparent),
+    var(--hairline);
+}
+
+.btn--sm {
+  min-height: 40px;
+  padding: 0.55rem 1.05rem;
+}
+
+.btn[disabled],
+.btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn[disabled]:hover svg,
+.btn[aria-disabled='true']:hover svg {
+  transform: none;
+}
+
+/* ---------- Chips ---------- */
+.chip {
+  padding: 0.32rem 0.72rem;
+  box-shadow: var(--hairline);
+  transition:
+    color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    background var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-spring);
+}
+
+.chip:hover {
+  transform: translateY(-1px);
+}
+
+.chip-row {
+  gap: 0.42rem;
+}
+
+/* ---------- Notes ---------- */
+.note {
+  gap: 0.6rem;
+  padding: 0.9rem 1.05rem;
+  border-radius: var(--r-md);
+  line-height: 1.7;
+  transition:
+    border-color var(--t-base) var(--ease-out),
+    color var(--t-base) var(--ease-out);
+}
+
+.note:hover {
+  border-color: var(--border-strong);
+  color: var(--text-muted);
+}
+
+/* ---------- Skip link ---------- */
+.skip-link {
+  box-shadow: var(--e-3);
+}
+
+/* ---------- Smooth scrolling ----------
+   `scroll-behavior` is set on <html> above; this makes anchored sections stop
+   clear of the sticky navbar on every browser, including when a link is
+   followed from outside the page. */
+.section,
+[id] {
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+
+/* ---------- Responsive refinements ---------- */
+@media (max-width: 640px) {
+  /* Descriptions gain more from a shorter measure than from a smaller size. */
+  .section__desc {
+    max-width: 46ch;
+  }
+  .section__rule {
+    margin-top: var(--sp-3);
+  }
+  /* Full-width action buttons are far easier to hit one-handed. */
+  .btn {
+    padding-inline: 1.25rem;
+  }
+}
+
+/* Very large displays: hold the measure so text does not stretch into a band. */
+@media (min-width: 1700px) {
+  .section__head {
+    max-width: 780px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow::after {
+    animation: none;
+  }
+  .btn:hover svg,
+  .btn--arrow:hover svg:last-child {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Premium layer — headings, eyebrow and chips
+   ========================================================================== */
+
+/* ---------- Eyebrow ----------
+   Smaller, wider-tracked and platinum instead of muted blue-grey. The shimmer
+   is slowed and dimmed: at this size it should register as a material, not as
+   an animation. */
+.eyebrow {
+  padding: 0.38rem 0.9rem 0.36rem;
+  font-size: 0.66rem;
+  font-weight: 500;
+  color: var(--platinum);
+  background: var(--wash-2);
+  box-shadow: var(--e-1), var(--hairline-2);
+}
+
+.eyebrow svg {
+  /* Still accent-tinted, pulled toward platinum so the chip reads as one object. */
+  color: color-mix(in srgb, var(--cyan) 72%, var(--platinum));
+}
+
+.eyebrow::after {
+  background: linear-gradient(100deg, transparent 38%, var(--wash-3) 50%, transparent 62%);
+  animation-duration: 8s;
+}
+
+/* ---------- Title ----------
+   Tighter tracking at display sizes, and balanced wrapping so a centered
+   heading never leaves one orphaned word on the second line. */
+.section__title {
+  letter-spacing: -0.034em;
+  line-height: var(--lh-tight);
+  text-wrap: balance;
+}
+
+.section__title .grad {
+  filter: drop-shadow(0 8px 30px color-mix(in srgb, var(--primary-light) 16%, transparent));
+}
+
+/* Measure over width: a shorter line is easier to read and looks composed. */
+.section__desc {
+  max-width: 56ch;
+  text-wrap: pretty;
+}
+
+/* ---------- Rule ----------
+   A platinum hairline replaces the coloured bar. It reads as a rule on a
+   printed page rather than a UI accent, which is the whole point. */
+.section__rule {
+  height: 1px;
+  width: 88px;
+  background: var(--grad-hairline);
+}
+
+.section__head--center .section__rule {
+  width: 132px;
+  background: var(--grad-hairline);
+}
+
+/* ---------- Chips ----------
+   Flatter fill, brighter edge, and a hover that tints the edge only. Filling a
+   chip with accent colour on hover is what made the rows look busy. */
+.chip {
+  padding: 0.3rem 0.68rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.015em;
+  color: var(--text-muted);
+  background: var(--wash-2);
+}
+
+.chip:hover {
+  color: var(--platinum);
+  border-color: color-mix(in srgb, var(--a, var(--blue)) 42%, transparent);
+  background: var(--wash-3);
+}
+
+/* ==========================================================================
+   THEME TRANSITION
+   Switching themes changes ~85 custom properties at once. Transitioning the
+   properties that actually carry colour gives one smooth cross-fade instead of
+   85 independent ones, and scoping it to a `.theme-anim` class on <html> means
+   the transition only exists during a switch — so it never fights the hover and
+   reveal transitions the rest of the time.
+   ========================================================================== */
+.theme-anim,
+.theme-anim *,
+.theme-anim *::before,
+.theme-anim *::after {
+  transition:
+    background-color var(--t-theme) var(--ease-out),
+    border-color var(--t-theme) var(--ease-out),
+    color var(--t-theme) var(--ease-out),
+    fill var(--t-theme) var(--ease-out),
+    stroke var(--t-theme) var(--ease-out),
+    box-shadow var(--t-theme) var(--ease-out) !important;
+  /* Gradients and background-image cannot interpolate, so they swap instantly;
+     letting them animate would produce a visible step rather than a fade. */
+  transition-property:
+    background-color, border-color, color, fill, stroke, box-shadow !important;
+}
+
+/* A theme change is a colour change, not motion — but honour the preference
+   anyway, since the cross-fade is still an animation. */
+@media (prefers-reduced-motion: reduce) {
+  .theme-anim,
+  .theme-anim *,
+  .theme-anim *::before,
+  .theme-anim *::after {
+    transition: none !important;
+  }
+}

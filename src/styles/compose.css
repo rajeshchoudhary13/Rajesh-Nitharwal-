@@ -1,0 +1,592 @@
+/* ==========================================================================
+   PAGE COMPOSITION
+   --------------------------------------------------------------------------
+   Every route used to open the same way: `.phead` masthead, a stack of
+   sections, a `.pagecta` close. Identical vertical rhythm on all seven pages,
+   which is what made them read as one template rather than as chapters.
+
+   This file holds the per-page compositions that replace it. The rule it keeps
+   to: each page gets ONE distinguishing structural gesture, and no two pages
+   get the same one.
+
+     About       an asymmetric editorial masthead with a sticky meta rail
+     Projects    a full-bleed masthead band with an inline index
+     Skills      a two-column masthead whose aside carries the strongest stack
+     Experience  a masthead that sits beside the career summary, not above it
+     Services    a centred journey masthead with a numbered process spine
+     Contact     a conversion masthead: headline, availability, direct actions
+     Case study  a storytelling masthead over a metric strip
+
+   Everything here is layout and rhythm. Material — border, radius, shadow,
+   colour — comes from the tokens and stays owned by global.css and
+   editorial.css, so this file never competes with the editorial layer for the
+   last word on how a surface looks.
+
+   Built on the primitives in layout.css (`.split`, `.grid-cards`, `.stack`,
+   `.rail`, `.measure`, `.bleed`) rather than on fresh grid declarations — the
+   point of that file is that these compositions are recombinations of shared
+   parts, not seven more one-off grids.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. SECTION FOOT — the shared closing line
+   --------------------------------------------------------------------------
+   Base treatment for <SectionFoot>. Six sections had their own `X__foot` rule;
+   those still exist and still win where they are more specific, so adopting the
+   component changes nothing visually until a section's own rule is removed.
+   This is the default for everything that has no bespoke rule.
+   ========================================================================== */
+.sfoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.9rem, 2vw, 1.6rem);
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+  padding-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-top: 1px solid var(--border);
+}
+
+.sfoot__text {
+  max-width: 52ch;
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+/* The text takes the slack so the actions sit hard right — a closing line reads
+   as a footer rather than as another paragraph when the action is pinned. */
+.sfoot__actions {
+  margin-left: auto;
+}
+
+.sfoot--center {
+  justify-content: center;
+  text-align: center;
+}
+
+.sfoot--center .sfoot__actions {
+  margin-left: 0;
+}
+
+@media (max-width: 640px) {
+  .sfoot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sfoot__actions {
+    margin-left: 0;
+  }
+}
+
+/* ==========================================================================
+   2. EDITORIAL MASTHEAD — `.mast`
+   --------------------------------------------------------------------------
+   The alternative to `.phead`. Where `.phead` is a centred-left column with the
+   title, blurb and rule stacked, `.mast` is a two-column arrangement: the title
+   holds the wide column and a meta rail sits beside it carrying the facts that
+   used to be dropped into the body as another card grid.
+
+   Pages opt into this INSTEAD of `.phead`, not in addition to it, so no page
+   gains a second masthead.
+   ========================================================================== */
+.mast {
+  --split-gap: clamp(2rem, 5vw, 5rem);
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.mast__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6.5vw, 4.75rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.mast__index {
+  display: block;
+  margin-bottom: var(--s-4);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
+
+.mast__lead {
+  margin-top: var(--s-6);
+  max-width: 46ch;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+/* The rail beside the title. A definition list rather than cards: these are
+   facts, and a 1px rule between them carries the same structure a bordered card
+   would at a fraction of the visual weight. */
+.mast__rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding-top: var(--s-2);
+}
+
+.mast__fact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--s-4);
+  padding-block: var(--s-4);
+  border-top: 1px solid var(--border);
+}
+
+.mast__fact:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.mast__fact-key {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.mast__fact-val {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--text);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1024px) {
+  .mast__lead {
+    max-width: 60ch;
+  }
+  .mast__rail {
+    /* Stacked, the rail becomes a two-up fact grid rather than a tall list —
+       eight full-width rows below a heading is a lot of vertical space for
+       eight short facts. */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 0 clamp(1.5rem, 4vw, 2.5rem);
+  }
+}
+
+/* ==========================================================================
+   3. BAND — `.band`
+   --------------------------------------------------------------------------
+   A full-width tinted strip that breaks the page's column rhythm. This is the
+   main tool against the "one long centred column" feel: a page with two or
+   three bands in it has a visible large-scale structure, which is what the
+   brief means by visual rhythm.
+
+   It reaches full width via `.bleed`, so it must be used inside `.container`.
+   ========================================================================== */
+.band {
+  position: relative;
+  margin-block: clamp(3rem, 6vw, 5.5rem);
+  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+  background: var(--wash-1);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* A band whose top rule is the only one — for a band that closes a page and
+   runs into the footer. */
+.band--open {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.band--flush {
+  margin-bottom: 0;
+}
+
+/* Numbered eyebrow used by the band headings, so a band announces itself
+   without borrowing `.section__head` and looking like every other section. */
+.band__eyebrow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  margin-bottom: var(--s-6);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.band__eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.band__num {
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
+
+.band__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.band__lead {
+  margin-top: var(--s-4);
+  max-width: 58ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+/* The gap between a band's heading block and its content. Only applied when
+   there is content following, so a heading-only band does not carry a trailing
+   space it never uses. */
+.band__head:not(:last-child) {
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+/* ==========================================================================
+   4. FIGURE ROW — `.frow`
+   --------------------------------------------------------------------------
+   The alternating content row the brief asks for on Projects and the case
+   study: a visual on one side, the write-up on the other, flipping down the
+   page. Built on `.split`, so the collapse and the DOM-order-preserving flip
+   come for free.
+
+   `.frow` is the row; `.frow--flip` alternates it. Applied from the index in
+   JSX (`index % 2`) rather than with `:nth-child`, because the rows are
+   sometimes filtered and `:nth-child` would then flip the wrong ones.
+   ========================================================================== */
+.frow {
+  --split-gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--border);
+}
+
+.frow:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.frow__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.frow__index {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
+
+.frow__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.15rem);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.frow__text {
+  max-width: 54ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+/* The labelled fact rows inside a figure row — role, stack, contribution. A
+   two-column definition list, so the labels form a scannable left edge. */
+.frow__facts {
+  display: grid;
+  gap: var(--s-3);
+  margin: 0;
+}
+
+.frow__fact {
+  display: grid;
+  grid-template-columns: minmax(84px, 96px) minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: baseline;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border);
+}
+
+.frow__fact-key {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.frow__fact-val {
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--text);
+}
+
+@media (max-width: 560px) {
+  .frow__fact {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-1);
+  }
+}
+
+/* ==========================================================================
+   5. METRIC STRIP — `.metrics`
+   --------------------------------------------------------------------------
+   A horizontal row of figures with rules between them. Used by the case study
+   and the experience page for the "what came of it" line. Distinct from
+   `.trust__panel`, which is a filled panel — this is bare type on the page, so
+   the two never read as the same component on pages a visitor sees in sequence.
+   ========================================================================== */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-strong);
+}
+
+.metrics__item {
+  padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1rem, 2vw, 1.5rem);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Vertical rules between columns, but not before the first in a row. The
+   `+ *` selector gives every item after the first a left rule; on a wrapped row
+   the first item of the second row also gets one, which is why the strip is
+   used at counts that fit one row (three or four). */
+.metrics__item + .metrics__item {
+  border-left: 1px solid var(--border);
+}
+
+.metrics__value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.metrics__label {
+  display: block;
+  margin-top: var(--s-3);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+@media (max-width: 560px) {
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* On two columns the `+ *` rule would put a left border on the first item of
+     every row; reset and re-apply to the even columns only. */
+  .metrics__item + .metrics__item {
+    border-left: 0;
+  }
+  .metrics__item:nth-child(even) {
+    border-left: 1px solid var(--border);
+  }
+}
+
+/* ==========================================================================
+   6. LEDGER — `.ledger`
+   --------------------------------------------------------------------------
+   A numbered list where the number is a large display figure in the margin.
+   The Services journey and the Skills group listing use it. It is deliberately
+   NOT a card grid: the whole point is that these pages stop presenting their
+   content as boxes.
+   ========================================================================== */
+.ledger {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: ledger;
+}
+
+.ledger__item {
+  --split-gap: clamp(1.5rem, 4vw, 3.5rem);
+  counter-increment: ledger;
+  padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+  border-top: 1px solid var(--border);
+  transition: background-color var(--t-base) var(--ease);
+}
+
+.ledger__item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+/* A whole-row hover, which is the interaction the brief calls a premium hover
+   state: the row acknowledges the pointer without lifting or glowing. */
+.ledger__item:hover {
+  background: var(--wash-1);
+}
+
+.ledger__num {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--border-strong);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--t-base) var(--ease);
+}
+
+.ledger__item:hover .ledger__num {
+  color: var(--primary);
+}
+
+.ledger__num::before {
+  content: counter(ledger, decimal-leading-zero);
+}
+
+.ledger__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: -0.018em;
+  color: var(--text);
+}
+
+.ledger__text {
+  margin-top: var(--s-3);
+  max-width: 60ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+/* The number sits in the margin beside the title rather than above it, so the
+   figures form a scannable left edge down the list. `align-items: baseline`
+   lines the digit up with the title's first line, which a top alignment does
+   not because the two have very different cap heights. */
+.ledger__lead {
+  display: grid;
+  grid-template-columns: minmax(2.5rem, auto) minmax(0, 1fr);
+  column-gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: baseline;
+}
+
+.ledger__num {
+  grid-row: 1 / span 2;
+}
+
+.ledger__text {
+  grid-column: 2;
+}
+
+/* The aside column: a technology list, a deliverables list, a proof link. */
+.ledger__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .ledger__lead {
+    /* One column: at phone widths a 3.4rem figure in a margin leaves the title
+       about 60% of a 320px screen, which forces it to wrap every two words. */
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-2);
+  }
+  .ledger__num {
+    grid-row: auto;
+    font-size: 1.9rem;
+  }
+  .ledger__text {
+    grid-column: 1;
+  }
+}
+
+/* ---------- Figure row figure ----------
+   The visual half of a `.frow`. A min-height on desktop only: it keeps rows on
+   a consistent grid when their figures are different heights, and would be an
+   arbitrary empty box on a phone. */
+.frow__figure:empty {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  .frow__figure > * {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   7. PAGE-LEVEL SPACING SEAMS
+   --------------------------------------------------------------------------
+   page.css normalises the seams between `.section` siblings. The compositions
+   above introduce three new sibling types — `.band`, `.mast` and a bare
+   `.container` holding a composition — so their seams are normalised here in
+   the same spirit, rather than each page choosing its own margins.
+   ========================================================================== */
+
+/* A band immediately after the masthead has already been given its space by the
+   masthead's own bottom margin. */
+.mast + .band,
+.phead + .band {
+  margin-top: 0;
+}
+
+/* A section following a band does not need to re-open the gap the band's bottom
+   padding already provides. */
+.band + .section,
+.page .band + .section {
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Two bands in sequence share one seam rather than stacking two margins. */
+.band + .band {
+  margin-top: 0;
+  border-top: 0;
+}
+
+@media (max-width: 640px) {
+  .mast {
+    margin-bottom: clamp(2rem, 8vw, 3rem);
+  }
+  .band {
+    margin-block: clamp(2.25rem, 8vw, 3.25rem);
+    padding-block: clamp(1.75rem, 6vw, 2.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ledger__item,
+  .ledger__num {
+    transition: none;
+  }
+}

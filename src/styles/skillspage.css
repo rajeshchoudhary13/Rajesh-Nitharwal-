@@ -1,0 +1,420 @@
+/* ==========================================================================
+   SKILLS PAGE — five groups, five shapes
+   --------------------------------------------------------------------------
+   The brief's requirement for this route is explicit: group the technologies
+   logically, and use visually different layouts instead of one large repetitive
+   icon grid. So each group gets a treatment chosen for what it contains and how
+   much weight the claim deserves:
+
+     .score    core        large marks, one per stack layer, most space
+     .sgrid    frontend    two-column bordered rows — the longest group
+     .smobile  mobile      the page's one filled panel — the deepest experience
+     .spair    server      two columns read side by side
+     .splat    platform    dense inline marks, no descriptions — a reference list
+
+   Weight follows the claim: mobile is five live applications and gets a filled
+   panel; the platform tooling is eleven names and gets one line each. That
+   ordering is the hierarchy the brief asks for, expressed as layout rather than
+   as a "proficiency" bar — which would be a number nobody measured.
+
+   skills.css is not imported by this page; TechStack still owns it.
+   ========================================================================== */
+
+/* ---------- Shared: the Core badge ----------
+   `<em>` in the markup, so the emphasis is semantic as well as visual. */
+.sbadge {
+  display: inline-block;
+  margin-left: var(--s-2);
+  padding: 0.08rem var(--s-2);
+  border: 1px solid color-mix(in srgb, var(--primary) 38%, transparent);
+  border-radius: var(--r-full);
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+  vertical-align: 0.15em;
+}
+
+/* Shared section rhythm. Each group is a sibling of the last, so one rule sets
+   the gap between them rather than five. */
+.score,
+.sgroup,
+.smobile,
+.spair,
+.splat {
+  margin-block: clamp(3rem, 6vw, 5rem);
+}
+
+.score__head,
+.spair__head,
+.splat__head {
+  max-width: 62ch;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+/* ==========================================================================
+   1. CORE — `.score`
+   --------------------------------------------------------------------------
+   The strongest technologies, one per stack layer, as the largest marks on the
+   page. Five columns on desktop; the mark sits above the name so the row reads
+   as a set of emblems rather than a list.
+   ========================================================================== */
+.score__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-strong);
+}
+
+.score__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1rem, 2vw, 1.5rem);
+  border-bottom: 1px solid var(--border);
+  transition: background-color var(--t-base) var(--ease);
+}
+
+.score__item + .score__item {
+  border-left: 1px solid var(--border);
+}
+
+.score__item:hover {
+  background: var(--wash-1);
+}
+
+.score__mark {
+  display: flex;
+  align-items: center;
+  height: 34px;
+  margin-bottom: var(--s-2);
+  color: var(--primary);
+}
+
+.score__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.score__group {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.score__desc {
+  margin-top: var(--s-2);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .score__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* On two columns the `+ *` rule gives the first item of every row a left
+     border; reset and re-apply to the even column only. */
+  .score__item + .score__item {
+    border-left: 0;
+  }
+  .score__item:nth-child(even) {
+    border-left: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 480px) {
+  .score__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .score__item:nth-child(even) {
+    border-left: 0;
+  }
+}
+
+/* ==========================================================================
+   2. GROUP HEADING — `.sgroup`
+   ========================================================================== */
+.sgroup__head {
+  --split-gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.sgroup__blurb {
+  max-width: 46ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+/* ---------- Frontend rows — `.sgrid` ----------
+   Two columns of bordered rows. Not tiles: nine technologies each with a
+   sentence of context is list-shaped content, and a nine-tile logo grid is
+   exactly the "one large repetitive icon grid" this page is replacing. */
+.sgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.sgrid__item {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: clamp(0.9rem, 2vw, 1.25rem);
+  align-items: start;
+  padding: clamp(1rem, 2vw, 1.35rem) clamp(0.75rem, 1.5vw, 1.15rem);
+  border-bottom: 1px solid var(--border);
+  transition: background-color var(--t-base) var(--ease);
+}
+
+.sgrid__item:hover {
+  background: var(--wash-1);
+}
+
+@media (min-width: 1025px) {
+  .sgrid__item:nth-child(even) {
+    border-left: 1px solid var(--border);
+  }
+}
+
+.sgrid__mark,
+.smobile__mark,
+.spair__mark,
+.splat__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  color: var(--a, var(--primary));
+}
+
+.sgrid__mark {
+  width: 26px;
+  padding-top: 0.1rem;
+}
+
+.sgrid__name,
+.smobile__name,
+.spair__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  color: var(--text);
+}
+
+.sgrid__desc,
+.smobile__desc,
+.spair__desc {
+  display: block;
+  margin-top: var(--s-2);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   3. MOBILE — `.smobile`
+   --------------------------------------------------------------------------
+   The page's one filled panel. Mobile is the deepest experience on the record —
+   five live applications — so it is the one group whose visual weight is raised
+   above the others rather than being one tab among five.
+   ========================================================================== */
+.smobile {
+  padding: clamp(1.75rem, 4vw, 3rem);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--wash-1);
+}
+
+.smobile__inner {
+  --split-gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.smobile__inner .band__lead {
+  margin-bottom: var(--s-6);
+}
+
+.smobile__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.smobile__item {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+  padding-block: var(--s-4);
+  border-top: 1px solid var(--border);
+}
+
+.smobile__item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.smobile__mark {
+  width: 24px;
+  padding-top: 0.15rem;
+}
+
+/* ==========================================================================
+   4. SERVER PAIR — `.spair`
+   ========================================================================== */
+.spair__cols {
+  --split-gap: clamp(2rem, 4vw, 3.5rem);
+}
+
+.spair__col {
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--border-strong);
+}
+
+.spair__title {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.spair__title svg {
+  flex: none;
+  color: var(--a, var(--primary));
+}
+
+.spair__blurb {
+  margin-top: var(--s-3);
+  margin-bottom: var(--s-6);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.spair__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.spair__item {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+  padding-block: var(--s-4);
+  border-top: 1px solid var(--border);
+}
+
+.spair__item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.spair__mark {
+  width: 22px;
+  padding-top: 0.15rem;
+}
+
+/* ==========================================================================
+   5. PLATFORM — `.splat`
+   --------------------------------------------------------------------------
+   Eleven tools, inline. The most compact treatment on the page: a mark and a
+   name, no description. `title` on each item carries the detail for anyone who
+   wants it without spending eleven paragraphs of page height on it.
+   ========================================================================== */
+.splat__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.splat__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) clamp(0.85rem, 1.8vw, 1.15rem);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  transition:
+    border-color var(--t-base) var(--ease),
+    transform var(--t-base) var(--ease);
+}
+
+.splat__item:hover {
+  border-color: color-mix(in srgb, var(--a, var(--primary)) 45%, transparent);
+  transform: translateY(-2px);
+}
+
+.splat__mark {
+  width: 22px;
+}
+
+.splat__name {
+  font-size: 0.86rem;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 640px) {
+  .smobile {
+    padding: var(--s-4);
+  }
+  .sgrid__item {
+    padding-inline: 0;
+  }
+  .splat__item {
+    /* Two per row rather than a ragged wrap of eleven differently-sized pills. */
+    flex: 1 1 calc(50% - var(--s-3));
+    padding-inline: var(--s-3);
+  }
+  .splat__name {
+    font-size: 0.78rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .score__item,
+  .sgrid__item,
+  .splat__item {
+    transition: none;
+  }
+  .splat__item:hover {
+    transform: none;
+  }
+}

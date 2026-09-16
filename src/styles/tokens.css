@@ -1,0 +1,553 @@
+/* ==========================================================================
+   Design tokens — three themes.
+
+     [data-theme="light"]  White cards on a barely-grey page. Default.
+     [data-theme="dark"]   The original near-black + electric violet theme,
+                           restored with its original colour values.
+     [data-theme="night"]  Deep navy, softer ink, dimmer accents. A calmer
+                           low-glare mode, deliberately not the same object as
+                           dark: dark is neutral and high-contrast, night is
+                           blue and gentle.
+
+   ARCHITECTURE
+   The section stylesheets contain no colour literals. Every colour reaches them
+   through a token named for its *role*, which is what lets one set of
+   stylesheets serve three themes. The roles worth knowing:
+
+     --wash-1..5     translucent overlays that tint toward the theme's
+                     foreground. In light that means ink over white; in dark and
+                     night, light over black. Same idea, opposite direction,
+                     which is exactly why they cannot be one literal.
+     --panel/--scrim translucent glass panels and modal backdrops.
+     --device-*      the schematic phone / browser mockups, which are their own
+                     small material with a shell, a screen and inner chrome.
+     --code-*        the code-window syntax theme.
+     --shadow-rgb/-a shadow channel and strength. Dark themes need a much
+                     heavier shadow alpha than light ones for the same read.
+
+   Accent alphas are expressed in the stylesheets as
+   `color-mix(in srgb, var(--primary) N%, transparent)`, so a hue change here
+   propagates without touching a single section rule.
+   ========================================================================== */
+
+/* ==========================================================================
+   THEME-INDEPENDENT: geometry, type, rhythm, motion.
+   ========================================================================== */
+:root {
+  /* --- Radii ------------------------------------------------------------- */
+  /* Minimal radii: an editorial layout is built from thin rules and square
+     corners, so every step is pulled well in from the old rounded-card values.
+     --r-full stays a pill because a handful of genuine pills (status dot,
+     chips, icon buttons) depend on it. */
+  --r-xs: 2px;
+  --r-sm: 3px;
+  --r-md: 4px;
+  --r-lg: 6px;
+  --r-xl: 8px;
+  --r-2xl: 10px;
+  --r-full: 999px;
+
+  /* --- Type -------------------------------------------------------------- */
+  /* Two families, as briefed: a Playfair display face for editorial headings
+     and Inter for body. --font-mono resolves to Inter's tabular/uppercase
+     treatment rather than a third family — the `.mono` class is used all over
+     the site for eyebrows and meta labels, so it stays defined, but it now
+     borrows the body face instead of loading JetBrains Mono. */
+  --font-display: 'Playfair Display', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --fs-hero: clamp(2.6rem, 7vw, 5.5rem);
+  --fs-h2: clamp(1.95rem, 4vw, 3.2rem);
+  --fs-h3: clamp(1.2rem, 2vw, 1.55rem);
+  --fs-h4: clamp(1.02rem, 1.35vw, 1.14rem);
+  --fs-lead: clamp(1.05rem, 1.35vw, 1.2rem);
+  --fs-body: clamp(1rem, 1.05vw, 1.0625rem);
+  --fs-sm: clamp(0.9rem, 0.95vw, 0.95rem);
+  --fs-xs: 0.8rem;
+
+  /* Tight on display, comfortable on body — the editorial contrast the brief
+     asks for comes as much from this gap as from the size ramp. */
+  --lh-tight: 1.06;
+  --lh-body: 1.75;
+  --tracking-eyebrow: 0.2em;
+
+  /* --- Layout ------------------------------------------------------------ */
+  --container: 1280px;
+  /* 20px phone / 32px tablet / 40-60px desktop, exactly as specified. */
+  --gutter: clamp(1.25rem, 4vw, 3.75rem);
+  --section-y: clamp(4rem, 7vw, 7.5rem);
+  --nav-h: 76px;
+
+  /* ---- Spacing scale ----
+     The briefed 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 120 ramp, in
+     rem. --sp-1..7 are kept as aliases onto it so the 28 existing stylesheets
+     that already reference them land on scale values instead of the old
+     arbitrary ones. */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+  --s-20: 5rem;
+  --s-24: 6rem;
+  --s-30: 7.5rem;
+
+  --sp-1: var(--s-1);
+  --sp-2: var(--s-2);
+  --sp-3: var(--s-3);
+  --sp-4: var(--s-4);
+  --sp-5: var(--s-6);
+  --sp-6: var(--s-8);
+  --sp-7: var(--s-12);
+  --card-pad: clamp(1.5rem, 2.2vw, 2rem);
+  --card-gap: clamp(1rem, 1.6vw, 1.5rem);
+  --head-gap: clamp(2rem, 4vw, 3rem);
+  --stack: clamp(1rem, 1.8vw, 1.5rem);
+
+  /* --- Pointer spotlight (hook writes --mx / --my / --glow) -------------- */
+  --mx: 50%;
+  --my: 0%;
+  --glow: 0;
+  --spot-size: 420px;
+
+  /* --- Motion ------------------------------------------------------------ */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.46, 0.64, 1);
+  --ease-emphasis: cubic-bezier(0.4, 0, 0.2, 1);
+  --t-xfast: 0.1s;
+  --t-fast: 0.16s;
+  --t-base: 0.26s;
+  --t-slow: 0.5s;
+  --t-slower: 0.7s;
+  /* How long a theme change takes to cross-fade. */
+  --t-theme: 0.42s;
+}
+
+/* ==========================================================================
+   LIGHT — default. Warm editorial paper.
+
+   The palette is the briefed Myhra set. Contrast on the #FFFFFF surface:
+   text #171717 = 17.4:1, secondary #5F5B55 = 6.6:1, muted #8A847B = 3.9:1
+   (decorative / large only), accent #B65F45 = 4.6:1 — so the accent is the
+   lightest thing still allowed to carry body text, and --text-dim is kept off
+   small copy in the sections that use it for rules and icons.
+   ========================================================================== */
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f4f1eb;
+  --bg-soft: #eae5dc;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #e8e3da;
+  --surface-strong: rgba(255, 255, 255, 0.92);
+  --border: #d6d0c6;
+  --border-strong: #c3bcaf;
+
+  --text: #171717;
+  --text-muted: #5f5b55;
+  /* The brief's "Muted Text" is #8A847B, which measures 3.29:1 on the page and
+     2.90:1 on the muted surface — fine for a 1px rule or an icon, but this token
+     is used all over the section stylesheets for real small text (captions,
+     hints, meta labels, counts), and at 10-13px that is unreadable and fails AA.
+     Darkened to the nearest value in the same hue that clears 4.5:1 on every
+     surface this theme actually uses (5.19:1 on the page, 4.57:1 on the muted
+     surface). #8A847B is kept below as --text-faint for the decorative uses. */
+  --text-dim: #6b6459;
+  --text-faint: #8a847b;
+  --platinum: #5f5b55;
+
+  /* One accent, terracotta. --primary-alt / --primary-light are the same hue at
+     different levels rather than three separate colours: the old palette's
+     violet/cyan/amber trio is what made the page read as a swatch sheet, and
+     every section stylesheet reaches colour through these names.
+
+     CONTRAST NOTE. The briefed #B65F45 measures 4.46:1 on white and 3.95:1 on
+     the #F4F1EB page — just under the 4.5:1 AA threshold for normal-size text.
+     It is kept as --primary because it is the brand colour and it is correct for
+     the things it actually paints: 1px rules, icons, borders, dots, and the
+     large display type where AA's 3:1 large-text threshold applies.
+
+     --primary-ink is the same hue darkened to the briefed hover value #964A34,
+     which clears AA comfortably (6.31:1 on white, 5.60:1 on paper). Small
+     accent-coloured *text* uses that instead — see the accent-text rule in
+     editorial.css. Two tokens rather than one compromise colour, so the brand
+     stays exact everywhere it is not carrying a paragraph. */
+  --primary: #b65f45;
+  --primary-ink: #964a34;
+  /* An accent GROUND that white text can sit on.
+     --primary itself is only 4.46:1 against white, so a terracotta panel with
+     white copy fails AA in light and is worse in dark/night, where the accent is
+     lighter still. This is the briefed hover value (#964A34) promoted to a
+     surface: white on it is 6.31:1 and white at 80% is 4.69:1, so the panel
+     keeps the brand colour and the copy stays readable in every theme. */
+  --primary-surface: #964a34;
+  --primary-alt: #a5543c;
+  --primary-light: #c87559;
+  --support: #7a7268;
+  --support-alt: #8a847b;
+
+  --ok: #4f7a52;
+  --ok-text: #3d5f40;
+  --warn: #9a7434;
+  --warn-text: #7d5e2a;
+  --danger: #a8422f;
+  --danger-text: #8c3627;
+  --gold: #9a7434;
+
+  --blue: var(--primary);
+  --violet: var(--primary);
+  --cyan: var(--support);
+  --accent: var(--primary);
+
+  /* Flat ink fill, warm paper ink — the briefed primary button. */
+  --fill-primary: linear-gradient(180deg, #171717 0%, #171717 100%);
+  --fill-primary-ink: #f4f1eb;
+
+  /* "Gradients" collapse to flat colour: the brief rules out decorative
+     gradients, and keeping the token names means no stylesheet has to change. */
+  --grad-primary: linear-gradient(135deg, #b65f45 0%, #964a34 100%);
+  --grad-text: linear-gradient(100deg, #171717 0%, #171717 100%);
+  --grad-text-mid: #171717;
+  --grad-line: linear-gradient(90deg, transparent, #d6d0c6, transparent);
+  --grad-surface: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
+  --grad-hairline: linear-gradient(90deg, #171717, rgba(23, 23, 23, 0.35) 55%, transparent);
+  --grad-metal: linear-gradient(120deg, #b65f45, #964a34);
+
+  /* No glows on paper — a hairline ring plus the faintest lift. */
+  --glow-blue: 0 0 0 1px #c3bcaf;
+  --glow-violet: 0 0 0 1px #c3bcaf;
+  --glow-cyan: 0 0 0 1px #c3bcaf;
+
+  --shadow-rgb: 23, 23, 23;
+  --shadow-a: 0.07;
+  --shadow-sm: 0 1px 2px rgba(23, 23, 23, 0.04);
+  --shadow-md: 0 2px 8px -4px rgba(23, 23, 23, 0.06);
+  --shadow-lg: 0 8px 24px -16px rgba(23, 23, 23, 0.09);
+  --shadow-hover: 0 6px 18px -12px rgba(23, 23, 23, 0.1);
+  --ring: 0 0 0 3px rgba(182, 95, 69, 0.22);
+
+  /* The elevation ladder is deliberately shallow now: the brief rules out heavy
+     shadows, so depth comes from the 1px border and the paper tone instead. */
+  --e-1: 0 1px 1px rgba(23, 23, 23, 0.02);
+  --e-2: 0 1px 2px rgba(23, 23, 23, 0.03);
+  --e-3: 0 2px 8px -5px rgba(23, 23, 23, 0.06);
+  --e-4: 0 8px 24px -16px rgba(23, 23, 23, 0.09);
+  --e-accent: 0 8px 22px -16px rgba(182, 95, 69, 0.3);
+
+  --hairline: inset 0 0 0 0 transparent;
+  --hairline-2: inset 0 0 0 0 transparent;
+  --hairline-ink: rgba(23, 23, 23, 0.06);
+
+  /* Overlays: ink over warm paper. */
+  --wash-1: rgba(23, 23, 23, 0.022);
+  --wash-2: rgba(23, 23, 23, 0.04);
+  --wash-3: rgba(23, 23, 23, 0.06);
+  --wash-4: rgba(23, 23, 23, 0.1);
+  --wash-5: rgba(23, 23, 23, 0.16);
+  --sheen: rgba(23, 23, 23, 0.04);
+  --grid-line: rgba(23, 23, 23, 0.05);
+  --watermark: rgba(23, 23, 23, 0.08);
+  --watermark-hover: rgba(23, 23, 23, 0.14);
+
+  --scrim: rgba(244, 241, 235, 0.82);
+  --panel: rgba(244, 241, 235, 0.86);
+  --panel-solid: #f4f1eb;
+  --chip-bg: rgba(232, 227, 218, 0.8);
+  --page-ring: rgba(244, 241, 235, 0.94);
+  --inset-well: rgba(232, 227, 218, 0.5);
+  --inset-well-focus: rgba(232, 227, 218, 0.8);
+
+  --device-shell-1: #e8e3da;
+  --device-shell-2: #d6d0c6;
+  --device-screen-1: #ffffff;
+  --device-screen-2: #f4f1eb;
+  --device-bar: rgba(23, 23, 23, 0.1);
+  --device-border: #d6d0c6;
+  --device-line: rgba(23, 23, 23, 0.07);
+  --device-text: rgba(23, 23, 23, 0.5);
+
+  --code-bg: #eae5dc;
+  --code-text: #171717;
+  --code-keyword: #a5543c;
+  --code-string: #4f7a52;
+  --code-fn: #7a5c34;
+  --code-comment: #8a847b;
+}
+
+/* ==========================================================================
+   DARK — the same warm palette after dark.
+
+   Briefed values. Contrast on the #292723 surface: text #F4F1EB = 13.9:1,
+   secondary #BDB6AB = 8.0:1, muted #8E887F = 4.3:1, accent #C87559 = 4.6:1.
+   Warm charcoal rather than neutral black, so the identity survives the switch.
+   ========================================================================== */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #171717;
+  --bg-soft: #22201d;
+  --bg-elevated: #292723;
+  --surface: #292723;
+  --surface-2: #22201d;
+  --surface-strong: rgba(41, 39, 35, 0.92);
+  --border: #3a3631;
+  --border-strong: #4d4841;
+
+  --text: #f4f1eb;
+  --text-muted: #bdb6ab;
+  /* Same correction as light, in the opposite direction: the briefed #8E887F is
+     4.24:1 on the #292723 surface. Lightened until it clears AA everywhere
+     (4.95:1 on the surface, 5.95:1 on the page). */
+  --text-dim: #9a9489;
+  --text-faint: #8e887f;
+  --platinum: #bdb6ab;
+
+  --primary: #c87559;
+  /* On a dark ground the accessible direction is lighter, not darker: #C87559
+     already clears AA here (4.36:1 on the surface), and --primary-ink is the
+     next step up for the same small-text role light mode needs it for. */
+  --primary-ink: #d9937a;
+  /* The accent panel keeps the same deep ground in every theme: its contrast
+     pairing is with the white text sitting on it, not with the page behind it,
+     so lightening it here would only make that text harder to read. */
+  --primary-surface: #964a34;
+  --primary-alt: #d18466;
+  --primary-light: #d9937a;
+  --support: #9b938a;
+  --support-alt: #8e887f;
+
+  --ok: #7aa47d;
+  --ok-text: #a9c9ab;
+  --warn: #d0a662;
+  --warn-text: #e3c99b;
+  --danger: #d97a63;
+  --danger-text: #e8a893;
+  --gold: #d0a662;
+
+  --blue: var(--primary);
+  --violet: var(--primary);
+  --cyan: var(--support);
+  --accent: var(--primary);
+
+  /* Inverted from light: the paper tone becomes the fill, ink becomes the label. */
+  --fill-primary: linear-gradient(180deg, #f4f1eb 0%, #f4f1eb 100%);
+  --fill-primary-ink: #171717;
+
+  --grad-primary: linear-gradient(135deg, #c87559 0%, #b65f45 100%);
+  --grad-text: linear-gradient(100deg, #f4f1eb 0%, #f4f1eb 100%);
+  --grad-text-mid: #f4f1eb;
+  --grad-line: linear-gradient(90deg, transparent, #3a3631, transparent);
+  --grad-surface: linear-gradient(180deg, #292723 0%, #292723 100%);
+  --grad-hairline: linear-gradient(90deg, #f4f1eb, rgba(244, 241, 235, 0.3) 55%, transparent);
+  --grad-metal: linear-gradient(120deg, #d0a662, #c87559);
+
+  --glow-blue: 0 0 0 1px #4d4841;
+  --glow-violet: 0 0 0 1px #4d4841;
+  --glow-cyan: 0 0 0 1px #4d4841;
+
+  --shadow-rgb: 0, 0, 0;
+  --shadow-a: 0.5;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 10px -4px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 10px 30px -18px rgba(0, 0, 0, 0.6);
+  --shadow-hover: 0 8px 22px -14px rgba(0, 0, 0, 0.55);
+  --ring: 0 0 0 3px rgba(200, 117, 89, 0.28);
+
+  --e-1: 0 1px 1px rgba(0, 0, 0, 0.2);
+  --e-2: 0 1px 3px rgba(0, 0, 0, 0.28);
+  --e-3: 0 2px 10px -5px rgba(0, 0, 0, 0.42);
+  --e-4: 0 10px 28px -18px rgba(0, 0, 0, 0.55);
+  --e-accent: 0 8px 24px -16px rgba(200, 117, 89, 0.4);
+
+  --hairline: inset 0 0 0 0 transparent;
+  --hairline-2: inset 0 0 0 0 transparent;
+  --hairline-ink: rgba(244, 241, 235, 0.07);
+
+  /* Overlays: warm paper over charcoal. */
+  --wash-1: rgba(244, 241, 235, 0.025);
+  --wash-2: rgba(244, 241, 235, 0.045);
+  --wash-3: rgba(244, 241, 235, 0.07);
+  --wash-4: rgba(244, 241, 235, 0.1);
+  --wash-5: rgba(244, 241, 235, 0.16);
+  --sheen: rgba(244, 241, 235, 0.06);
+  --grid-line: rgba(244, 241, 235, 0.05);
+  --watermark: rgba(244, 241, 235, 0.08);
+  --watermark-hover: rgba(244, 241, 235, 0.13);
+
+  --scrim: rgba(23, 23, 23, 0.84);
+  --panel: rgba(23, 23, 23, 0.88);
+  --panel-solid: #171717;
+  --chip-bg: rgba(34, 32, 29, 0.85);
+  --page-ring: rgba(23, 23, 23, 0.94);
+  --inset-well: rgba(34, 32, 29, 0.6);
+  --inset-well-focus: rgba(34, 32, 29, 0.85);
+
+  --device-shell-1: #3a3631;
+  --device-shell-2: #22201d;
+  --device-screen-1: #292723;
+  --device-screen-2: #22201d;
+  --device-bar: rgba(244, 241, 235, 0.14);
+  --device-border: #3a3631;
+  --device-line: rgba(244, 241, 235, 0.07);
+  --device-text: rgba(244, 241, 235, 0.55);
+
+  --code-bg: #22201d;
+  --code-text: #f4f1eb;
+  --code-keyword: #d18466;
+  --code-string: #7aa47d;
+  --code-fn: #d0a662;
+  --code-comment: #8e887f;
+}
+
+/* ==========================================================================
+   NIGHT — the low-glare third mode.
+
+   The existing theme switcher cycles light -> dark -> night, and that cycle is
+   kept working. Night stays distinguishable from dark the way it always did —
+   by being warmer and lower-contrast, a lamplit sepia rather than a second
+   charcoal — but it is now built from the same terracotta family as the other
+   two instead of the old navy. Body text holds 10.6:1 on the night surface.
+   ========================================================================== */
+[data-theme='night'] {
+  color-scheme: dark;
+
+  --bg: #1e1a17;
+  --bg-soft: #26211d;
+  --bg-elevated: #2e2823;
+  --surface: #2e2823;
+  --surface-2: #26211d;
+  --surface-strong: rgba(46, 40, 35, 0.92);
+  --border: #423a33;
+  --border-strong: #564c43;
+
+  --text: #ece4d8;
+  --text-muted: #b5aa9c;
+  /* 3.81:1 before; 4.88:1 on the night surface now. */
+  --text-dim: #9e9488;
+  --text-faint: #8b8175;
+  --platinum: #b5aa9c;
+
+  --primary: #cf8064;
+  --primary-ink: #e0a189;
+  --primary-surface: #9c4e37;
+  --primary-alt: #d78f74;
+  --primary-light: #e0a189;
+  --support: #9a8f82;
+  --support-alt: #8b8175;
+
+  --ok: #82a882;
+  --ok-text: #adc9ad;
+  --warn: #d4ac6b;
+  --warn-text: #e6cb9b;
+  --danger: #dc836a;
+  --danger-text: #ecb09b;
+  --gold: #d4ac6b;
+
+  --blue: var(--primary);
+  --violet: var(--primary);
+  --cyan: var(--support);
+  --accent: var(--primary);
+
+  --fill-primary: linear-gradient(180deg, #ece4d8 0%, #ece4d8 100%);
+  --fill-primary-ink: #1e1a17;
+
+  --grad-primary: linear-gradient(135deg, #cf8064 0%, #b65f45 100%);
+  --grad-text: linear-gradient(100deg, #ece4d8 0%, #ece4d8 100%);
+  --grad-text-mid: #ece4d8;
+  --grad-line: linear-gradient(90deg, transparent, #423a33, transparent);
+  --grad-surface: linear-gradient(180deg, #2e2823 0%, #2e2823 100%);
+  --grad-hairline: linear-gradient(90deg, #ece4d8, rgba(236, 228, 216, 0.3) 55%, transparent);
+  --grad-metal: linear-gradient(120deg, #d4ac6b, #cf8064);
+
+  --glow-blue: 0 0 0 1px #564c43;
+  --glow-violet: 0 0 0 1px #564c43;
+  --glow-cyan: 0 0 0 1px #564c43;
+
+  --shadow-rgb: 0, 0, 0;
+  --shadow-a: 0.42;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.26);
+  --shadow-md: 0 2px 10px -4px rgba(0, 0, 0, 0.38);
+  --shadow-lg: 0 10px 30px -18px rgba(0, 0, 0, 0.52);
+  --shadow-hover: 0 8px 22px -14px rgba(0, 0, 0, 0.48);
+  --ring: 0 0 0 3px rgba(207, 128, 100, 0.28);
+
+  --e-1: 0 1px 1px rgba(0, 0, 0, 0.18);
+  --e-2: 0 1px 3px rgba(0, 0, 0, 0.24);
+  --e-3: 0 2px 10px -5px rgba(0, 0, 0, 0.36);
+  --e-4: 0 10px 28px -18px rgba(0, 0, 0, 0.48);
+  --e-accent: 0 8px 24px -16px rgba(207, 128, 100, 0.36);
+
+  --hairline: inset 0 0 0 0 transparent;
+  --hairline-2: inset 0 0 0 0 transparent;
+  --hairline-ink: rgba(236, 228, 216, 0.07);
+
+  --wash-1: rgba(236, 228, 216, 0.025);
+  --wash-2: rgba(236, 228, 216, 0.045);
+  --wash-3: rgba(236, 228, 216, 0.07);
+  --wash-4: rgba(236, 228, 216, 0.1);
+  --wash-5: rgba(236, 228, 216, 0.16);
+  --sheen: rgba(236, 228, 216, 0.06);
+  --grid-line: rgba(236, 228, 216, 0.05);
+  --watermark: rgba(236, 228, 216, 0.08);
+  --watermark-hover: rgba(236, 228, 216, 0.13);
+
+  --scrim: rgba(30, 26, 23, 0.84);
+  --panel: rgba(30, 26, 23, 0.88);
+  --panel-solid: #1e1a17;
+  --chip-bg: rgba(38, 33, 29, 0.85);
+  --page-ring: rgba(30, 26, 23, 0.94);
+  --inset-well: rgba(38, 33, 29, 0.6);
+  --inset-well-focus: rgba(38, 33, 29, 0.85);
+
+  --device-shell-1: #423a33;
+  --device-shell-2: #26211d;
+  --device-screen-1: #2e2823;
+  --device-screen-2: #26211d;
+  --device-bar: rgba(236, 228, 216, 0.14);
+  --device-border: #423a33;
+  --device-line: rgba(236, 228, 216, 0.07);
+  --device-text: rgba(236, 228, 216, 0.55);
+
+  --code-bg: #26211d;
+  --code-text: #ece4d8;
+  --code-keyword: #d78f74;
+  --code-string: #82a882;
+  --code-fn: #d4ac6b;
+  --code-comment: #8b8175;
+}
+
+/* ==========================================================================
+   RESPONSIVE / CAPABILITY OVERRIDES
+   ========================================================================== */
+@media (min-width: 1700px) {
+  :root {
+    --container: 1420px;
+    --nav-h: 80px;
+  }
+}
+@media (min-width: 2400px) {
+  :root {
+    --container: 1600px;
+  }
+}
+@media (max-width: 640px) {
+  :root {
+    --nav-h: 64px;
+    --section-y: clamp(3.25rem, 11vw, 4.5rem);
+  }
+}
+
+/* Devices without a real pointer never trigger the spotlight. */
+@media (hover: none) {
+  :root {
+    --spot-size: 0px;
+  }
+}

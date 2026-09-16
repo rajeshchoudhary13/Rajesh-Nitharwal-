@@ -1,0 +1,401 @@
+/* ==========================================================================
+   Case studies — tabbed project selector + a seven-stage vertical timeline.
+
+   The timeline is vertical at every width, deliberately. A horizontal one would
+   have to compress seven blocks of prose into columns, and the prose is the
+   point of the section: a client reads Problem → Solution → Result as a story,
+   which is a vertical shape.
+
+   The rail is one absolutely-positioned line behind the nodes, filled by a
+   scroll-linked scaleY from the component. `transform-origin: top` is what makes
+   it grow downward rather than from the middle.
+   ========================================================================== */
+
+/* ---------- Project selector ---------- */
+.cs__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.cs__tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  isolation: isolate;
+  transition:
+    color var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease);
+}
+
+.cs__tab:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.cs__tab.is-active {
+  /* Small text takes the accessible step of the accent — see --primary-ink. */
+  color: var(--primary-ink);
+  border-color: color-mix(in srgb, var(--a, var(--primary)) 45%, transparent);
+}
+
+/* The sliding highlight. z-index:-1 keeps it above the tab's own background but
+   below its label and icon. */
+.cs__tab-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--a, var(--primary)) 12%, transparent);
+}
+
+/* ---------- Study header ---------- */
+.cs__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 2.4vw, 1.75rem);
+  padding: clamp(1.15rem, 2.2vw, 1.6rem);
+  border-radius: var(--r-lg);
+}
+
+.cs__head-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 32%, transparent);
+  background: var(--a-soft, transparent);
+  color: var(--a, var(--primary));
+}
+
+.cs__head-text {
+  min-width: 0;
+}
+
+.cs__head-domain {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--a, var(--primary));
+}
+
+.cs__head-name {
+  margin-top: 0.2rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.cs__head-tagline {
+  margin-top: 0.2rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.cs__head-meta {
+  display: grid;
+  gap: 0.7rem;
+  max-width: 30ch;
+  padding-left: clamp(1rem, 2vw, 1.5rem);
+  border-left: 1px solid var(--border);
+}
+
+.cs__head-meta dt {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.cs__head-meta dt svg {
+  color: var(--a, var(--primary));
+}
+
+.cs__head-meta dd {
+  margin-top: 0.2rem;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+/* ---------- Timeline ---------- */
+.cs__track {
+  position: relative;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  /* Room for the rail and nodes in the left gutter. */
+  padding-left: clamp(2.1rem, 4vw, 2.9rem);
+}
+
+.cs__rail {
+  position: absolute;
+  top: 0.6rem;
+  bottom: 0.6rem;
+  /* Centred on the node column: half the node width in from the track edge. */
+  left: clamp(0.75rem, 1.6vw, 1.1rem);
+  width: 2px;
+  border-radius: var(--r-full);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.cs__rail-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: top center;
+  background: linear-gradient(180deg, var(--a, var(--primary)), var(--support));
+}
+
+.cs__stages {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.cs__stage {
+  position: relative;
+}
+
+/* The node sits back over the rail, so the icon interrupts the line. */
+.cs__node {
+  position: absolute;
+  top: 0.15rem;
+  left: calc(clamp(2.1rem, 4vw, 2.9rem) * -1 + clamp(0.75rem, 1.6vw, 1.1rem) - 12px + 1px);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 40%, transparent);
+  background: var(--bg-elevated);
+  color: var(--a, var(--primary));
+}
+
+.cs__stage-step {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.cs__stage-title {
+  margin-top: 0.15rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.cs__prose {
+  margin-top: 0.5rem;
+  max-width: 78ch;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+/* ---------- Stage bodies ---------- */
+.cs__checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 0.4rem 1.25rem;
+  margin-top: 0.6rem;
+}
+
+.cs__checklist li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.45rem;
+  align-items: start;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.cs__checklist svg {
+  margin-top: 0.3em;
+  color: var(--ok);
+}
+
+.cs__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.32rem;
+  margin-top: 0.6rem;
+}
+
+.cs__chips li {
+  padding: 0.26rem 0.55rem;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--border);
+  background: var(--wash-1);
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+/* The challenges stage is the one genuinely technical block, so it is boxed —
+   a reader who does not want the detail can see where it starts and ends. */
+.cs__deep {
+  margin-top: 0.7rem;
+  padding: clamp(0.95rem, 1.8vw, 1.25rem);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--wash-1);
+}
+
+/* Body-sized accent text — takes --primary-ink for AA, and weight 500 because
+   700 on a Playfair display face reads as heavy rather than emphatic. */
+.cs__deep-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  color: var(--primary-ink);
+}
+
+.cs__deep .cs__prose {
+  margin-top: 0.35rem;
+}
+
+.cs__deep-points {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.cs__deep-points li {
+  position: relative;
+  padding-left: 1rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.cs__deep-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--a, var(--primary));
+}
+
+.cs__deep-note {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-strong);
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+.cs__deep-note svg {
+  flex: none;
+  margin-top: 0.25em;
+}
+
+/* ---------- Foot ---------- */
+.cs__note {
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.cs__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  padding: clamp(1.1rem, 2.2vw, 1.5rem) clamp(1.15rem, 2.4vw, 1.75rem);
+  border-radius: var(--r-lg);
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 26%, transparent);
+  background: color-mix(in srgb, var(--a, var(--primary)) 6%, transparent);
+}
+
+.cs__cta-text {
+  max-width: 46ch;
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 860px) {
+  .cs__head {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  /* The meta column drops under the title and turns its left rule into a top
+     one, so it still reads as secondary information. */
+  .cs__head-meta {
+    grid-column: 1 / -1;
+    max-width: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    padding-left: 0;
+    padding-top: 1rem;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 560px) {
+  .cs__tab {
+    padding: 0.5rem 0.75rem;
+    font-size: var(--fs-xs);
+  }
+  .cs__head-icon {
+    width: 44px;
+    height: 44px;
+  }
+  .cs__cta {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* On the narrowest screens the tab row is the widest thing on the page, so it
+   becomes a swipeable strip rather than wrapping to three lines. */
+@media (max-width: 430px) {
+  .cs__tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+  }
+  .cs__tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .cs__tab {
+    flex: 0 0 auto;
+  }
+}

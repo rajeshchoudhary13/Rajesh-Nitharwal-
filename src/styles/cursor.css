@@ -1,0 +1,58 @@
+/* ==========================================================================
+   Desktop cursor companion.
+
+   Two fixed layers above everything, both pointer-events:none so they can never
+   intercept a click. Positioned by transform only — the component writes x/y
+   motion values, so movement stays on the compositor.
+
+   The component itself refuses to mount on coarse pointers and under
+   prefers-reduced-motion, so the media guard here is belt-and-braces for the
+   case where a stylesheet is cached ahead of a JS change.
+   ========================================================================== */
+.cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.cursor__dot,
+.cursor__ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.cursor__dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--primary);
+}
+
+.cursor__ring {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+  transition:
+    border-color var(--t-base) var(--ease),
+    background-color var(--t-base) var(--ease);
+}
+
+/* Over a link or control the ring fills slightly and warms up, which reads as
+   "this is clickable" without hiding the native pointer. */
+.cursor__ring.is-active {
+  border-color: color-mix(in srgb, var(--primary) 70%, transparent);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+}

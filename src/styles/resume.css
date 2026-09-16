@@ -1,0 +1,303 @@
+/* ================================ Resume ================================= */
+.resume__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(1.25rem, 2.4vw, 2rem);
+  align-items: start;
+}
+
+.resume__card {
+  padding: clamp(1.5rem, 2.8vw, 2.25rem);
+  border-radius: var(--r-xl);
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+  background:
+    radial-gradient(420px 220px at 50% -10%, color-mix(in srgb, var(--primary) 18%, transparent), transparent 70%),
+    var(--grad-surface);
+}
+
+.resume__doc {
+  position: relative;
+  width: min(100%, 218px);
+  padding: 1.15rem 1.05rem;
+  margin-bottom: 0.4rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: linear-gradient(170deg, var(--device-bar), var(--device-bar));
+  box-shadow: var(--shadow-md);
+}
+
+.resume__doc-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 0.85rem;
+  border-radius: 13px;
+  background: var(--fill-primary);
+  color: var(--fill-primary-ink);
+}
+
+.resume__doc-lines {
+  display: grid;
+  gap: 7px;
+}
+
+.resume__doc-lines span {
+  height: 6px;
+  border-radius: var(--r-full);
+  transform-origin: 0 50%;
+  background: var(--device-bar);
+}
+
+.resume__file {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.resume__hint {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  max-width: 40ch;
+  line-height: 1.7;
+}
+
+.resume__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.resume__side {
+  display: grid;
+  gap: clamp(0.8rem, 1.5vw, 1.15rem);
+  min-width: 0;
+}
+
+.resume__snapshot,
+.resume__certs {
+  padding: var(--card-pad);
+  border-radius: var(--r-lg);
+}
+
+.resume__snapshot h3,
+.resume__certs h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 1.02rem;
+  margin-bottom: 1rem;
+}
+
+.resume__certs h3 svg {
+  color: var(--gold);
+}
+
+.resume__snapshot dl {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.resume__snapshot dt {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.resume__snapshot dd {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.resume__certs ul {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.resume__certs li {
+  padding-left: 0.9rem;
+  border-left: 2px solid color-mix(in srgb, var(--gold) 35%, transparent);
+}
+
+.resume__cert-title {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.resume__cert-meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+}
+
+.resume__cert-note {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .resume__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Resume refinement layer
+   ========================================================================== */
+.resume__grid {
+  gap: clamp(1.35rem, 2.6vw, 2.25rem);
+}
+
+.resume__card {
+  gap: 0.8rem;
+  border-radius: var(--r-2xl);
+}
+
+/* ---------- Document mock ---------- */
+.resume__doc {
+  width: min(100%, 232px);
+  padding: 1.3rem 1.15rem;
+  margin-bottom: 0.6rem;
+  border-radius: var(--r-lg);
+  box-shadow: var(--e-3), var(--hairline);
+  /* Framer animates the wrapper's opacity/x on entrance, so the hover tilt uses
+     the standalone `rotate` property, which composes with `transform`. */
+  transition:
+    rotate var(--t-slow) var(--ease-out),
+    box-shadow var(--t-slow) var(--ease-out);
+}
+
+.resume__card:hover .resume__doc {
+  rotate: -1.4deg;
+  box-shadow: var(--e-4), var(--hairline);
+}
+
+.resume__doc-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+  box-shadow:
+    0 14px 30px -14px color-mix(in srgb, var(--primary) 90%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.resume__doc-lines span {
+  height: 7px;
+}
+
+/* The top line reads as the document's own heading. */
+.resume__doc-lines span:first-child {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--primary-light) 50%, transparent), color-mix(in srgb, var(--primary-light) 18%, transparent));
+}
+
+.resume__file {
+  font-size: 0.94rem;
+  letter-spacing: 0.01em;
+}
+
+.resume__hint {
+  line-height: var(--lh-body);
+}
+
+.resume__actions {
+  gap: 0.7rem;
+  margin-top: 0.7rem;
+}
+
+/* ---------- Side panels ---------- */
+.resume__side {
+  gap: clamp(0.9rem, 1.7vw, 1.3rem);
+}
+
+.resume__snapshot,
+.resume__certs {
+  padding: clamp(1.25rem, 2.1vw, 1.7rem);
+  border-radius: var(--r-xl);
+}
+
+.resume__snapshot h3,
+.resume__certs h3 {
+  gap: 0.55rem;
+  font-size: 1.06rem;
+  margin-bottom: 1.15rem;
+}
+
+/* Rule filling the remaining width, matching the modal's section headings. */
+.resume__snapshot h3::after,
+.resume__certs h3::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--primary-alt) 30%, transparent), transparent);
+}
+
+.resume__certs h3::after {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 32%, transparent), transparent);
+}
+
+/* ---------- Snapshot rows ---------- */
+.resume__snapshot dl {
+  gap: 0;
+}
+
+/* Each row is separated by a hairline instead of a gap, so the list reads as a
+   spec table — which is what a resume snapshot is. */
+.resume__snapshot dl > div {
+  padding-block: 0.7rem;
+  border-top: 1px solid var(--border);
+  transition: background var(--t-base) var(--ease-out);
+}
+
+.resume__snapshot dl > div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.resume__snapshot dt {
+  letter-spacing: 0.15em;
+  margin-bottom: 0.25rem;
+}
+
+.resume__snapshot dd {
+  line-height: 1.62;
+}
+
+/* ---------- Certifications ---------- */
+.resume__certs li {
+  position: relative;
+  border-left: 0;
+  padding-left: 1rem;
+}
+
+.resume__certs li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.3em;
+  bottom: 0.3em;
+  width: 2px;
+  border-radius: var(--r-full);
+  background: linear-gradient(180deg, var(--gold), color-mix(in srgb, var(--gold) 15%, transparent));
+  transition: opacity var(--t-base) var(--ease-out);
+  opacity: 0.65;
+}
+
+.resume__certs li:hover::before {
+  opacity: 1;
+}
+
+.resume__cert-meta {
+  letter-spacing: 0.02em;
+}

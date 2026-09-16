@@ -1,0 +1,418 @@
+/* ================================= Skills ================================ */
+.skills__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-bottom: clamp(1.75rem, 3.2vw, 2.5rem);
+}
+
+.skills__tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 42px;
+  padding: 0.58rem 1.05rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  isolation: isolate;
+  transition:
+    color var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.skills__tab svg {
+  color: var(--a, var(--blue));
+  transition: color var(--t-base) var(--ease);
+}
+
+.skills__tab:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.skills__tab:active {
+  transform: translateY(1px);
+}
+
+.skills__tab.is-active {
+  color: var(--fill-primary-ink);
+  border-color: color-mix(in srgb, var(--a, var(--blue)) 55%, transparent);
+}
+
+.skills__tab.is-active svg {
+  color: var(--fill-primary-ink);
+}
+
+.skills__tab-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--r-full);
+  /* Opaque: this pill carries a label, so the ground must not show through.
+     The card accent still tints it, mixed over the fill rather than over
+     the page. */
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--a, var(--primary)) 22%, transparent), transparent),
+    var(--fill-primary);
+  box-shadow: 0 14px 34px -16px color-mix(in srgb, var(--a, var(--blue)) 80%, transparent);
+}
+
+.skills__tab-count {
+  font-size: 0.7rem;
+  opacity: 1;
+}
+
+@media (max-width: 560px) {
+  .skills__tab {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.8rem;
+  }
+  .skills__tab-count {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Skills refinement layer
+   ========================================================================== */
+.skills__tabs {
+  gap: 0.5rem;
+  margin-bottom: clamp(2rem, 3.6vw, 2.75rem);
+}
+
+.skills__tab {
+  min-height: 44px;
+  padding: 0.6rem 1.1rem;
+  box-shadow: var(--hairline);
+}
+
+/* The active pill is a `ripple-host`, so its overflow is clipped — the accent
+   glow therefore lives on the tab itself, where nothing clips it. */
+.skills__tab.is-active {
+  box-shadow:
+    0 14px 34px -16px color-mix(in srgb, var(--a, var(--blue)) 80%, transparent),
+    var(--hairline);
+}
+
+.skills__tab-bg {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* No opacity: fading text is what pushed this under AA (4.06:1 measured). The
+   count is information — it is dimmer than the label by colour, not by alpha. */
+.skills__tab-count {
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--r-xs);
+  background: transparent;
+  font-size: 0.7rem;
+  opacity: 1;
+  color: var(--text-muted);
+}
+
+/* The white wash here was for the old dark filled pill; on a transparent tab it
+   just lightened the ground under the count and dropped it to 2.59:1 in dark.
+   The active count is simply the accent's accessible step. */
+.skills__tab.is-active .skills__tab-count {
+  background: transparent;
+  color: var(--primary-ink);
+  opacity: 1;
+}
+
+@media (max-width: 560px) {
+  .skills__tab {
+    min-height: 42px;
+    padding: 0.55rem 0.9rem;
+  }
+  /* The count is the first thing worth dropping when space is tight, but the
+     icon carries the category, so it stays. */
+  .skills__tab-count {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   TECHNOLOGY STACK
+   Two panels: the category (or the technology under the pointer) on the left,
+   the brand-mark grid on the right.
+
+   The left panel is what keeps this from being a logo wall. Each technology
+   carries a real line about what it was used for, and a logo-only grid would
+   have thrown all of that away — so the panel swaps to the hovered mark's
+   description instead of showing nothing.
+   ========================================================================== */
+.techstack {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.82fr) 1.18fr;
+  gap: clamp(1.25rem, 2.4vw, 2.25rem);
+  align-items: start;
+}
+
+/* ---------- Left panel ---------- */
+.techstack__panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 340px;
+  padding: clamp(1.4rem, 2.4vw, 2rem);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  background: var(--grad-surface);
+  box-shadow: var(--e-2), var(--hairline);
+}
+
+/* A single soft accent bloom, keyed to the active category. */
+.techstack__panel-glow {
+  position: absolute;
+  z-index: -1;
+  top: -30%;
+  right: -25%;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--a, var(--primary)) 20%, transparent), transparent 70%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.techstack__panel-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.techstack__panel-mark {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  margin-bottom: 0.2rem;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--e-1), var(--hairline);
+}
+
+.techstack__panel-mark--group {
+  color: var(--a, var(--primary));
+}
+
+.techstack__panel-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.1vw, 1.75rem);
+  font-weight: 800;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.techstack__panel-tag {
+  padding: 0.16rem 0.5rem;
+  border-radius: var(--r-full);
+  border: 1px solid color-mix(in srgb, var(--a, var(--primary)) 40%, transparent);
+  background: color-mix(in srgb, var(--a, var(--primary)) 12%, transparent);
+  color: var(--a, var(--primary));
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.techstack__panel-text {
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.techstack__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 0.35rem;
+  padding-top: 0.9rem;
+  width: 100%;
+  border-top: 1px solid var(--border);
+}
+
+.techstack__stats dt {
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.techstack__stats dd {
+  margin-top: 0.15rem;
+  color: var(--text);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.techstack__hint {
+  margin-top: 0.15rem;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+}
+
+/* No pointer means no hover, so the instruction would be a lie. */
+@media (hover: none) {
+  .techstack__hint {
+    display: none;
+  }
+}
+
+/* ---------- Right: brand-mark grid ---------- */
+.techstack__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(126px, 1fr));
+  gap: clamp(0.5rem, 1vw, 0.85rem);
+  list-style: none;
+}
+
+.techtile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 118px;
+  padding: 1rem 0.6rem;
+  border-radius: var(--r-lg);
+  border: 1px solid transparent;
+  cursor: default;
+  transition:
+    background var(--t-base) var(--ease-out),
+    border-color var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    transform var(--t-base) var(--ease-spring);
+}
+
+.techtile:hover,
+.techtile.is-on,
+.techtile:focus-visible {
+  background: var(--surface);
+  border-color: color-mix(in srgb, var(--a, var(--primary)) 32%, var(--border));
+  box-shadow: var(--e-2), var(--hairline);
+  transform: translateY(-3px);
+  outline: none;
+}
+
+.techtile:focus-visible {
+  box-shadow: var(--e-2), var(--ring);
+}
+
+.techtile__mark {
+  display: grid;
+  place-items: center;
+  height: 38px;
+  transition: transform var(--t-base) var(--ease-spring);
+}
+
+.techtile:hover .techtile__mark,
+.techtile.is-on .techtile__mark {
+  transform: scale(1.1);
+}
+
+.techtile__name {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  transition: color var(--t-base) var(--ease-out);
+}
+
+.techtile:hover .techtile__name,
+.techtile.is-on .techtile__name,
+.techtile:focus-visible .techtile__name {
+  color: var(--text);
+}
+
+/* A quiet accent dot marks the technologies that are core to the work, so the
+   grid has a hierarchy rather than reading as thirty-eight equal logos. */
+.techtile__dot {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--a, var(--primary));
+  opacity: 0.75;
+}
+
+/* Generic glyphs (no authentic brand mark) follow the accent so they read as
+   deliberate rather than as a logo that failed to load. */
+.techtile__glyph {
+  color: var(--a, var(--primary));
+}
+
+/* ==========================================================================
+   BRAND MARKS
+   Each mark ships two colours (see TechIcon.jsx): a hue-preserved variant for
+   light grounds and one for dark. Only 10 of 28 brand hexes clear 3:1 on all
+   three themes as published, so the theme picks the legible variant rather than
+   every logo collapsing to one flat colour.
+   ========================================================================== */
+/* The `.techicon` fill rules moved to styles/techicon.css, which TechIcon.jsx
+   imports itself — they were unreachable for any page that renders a mark
+   without also mounting this section, and the marks painted black. */
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .techstack {
+    grid-template-columns: 1fr;
+  }
+
+  .techstack__panel {
+    min-height: 0;
+  }
+
+  /* Without a pointer the panel cannot be driven by hover, so it stays on the
+     category summary and the stats carry the detail. */
+  .techstack__hint {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .techstack__grid {
+    grid-template-columns: repeat(auto-fill, minmax(102px, 1fr));
+  }
+
+  .techtile {
+    min-height: 104px;
+    padding: 0.8rem 0.45rem;
+    gap: 0.5rem;
+  }
+
+  .techtile__name {
+    font-size: 0.72rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .techtile,
+  .techtile__mark {
+    transition: none;
+  }
+
+  .techtile:hover,
+  .techtile.is-on {
+    transform: none;
+  }
+
+  .techtile:hover .techtile__mark,
+  .techtile.is-on .techtile__mark {
+    transform: none;
+  }
+}

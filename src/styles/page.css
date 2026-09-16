@@ -1,0 +1,338 @@
+/* ==========================================================================
+   PAGE SHELL
+   --------------------------------------------------------------------------
+   The layout contract shared by every route. Three jobs:
+
+     1. one container width and one gutter ramp, so no page invents its own;
+     2. the vertical rhythm between the masthead and the page body;
+     3. the spacing audit — a single place where section padding is normalised,
+        rather than 28 stylesheets each choosing a value.
+
+   All spacing here comes from the --s-* scale in tokens.css.
+   ========================================================================== */
+
+/* ---------- Shell ----------
+   `min-height` on the shell rather than on each page: it keeps a short page
+   (Contact, Resume) from leaving the footer floating up the viewport, without
+   forcing a tall page to be a multiple of the viewport. Pages grow to their
+   content, exactly as briefed. */
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Clears the fixed navbar. */
+  padding-top: var(--nav-h);
+}
+
+.shell__main {
+  flex: 1 0 auto;
+}
+
+/* The routed page itself. Top padding is the gap under the navbar; bottom is
+   the gap above the footer. */
+.page {
+  padding-block: clamp(3rem, 6vw, 5rem) clamp(4rem, 8vw, 7.5rem);
+}
+
+/* ---------- Masthead ---------- */
+.phead {
+  max-width: 62ch;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.phead__index {
+  margin-bottom: var(--s-4);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
+
+.phead__title {
+  font-family: var(--font-display);
+  /* Editorial display size — larger than any section heading on the page. */
+  font-size: clamp(2.5rem, 6.5vw, 4.75rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.phead__blurb {
+  margin-top: var(--s-6);
+  max-width: 54ch;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+.phead__rule {
+  display: block;
+  width: 100%;
+  max-width: 120px;
+  height: 1px;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  background: var(--border-strong);
+  transform-origin: 0 50%;
+}
+
+/* ---------- AnimatedText line tracks ----------
+   Each line is its own clipping window; the inner span slides up out of it.
+   `padding-bottom` + the matching negative margin give descenders room so a
+   'g' or 'y' is not sliced off by the overflow. */
+.atext__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.atext__inner {
+  display: block;
+  will-change: transform;
+}
+
+/* ==========================================================================
+   SPACING AUDIT — section normalisation
+   --------------------------------------------------------------------------
+   The 20 section components were written for a single scrolling page, where
+   each carried its own full --section-y padding block. Composed into pages that
+   is doubled up: a page's own top padding plus the section's, then section
+   against section.
+
+   Rather than edit 28 stylesheets, the rhythm is corrected here at the seams.
+   ========================================================================== */
+
+/* Every page opens with a `.container` holding the masthead, and the sections
+   follow it as siblings — so `:first-child` never matches a section and the
+   sections kept their full --section-y on top of the masthead's own margin.
+
+   The rule that actually applies: any section directly preceded by the masthead
+   block drops its top padding, because the masthead has already provided that
+   space. `:first-of-type` is wrong here too (a page can open with two
+   containers), so the relationship is stated explicitly. */
+.page > .container:first-child + .section {
+  padding-top: 0;
+}
+
+/* Between stacked sections, one section's worth of space rather than two —
+   otherwise adjacent --section-y paddings compound into a visible void. */
+.page .section + .section {
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* A section running into the page's own bottom padding does not add its own. */
+.page > .section:last-child {
+  padding-bottom: 0;
+}
+
+/* ...and where a trailing `.container` (the closing call to action) follows the
+   last section, that section's bottom padding is the only gap needed, so the
+   CTA does not stack a second one on top of it. */
+.page > .section:last-of-type {
+  padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Sections inside a page do not need their own scroll offset — there is no
+   in-page anchoring any more, and the value fights the fixed navbar. */
+.page .section {
+  scroll-margin-top: calc(var(--nav-h) + var(--s-4));
+}
+
+/* Section headings inside a routed page are subordinate to the masthead, so
+   they step down from it rather than competing at display size. */
+.page .section__title {
+  font-size: var(--fs-h2);
+}
+
+/* ---------- Page body ---------- */
+.page__body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A generic stack used by the simpler pages. */
+.page__stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 6vw, 5rem);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .phead {
+    margin-bottom: clamp(2rem, 8vw, 3rem);
+  }
+  .phead__blurb {
+    margin-top: var(--s-4);
+    max-width: 46ch;
+  }
+  .phead__rule {
+    margin-top: var(--s-6);
+  }
+  .page {
+    padding-block: var(--s-8) var(--s-16);
+  }
+}
+
+/* ==========================================================================
+   PAGE PRIMITIVES
+   Shared blocks the routed pages compose from: the standfirst prose, the
+   closing call to action, the masthead's optional meta row, and the 404 list.
+   ========================================================================== */
+
+/* ---------- Prose ----------
+   A measured column for running copy. 66 characters is the readable maximum;
+   the paragraph spacing is the scale's --s-6 rather than a line-height trick. */
+.prose {
+  max-width: 66ch;
+}
+
+.prose p + p {
+  margin-top: var(--s-6);
+}
+
+.prose p {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+/* The opening paragraph of a page carries slightly more weight, the way a
+   standfirst does in print. */
+.prose > p:first-child {
+  font-size: var(--fs-lead);
+  color: var(--text);
+}
+
+/* ---------- Masthead extras ---------- */
+.phead__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-6);
+  margin-top: var(--s-6);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.phead__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-8);
+}
+
+/* ---------- Closing call to action ----------
+   One per page, above the footer. A rule and type — no filled panel, which is
+   what would make it read as an ad rather than as the end of an article. */
+.pagecta {
+  max-width: 62ch;
+  margin-top: clamp(4rem, 8vw, 7rem);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--border-strong);
+}
+
+.pagecta__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+
+.pagecta__text {
+  margin-top: var(--s-4);
+  max-width: 52ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+}
+
+.pagecta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-8);
+}
+
+/* ---------- 404 ---------- */
+/* A single column, not a multi-column grid.
+   `auto-fit, minmax(220px, 1fr)` put three routes on a row, and because each row
+   is itself a `space-between` flex pair (label left, path right) the path of one
+   route ran straight into the label of the next — they visibly overlapped. A
+   list of seven short links does not need columns; one column per row keeps the
+   label/path pairing legible, which is the whole point of showing the path. */
+.nf__links {
+  display: flex;
+  flex-direction: column;
+  max-width: 520px;
+  margin-top: var(--s-4);
+  border-top: 1px solid var(--border);
+}
+
+.nf__link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-6);
+  padding-block: var(--s-4);
+  border-bottom: 1px solid var(--border);
+  transition: padding-left var(--t-base) var(--ease);
+}
+
+.nf__link:hover {
+  padding-left: var(--s-2);
+}
+
+.nf__link-label {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.nf__link-path {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+.nf__link:hover .nf__link-label {
+  color: var(--primary);
+}
+
+.nf__action {
+  margin-top: var(--s-12);
+}
+
+@media (max-width: 640px) {
+  .pagecta {
+    margin-top: var(--s-12);
+    padding-top: var(--s-8);
+  }
+  .pagecta__actions,
+  .phead__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pagecta__actions .btn,
+  .phead__actions .btn {
+    width: 100%;
+  }
+  .phead__meta {
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf__link:hover {
+    padding-left: 0;
+  }
+}

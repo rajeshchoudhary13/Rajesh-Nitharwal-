@@ -1,0 +1,35 @@
+/* ==========================================================================
+   BRAND MARKS — `.techicon`
+   --------------------------------------------------------------------------
+   The fill rules for <TechIcon>, imported BY THE COMPONENT rather than by a
+   section stylesheet.
+
+   They used to live in skills.css, which is imported only by the <TechStack>
+   section. That was fine while TechStack was the one consumer, but the moment
+   another page rendered a <TechIcon> the marks arrived with no `fill` rule at
+   all and painted with the SVG default — solid black, invisible on the dark and
+   night themes. A component that carries its own styling cannot be broken that
+   way by a new call site, so the rules moved here and this file is imported from
+   TechIcon.jsx.
+
+   Each mark ships two colours (see the MARKS table in TechIcon.jsx): a
+   hue-preserved variant for light grounds and one for dark. Only 10 of 28 brand
+   hexes clear 3:1 on all three themes as published, so the theme picks the
+   legible variant rather than every logo collapsing to one flat colour.
+   ========================================================================== */
+.techicon {
+  display: block;
+  fill: var(--brand-l);
+  transition: fill var(--t-theme) var(--ease-out);
+}
+
+[data-theme='dark'] .techicon,
+[data-theme='night'] .techicon {
+  fill: var(--brand-d);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .techicon {
+    transition: none;
+  }
+}

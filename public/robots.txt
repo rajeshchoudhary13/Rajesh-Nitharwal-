@@ -1,0 +1,7 @@
+# Rajesh Nitharwal — Full Stack & Mobile App Developer
+# https://rajeshnitharwal.dev
+
+User-agent: *
+Allow: /
+
+Sitemap: https://rajeshnitharwal.dev/sitemap.xml

@@ -1,0 +1,316 @@
+/* ==========================================================================
+   LAYOUT PRIMITIVES
+   --------------------------------------------------------------------------
+   The audit that prompted this file found the same two shapes written out by
+   hand across the section stylesheets:
+
+     • `repeat(auto-fit, minmax(min(100%, Npx), 1fr))` — 20 times in 14 files,
+       each with its own N and its own gap;
+     • `minmax(0, 1fr) minmax(0, 1fr)` two-column splits — 7 times, each with a
+       slightly different fr ratio (1/1, 1.05/1, 0.85/1.15, 1.35/1 …) and each
+       collapsing at a different breakpoint (900, 980, 1024).
+
+   Those near-duplicates are why the pages read as one template: the same grid,
+   repeated, is the same visual rhythm repeated. They also drift — three
+   different collapse breakpoints mean three different tablet behaviours on
+   pages a visitor sees back to back.
+
+   So both shapes become one primitive each, parameterised by a custom property.
+   A section that wants a different column floor sets `--min`; a split that wants
+   a different balance sets `--ratio`. Nothing has to redeclare `display: grid`,
+   the gap, or the collapse.
+
+   WHY A SEPARATE FILE, LOADED WHERE IT IS
+   global.css already contains three sequential layers that override each other
+   (`.section__desc` is set at 60ch, then 62ch, then 56ch inside that one file),
+   and editorial.css overrides a fourth time from the very end of the cascade.
+   Adding primitives into the middle of that would make them silently losable.
+   This file is imported from main.jsx immediately before editorial.css, so it
+   sits after global/ui and after every section stylesheet that the eager
+   imports pull in — but still before the editorial layer, which stays the last
+   word on material and geometry exactly as its own header promises.
+
+   These are LAYOUT primitives only: grid shape, gap, alignment, collapse. No
+   colour, no border, no radius, no shadow. Material stays where it already
+   lives, so nothing here competes with editorial.css.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. COLLAPSE BREAKPOINT
+   --------------------------------------------------------------------------
+   One value, named once. The audit found 980/981, 1023/1024/1025 and 900/860
+   all in use for the same job; a token cannot be used inside a media query, so
+   the number is written literally in each query below and this comment is the
+   single place that records what it means.
+
+     --bp-lap  1024px  two columns become one
+     --bp-tab   768px  multi-column card grids tighten
+     --bp-mob   640px  everything is one column
+
+   Any new query should reuse one of those three rather than inventing a fourth.
+   ========================================================================== */
+
+/* ==========================================================================
+   2. CARD GRID — `.grid-cards`
+   --------------------------------------------------------------------------
+   The auto-fit grid, once. `--min` is the column floor: the width below which a
+   card would rather wrap than shrink.
+
+     <ul class="grid-cards" style="--min: 280px">
+
+   `min(100%, var(--min))` is load-bearing and the reason the older non-min()
+   variants in modal.css and projects.css overflow on narrow screens: without
+   it, a 300px floor on a 320px viewport minus gutters is wider than the track,
+   and the grid pushes the page sideways. Kept here so no caller has to remember.
+
+   `--cols-max` optionally caps the column count on very wide screens, so a
+   4-item grid does not stretch into a thin 4-across line at 1600px when 2×2
+   reads better.
+   ========================================================================== */
+/* `--min` is a var() fallback rather than a declaration, for the same cascade
+   reason as `--ratio` on `.split` below: a default declared here would out-rank
+   every caller's `--min` because this file is imported last. */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--min, 280px)), 1fr));
+  gap: var(--grid-gap, var(--card-gap));
+  align-items: start;
+  /* Lists use this primitive constantly; the reset belongs with the layout
+     rather than in every calling stylesheet. */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* An explicit column count, for the grids where "as many as fit" is the wrong
+   answer — a three-step process, a two-up feature pair. Below the lap
+   breakpoint these fall back to the auto-fit behaviour above. */
+@media (min-width: 1025px) {
+  .grid-cards[data-cols='2'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid-cards[data-cols='3'] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid-cards[data-cols='4'] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Tablet: a 4-across grid at 900px is four cramped columns. Halve it. */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .grid-cards[data-cols='3'],
+  .grid-cards[data-cols='4'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-cards,
+  .grid-cards[data-cols='2'],
+  .grid-cards[data-cols='3'],
+  .grid-cards[data-cols='4'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ==========================================================================
+   3. SPLIT — `.split`
+   --------------------------------------------------------------------------
+   The two-column editorial split, once. `--ratio` is the first column's share of
+   the space, AND IT MUST CARRY THE `fr` UNIT:
+
+     <div class="split" style="--ratio: 1.35fr">   wide left, narrow right
+     <div class="split" style="--ratio: 0.72fr">   narrow left, wide right
+
+   The unit is the caller's job because it cannot be the stylesheet's: `fr` is
+   invalid inside `calc()`, so there is no way to turn a bare `1.35` into a track
+   size here. A custom property can carry the unit itself, which is what this
+   relies on. Passing a unitless number makes the whole `grid-template-columns`
+   declaration invalid and the element silently falls back to ONE column — see
+   the note on the rule below.
+
+   Defaults to a true half-and-half. `minmax(0, …)` on both tracks rather than a
+   bare fr, because a bare fr track refuses to shrink below the intrinsic width
+   of its content — which is what makes a long unbroken string (a URL, a
+   technology list) push a grid wider than its container.
+
+   `align-items: start` by default: two columns of different heights should
+   align at the top, not stretch to match. `.split--center` opts into centring
+   for the cases where a short aside should sit against the middle of a tall
+   column.
+   ========================================================================== */
+/* TWO THINGS HERE ARE LOAD-BEARING. Both were bugs first, and both fail the
+   same silent way — the split renders as ONE column, with no CSS error anywhere.
+
+   1. `--ratio` is a var() FALLBACK, not a declaration on `.split`.
+      `--ratio: 1fr` as its own declaration would have the same specificity
+      (0,1,0) as `.home__hero { --ratio: 1.32fr }`, and this file is imported
+      after the section stylesheets — so the default would win every tie and
+      flatten every caller's ratio back to 50/50.
+
+   2. The `fr` unit lives in the VALUE the caller passes, not in this rule.
+      `fr` is invalid inside `calc()` — `calc(1.32 * 1fr)` is thrown out by
+      every engine — so the stylesheet cannot attach the unit itself. A custom
+      property *can* carry a unit, so `--ratio: 1.32fr` substitutes into a valid
+      track size while `--ratio: 1.32` produces `minmax(0, 1.32)`, which
+      invalidates the whole declaration and drops the element to one column.
+
+   If a split ever renders as a single column at desktop width, check the call
+   site for a missing `fr` before looking anywhere else. */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, var(--ratio, 1fr)) minmax(0, 1fr);
+  gap: var(--split-gap, clamp(2rem, 4vw, 4.5rem));
+  align-items: start;
+}
+
+.split--center {
+  align-items: center;
+}
+
+/* The asymmetric variant the brief asks for by name: a deliberately unequal
+   split that reads as editorial rather than as a 50/50 grid. Set as a class
+   rather than a magic number at each call site so the whole site's "asymmetric"
+   means one thing. */
+.split--editorial {
+  --ratio: 1.38fr;
+}
+
+.split--aside {
+  --ratio: 0.62fr;
+}
+
+/* Reverses the *visual* order without touching the DOM order, so the markup can
+   stay in reading order for screen readers and keyboard tabbing while the
+   layout alternates left/right down the page. This is what the alternating
+   project and case-study sections are built on. */
+.split--flip > :first-child {
+  order: 2;
+}
+
+@media (max-width: 1024px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--split-gap-collapsed, clamp(1.75rem, 5vw, 2.75rem));
+  }
+  /* Once stacked, a flip would put the aside above the content it annotates. */
+  .split--flip > :first-child {
+    order: 0;
+  }
+}
+
+/* ==========================================================================
+   4. STACK — `.stack`
+   --------------------------------------------------------------------------
+   A vertical rhythm primitive. Sets the gap between children once instead of
+   `margin-top` on `* + *` in a dozen stylesheets. `--stack-gap` overrides.
+   ========================================================================== */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--s-6));
+}
+
+.stack--tight {
+  --stack-gap: var(--s-3);
+}
+
+.stack--loose {
+  --stack-gap: clamp(2rem, 4vw, 3.5rem);
+}
+
+/* ==========================================================================
+   5. MEASURE — `.measure`
+   --------------------------------------------------------------------------
+   The audit found ten distinct character measures as literals (62ch five
+   times, 52ch five times, plus 66/56/54/46/44/78/76/40/34/32/30ch), with no
+   token behind any of them. Three named steps replace the spread; running copy
+   should reach for one of these rather than a new number.
+
+     .measure        66ch  a full reading column (matches .prose)
+     .measure--tight 52ch  a standfirst or a card paragraph
+     .measure--wide  78ch  a wide intro under a display heading
+   ========================================================================== */
+.measure {
+  max-width: 66ch;
+}
+
+.measure--tight {
+  max-width: 52ch;
+}
+
+.measure--wide {
+  max-width: 78ch;
+}
+
+/* ==========================================================================
+   6. BLEED — `.bleed`
+   --------------------------------------------------------------------------
+   Escapes the container to the full viewport width while keeping its content on
+   the container's own grid. Used by the full-width editorial bands that break up
+   the page rhythm — the thing that stops a page reading as one long column of
+   equal-width blocks.
+
+   `calc(-1 * var(--gutter))` rather than a viewport-unit trick, so it stays
+   correct inside a container that is already narrower than the viewport, and
+   never introduces a horizontal scrollbar the way `100vw` does when a vertical
+   scrollbar is present.
+   ========================================================================== */
+.bleed {
+  margin-inline: calc(-1 * var(--gutter));
+  padding-inline: var(--gutter);
+}
+
+/* ==========================================================================
+   7. RAIL — `.rail`
+   --------------------------------------------------------------------------
+   The sticky column. Three sections wanted one and none had it, so each pinned
+   content with its own ad-hoc `position: sticky` and its own top offset —
+   which is how a sticky element ends up underneath the fixed navbar.
+
+   The offset is computed from `--nav-h` once, here, so it cannot drift, and the
+   sticky behaviour is dropped below the lap breakpoint: a sticky column in a
+   single-column stack pins content over the content it was meant to annotate.
+   ========================================================================== */
+@media (min-width: 1025px) {
+  .rail {
+    position: sticky;
+    top: calc(var(--nav-h) + clamp(1.5rem, 3vw, 2.5rem));
+  }
+}
+
+/* ==========================================================================
+   8. FLOW UTILITIES
+   ========================================================================== */
+
+/* A row that wraps, for chip rows and button pairs. */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cluster-gap, var(--s-3));
+}
+
+.cluster--between {
+  justify-content: space-between;
+}
+
+/* Pushes the last child to the bottom of a grid/flex column, so rows of cards
+   keep their footers aligned regardless of body length. The audit found this
+   done with `margin-top: auto` inline in several card stylesheets. */
+.push-end {
+  margin-top: auto;
+}
+
+@media (max-width: 640px) {
+  /* Button pairs go full-width and stack, matching the existing treatment in
+     page.css for `.pagecta__actions`. */
+  .cluster--stack-mobile {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cluster--stack-mobile > .btn {
+    width: 100%;
+  }
+}
